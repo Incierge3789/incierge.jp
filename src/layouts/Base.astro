@@ -1,15 +1,102 @@
 ---
-const { title = "INCIERGE" } = Astro.props;
+// Base layout with SEO / OGP / JSON-LD (Organization, LocalBusiness, Breadcrumb)
+// 使い方：各ページで <Base title="..." description="..."
+//                       ogImage="/og.jpg"
+//                       breadcrumbs={[["Home","/"],["山梨のAIマーケ","/yamanashi-ai-marketing/"]]}>
+
+const {
+  title = "INCIERGE｜Information Concierge",
+  description = "山梨・甲斐市発。中小企業/個人の“伝わらない”を、AIで変える。AIマーケ支援・自動化・講座。",
+  ogImage = "/og.jpg",
+  breadcrumbs = [] as Array<[string, string]>,
+} = Astro.props;
+
 import "../styles/global.css";
+
+// canonical（astro.config.mjs の site が必須）
+const canonical = new URL(Astro.url.pathname, Astro.site);
+
+// 事業定数（NAP類：AEOで一貫性が重要）
+const ORG = {
+  name: "INCIERGE",
+  legalName: "INCIERGE",
+  url: "https://incierge.jp",
+  sameAs: [
+    // 必要に応じて追記
+    // "https://x.com/yourid",
+    // "https://www.youtube.com/@yourid",
+    // "https://note.com/yourid"
+  ],
+  address: {
+    "@type": "PostalAddress",
+    addressRegion: "山梨県",
+    addressLocality: "甲斐市",
+  },
+  areaServed: ["山梨県", "甲信", "日本"],
+};
 ---
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- 基本 -->
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical.href} />
+    <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
+    <meta name="keywords" content="山梨,甲斐市,AIマーケティング,地方創業,AI支援,INCIERGE" />
+
+    <!-- OGP / Twitter -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical.href} />
+    <meta property="og:site_name" content="INCIERGE" />
+    <meta property="og:image" content={new URL(ogImage, Astro.site).href} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(ogImage, Astro.site).href} />
+
+    <!-- フォント -->
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Organization / LocalBusiness JSON-LD -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": ["Organization","LocalBusiness"],
+      "name": ORG.name,
+      "url": ORG.url,
+      "logo": new URL(ogImage, Astro.site).href,
+      "image": new URL(ogImage, Astro.site).href,
+      "description": description,
+      "address": ORG.address,
+      "areaServed": ORG.areaServed,
+      "sameAs": ORG.sameAs,
+      "contactPoint": [{
+        "@type": "ContactPoint",
+        "contactType": "sales",
+        "url": "https://incierge.jp/contact/"
+      }]
+    })}></script>
+
+    <!-- パンくず（あるときだけ出力） -->
+    {breadcrumbs.length > 0 && (
+      <script type="application/ld+json" set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": breadcrumbs.map(([name, path], i) => ({
+          "@type": "ListItem",
+          "position": i + 1,
+          "name": name,
+          "item": new URL(path, Astro.site).href
+        }))
+      })}></script>
+    )}
   </head>
+
   <body class="font-body">
     <header class="container flex items-center justify-between">
       <a href="/" class="font-heading text-xl">INCIERGE</a>
@@ -21,7 +108,9 @@ import "../styles/global.css";
         <a href="/contact/" class="btn-primary">相談する</a>
       </nav>
     </header>
+
     <main class="container"><slot /></main>
+
     <footer class="container mt-16 py-10 text-sm opacity-80">
       © {new Date().getFullYear()} INCIERGE — Information Concierge
     </footer>

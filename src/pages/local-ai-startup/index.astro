@@ -1,0 +1,79 @@
+---
+import Base from "../../layouts/Base.astro";
+
+const title = "地方創業 × AI支援｜INCIERGE";
+const description =
+  "地方での創業・小規模経営に特化。ChatGPT/Notion/GASで業務を仕組み化し、少人数でも続く集客と運営を設計。甲斐市・山梨から全国対応。";
+const crumbs = [["Home","/"],["地方創業×AI支援","/local-ai-startup/"]];
+
+const faq = [
+  { q: "創業準備でAIは何から始めればいい？",
+    a: "事業の言語化→情報整理→発信の自動化の順が効率的です。ChatGPTで事業の骨子を整え、Notionで業務手順を可視化、GASで繰り返し作業を自動化します。" },
+  { q: "費用感と期間は？",
+    a: "初期設計 10〜30万円／導入伴走 月5〜15万円が目安。個人・小規模向けのライトプランも用意します。" },
+  { q: "補助金や商工会の講座と両立できる？",
+    a: "可能です。申請書の構成支援や講座の成果物を運用に接続する設計も対応します。" },
+  { q: "ITが苦手でも大丈夫？",
+    a: "対話ベースの運用マニュアルとテンプレを提供します。“続けられる設計”を重視します。" },
+];
+---
+<Base title={title} description={description} ogImage="/og.jpg" breadcrumbs={crumbs}>
+  <section class="prose max-w-3xl mx-auto py-10">
+    <h1 class="text-3xl md:text-4xl font-heading">地方創業 × AI支援</h1>
+    <p class="mt-3">{description}</p>
+    <div class="mt-6"><a href="/contact/" class="btn-primary">相談する</a></div>
+
+    <h2 class="mt-12">支援内容</h2>
+    <ul class="list-disc pl-6">
+      <li>事業の言語化・情報設計（Mission/Vision/Offer）</li>
+      <li>ChatGPT × Notion × GAS による運用の仕組み化</li>
+      <li>SNS/YouTube/LINEの最小運用セット（即日開始）</li>
+    </ul>
+
+    <h2 id="price" class="mt-12">料金と期間</h2>
+    <p>初期 10〜30万円／導入伴走 月5〜15万円（山梨割あり）。</p>
+
+    <h2 class="mt-12">よくある質問</h2>
+    <dl>
+      {faq.map((f) => (
+        <div class="mt-4">
+          <dt class="font-semibold">{f.q}</dt>
+          <dd>{f.a}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  <!-- Service + FAQ + Breadcrumb JSON-LD -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context":"https://schema.org",
+    "@type":"WebPage",
+    "name": title,
+    "breadcrumb": {
+      "@type":"BreadcrumbList",
+      "itemListElement":[
+        {"@type":"ListItem","position":1,"name":"Home","item":"https://incierge.jp/"},
+        {"@type":"ListItem","position":2,"name":"地方創業×AI支援","item":"https://incierge.jp/local-ai-startup/"}
+      ]
+    },
+    "mainEntity": {
+      "@type":"Service",
+      "name":"AI創業・業務効率化支援",
+      "serviceType":"BusinessConsulting",
+      "areaServed":["山梨県","甲信","日本"],
+      "provider":{"@type":"Organization","name":"INCIERGE","url":"https://incierge.jp"},
+      "description": description,
+      "offers":{"@type":"Offer","availability":"https://schema.org/InStock"}
+    }
+  })}></script>
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity": faq.map(f => ({
+      "@type":"Question",
+      "name": f.q,
+      "acceptedAnswer": {"@type":"Answer","text": f.a}
+    }))
+  })}></script>
+</Base>

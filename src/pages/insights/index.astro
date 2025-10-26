@@ -1,0 +1,20 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCollection } from "astro:content";
+const posts = await getCollection("insights");
+const title = "Insights｜INCIERGE";
+const description = "地方×AIマーケティングの実践知を発信。";
+---
+<Base title={title} description={description} breadcrumbs={[["Home","/"],["Insights","/insights/"]]}>
+  <section class="max-w-3xl mx-auto py-10">
+    <h1 class="text-3xl md:text-4xl font-heading">Insights</h1>
+    <ul class="mt-6 space-y-3">
+      {posts.sort((a,b)=>(a.data.date<b.data.date?1:-1)).map(p => (
+        <li>
+          <a class="underline" href={`/insights/${p.slug}/`}>{p.data.title}</a>
+          <span class="opacity-70"> — {p.data.date}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+</Base>

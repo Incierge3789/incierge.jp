@@ -1,0 +1,29 @@
+---
+import Base from "./Base.astro";
+const { data, Content } = Astro.props;
+const title = `${data.title}｜INCIERGE Insights`;
+const description = data.description;
+const breadcrumbs = [["Home","/"],["Insights","/insights/"],[data.title, Astro.url.pathname]];
+const og = data.ogImage ?? "/og.jpg";
+
+// ここで整形（ja-JP）
+const publishedText = new Intl.DateTimeFormat("ja-JP", { dateStyle: "medium" }).format(data.date);
+---
+<Base title={title} description={description} ogImage={og} breadcrumbs={breadcrumbs}>
+  <article class="prose max-w-3xl mx-auto py-10">
+    <h1 class="text-3xl md:text-4xl font-heading">{data.title}</h1>
+    <p class="opacity-70">{publishedText} — {data.author}</p>
+    <Content />
+  </article>
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline": data.title,
+    "description": data.description,
+    "datePublished": data.date.toISOString(), // ← Date型に合わせてISO出力
+    "author": {"@type":"Organization","name":"INCIERGE"},
+    "publisher":{"@type":"Organization","name":"INCIERGE","logo":{"@type":"ImageObject","url":"https://incierge.jp/og.jpg"}},
+    "mainEntityOfPage": {"@type":"WebPage","@id": new URL(Astro.url.pathname, Astro.site).href}
+  })}></script>
+</Base>
