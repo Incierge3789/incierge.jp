@@ -1,0 +1,29 @@
+---
+const { title = "INCIERGE" } = Astro.props;
+import "../styles/global.css";
+---
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="font-body">
+    <header class="container flex items-center justify-between">
+      <a href="/" class="font-heading text-xl">INCIERGE</a>
+      <nav class="flex gap-6">
+        <a href="/about/">About</a>
+        <a href="/services/">Services</a>
+        <a href="/works/">Works</a>
+        <a href="/news/">News</a>
+        <a href="/contact/" class="btn-primary">相談する</a>
+      </nav>
+    </header>
+    <main class="container"><slot /></main>
+    <footer class="container mt-16 py-10 text-sm opacity-80">
+      © {new Date().getFullYear()} INCIERGE — Information Concierge
+    </footer>
+  </body>
+</html>
