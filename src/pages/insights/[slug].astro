@@ -1,12 +1,17 @@
 ---
-import { getCollection, getEntry } from "astro:content";
+import { getCollection, getEntryBySlug } from "astro:content";
 import Article from "../../layouts/Article.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("insights");
-  return posts.map((p) => ({ params: { slug: p.slug }, props: p }));
+  return posts.map((p) => ({ params: { slug: p.slug } }));
 }
-const post = Astro.props;
-const { Content, data } = await getEntry("insights", post.slug);
+
+const { slug } = Astro.params;
+const entry = await getEntryBySlug("insights", slug);
+if (!entry) throw new Error(`Post not found: ${slug}`);
+
+const { Content } = await entry.render(); // ← render からは Content 等のみ
+const data = entry.data;                  // ← frontmatter は entry.data
 ---
 <Article data={data} Content={Content} />
