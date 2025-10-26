@@ -1,11 +1,11 @@
+@import './tokens.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import './tokens.css';
-
 html, body { background: var(--bg); color: var(--ink); }
 .container { max-width: var(--container); margin: 0 auto; padding: 24px; }
 .btn-primary { display: inline-flex; align-items: center; gap: .5rem; padding: .75rem 1.25rem; border-radius: 1rem; background: var(--ink); color: #fff; }
-.btn-ghost { text-decoration: underline; color: var(--ink); }
-.gold { color: var(--accent); }
+.btn-ghost { text-decoration: underline; color: var(--ink) }
+.gold { color: var(--accent) }
