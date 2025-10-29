@@ -36,27 +36,26 @@ const canonical = "https://incierge.jp/faq/";
     ))}
   </section>
 
-  <!-- FAQPage 構造化データ（AEO用） -->
+  <!-- JSON-LD（@graph で1本化） -->
   <script type="application/ld+json">
     {JSON.stringify({
       "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": faqs.map((f) => ({
-        "@type": "Question",
-        "name": f.q,
-        "acceptedAnswer": { "@type": "Answer", "text": f.a }
-      }))
-    })}
-  </script>
-
-  <!-- BreadcrumbList（パンくず） -->
-  <script type="application/ld+json">
-    {JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://incierge.jp/" },
-        { "@type": "ListItem", "position": 2, "name": "FAQ",  "item": "https://incierge.jp/faq/" }
+      "@graph": [
+        {
+          "@type": "FAQPage",
+          "mainEntity": faqs.map((f) => ({
+            "@type": "Question",
+            "name": f.q,
+            "acceptedAnswer": { "@type": "Answer", "text": f.a }
+          }))
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://incierge.jp/" },
+            { "@type": "ListItem", "position": 2, "name": "FAQ",  "item": "https://incierge.jp/faq/" }
+          ]
+        }
       ]
     })}
   </script>
