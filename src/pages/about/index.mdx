@@ -1,4 +1,5 @@
 ---
+layout: ../../layouts/Base.astro
 title: "INCIERGE について"
 description: "地方の『伝わらない』を、AIで変える。情報を整え、AIで外貨を稼ぐ。INCIERGE の理念・提供価値・支援内容。"
 ---
@@ -16,9 +17,9 @@ description: "地方の『伝わらない』を、AIで変える。情報を整�
 ---
 
 ## 提供する価値（Value）
-- **集客 × AEO × 検索意図設計**：検索で見つかる情報設計と内部リンク設計  
-- **自動化（GAS / Slack / Notion）**：続けられる日次オペレーション  
-- **AIコンテンツ運用**：YouTube/Threads/NoteのPDCA自動化
+- **集客 × AEO × 検索意図設計**：検索で見つかる情報設計と内部リンク設計
+- **自動化（GAS / Slack / Notion）**：続けられる日次オペレーション
+- **AIコンテンツ運用**：YouTube / Threads / note のPDCA自動化
 
 ## 行動原則（Principles）
 1. **小さく試す（PoC）** → 2. **計測** → 3. **継続運用**  
@@ -28,21 +29,21 @@ description: "地方の『伝わらない』を、AIで変える。情報を整�
 山梨・甲斐市から、「少人数でも回るAI運用」を当たり前に。
 
 ## 相談・導入の流れ
-1. 30分ヒアリング（現状・目標）  
-2. PoC設計（2–4週／最小構成）  
+1. 30分ヒアリング（現状・目標）
+2. PoC設計（2–4週／最小構成）
 3. 運用定着（週次レビュー／自動化拡張）
 
 ---
 
 ### 次に読む
-- 導入メニューは **[Services](/services/)**  
-- 地方創業×AIの進め方は **[Local AI Startup](/local-ai-startup/)**  
-- 要点のQ&Aは **[FAQ](/faq/)**  
+- 導入メニューは **[Services](/services/)**
+- 地方創業×AIの進め方は **[Local AI Startup](/local-ai-startup/)**
+- 要点のQ&Aは **[FAQ](/faq/)**
 - 最新記事は **[Insights](/insights/)**
 
-<!-- WebPage + BreadcrumbList（構造化データ） -->
+{/** WebPage + BreadcrumbList（構造化データ） */}
 <script type="application/ld+json">
-{
+{JSON.stringify({
   "@context": "https://schema.org",
   "@type": "WebPage",
   "name": "INCIERGE について",
@@ -54,5 +55,5 @@ description: "地方の『伝わらない』を、AIで変える。情報を整�
       { "@type": "ListItem", "position": 2, "name": "About", "item": "https://incierge.jp/about/" }
     ]
   }
-}
+})}
 </script>
