@@ -1,43 +1,22 @@
 ---
-import Base from "../../layouts/Base.astro";
-const title = "About｜INCIERGE";
-const description = "地方の『伝わらない』を、AIで変える。山梨・甲斐市発のAIマーケ支援／自動化の伴走パートナー。";
-const canonical = "https://incierge.jp/about/";
+layout: ../../layouts/Base.astro
+title: About｜INCIERGE
+description: INCIERGEの理念・提供価値・運用方針の紹介。
 ---
 
-<Base title={title}>
-  <head>
-    <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
-  </head>
+# INCIERGE について
 
-  # 私たちの使命
-  地方の「伝わらない」を、AIで変える。情報を整え、AIで外貨を稼ぐ。
+地方の「伝わらない」を、AIで変える。情報を整え、AIで外貨を稼ぐ。
 
-  ## 提供価値
-  - **最小運用セット**：少人数でも続く仕組み化
-  - **AEO/SEO 設計**：構造化データ・検索意図に最適化
-  - **自動化**：Slack/GAS/Pythonで省力化
+## 提供する価値
+- AIマーケ支援（集客・AEO・検索意図設計）
+- 自動化（GAS / Slack / Notion）
+- 創業・小規模向けの運用設計
 
-  ## 代表
-  小田切。山梨・甲斐市を拠点に、AI活用の内製化を伴走支援。
+## 行動原則
+1. 小さく試す（PoC） → 2. 計測 → 3. 継続運用
 
-  ## 次のアクション
-  - [AIマーケ相談](/contact/)
-  - [サービスを見る](/services/)
-  - [よくある質問](/faq/)
+---
 
-  <script type="application/ld+json">
-  {JSON.stringify({
-    "@context":"https://schema.org",
-    "@type":"BreadcrumbList",
-    "itemListElement":[
-      { "@type":"ListItem","position":1,"name":"Home","item":"https://incierge.jp/" },
-      { "@type":"ListItem","position":2,"name":"About","item":"https://incierge.jp/about/" }
-    ]
-  })}
-  </script>
-</Base>
+<p class="mt-8"><a class="underline" href="/services/">サービスを見る</a></p>
+<p class="mt-2"><a class="underline" href="/faq/">よくある質問</a></p>
