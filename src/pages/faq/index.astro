@@ -1,0 +1,51 @@
+---
+import Base from "../../layouts/Base.astro";
+
+const faqs = [
+  { q: "地方でもAIマーケティングは導入できますか？",
+    a: "はい。クラウドツールとAIエージェントを組み合わせて、地方の中小企業でも低コストで導入可能です。" },
+  { q: "AI導入でまず何から始めれば良いですか？",
+    a: "目的（集客・省力化など）を明確化 → 現状の業務棚卸し → 小さく試す、の順でPoCから始めます。" },
+  { q: "初期費用はどのくらい？",
+    a: "小規模事業者向けには月額数千円〜のスモールスタートが可能です。運用は段階的に拡張します。" },
+  { q: "支援エリアは？",
+    a: "山梨県を中心に、オンラインで全国対応可能です。" },
+];
+
+const title = "FAQ — よくある質問｜INCIERGE";
+const description = "AIマーケ支援・地方創業×AIに関するよくある質問と回答。";
+const canonical = "https://incierge.jp/faq/";
+---
+
+<Base title={title}>
+  <head>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+  </head>
+
+  <section class="py-16 max-w-3xl mx-auto">
+    <h1 class="text-3xl font-heading mb-8">よくある質問</h1>
+    {faqs.map((f) => (
+      <div class="mb-6">
+        <h2 class="text-xl font-semibold">{f.q}</h2>
+        <p class="opacity-80">{f.a}</p>
+      </div>
+    ))}
+  </section>
+
+  <!-- FAQPage 構造化データ（AEO用） -->
+  <script type="application/ld+json">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqs.map((f) => ({
+        "@type": "Question",
+        "name": f.q,
+        "acceptedAnswer": { "@type": "Answer", "text": f.a }
+      }))
+    })}
+  </script>
+</Base>
