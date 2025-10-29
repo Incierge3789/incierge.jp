@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://incierge.jp/sitemap-index.xml
