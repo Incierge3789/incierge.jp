@@ -10,6 +10,8 @@ export const onRequestPost: PagesFunction<{ INTAKE_KV: KVNamespace }> = async (c
   const ua = request.headers.get("user-agent") || "";
 
   const ct = request.headers.get("content-type") || "";
+  let turnstileToken = ""; // ← 追加
+
   if (ct.includes("application/x-www-form-urlencoded")) {
     const form = await request.formData();
     name = String(form.get("name") || "");
@@ -17,6 +19,8 @@ export const onRequestPost: PagesFunction<{ INTAKE_KV: KVNamespace }> = async (c
     message = String(form.get("message") || "");
     company = String(form.get("company") || "");
     website = String(form.get("website") || "");
+    // Turnstile は自動で cf-turnstile-response に入ります
+    turnstileToken = String(form.get("cf-turnstile-response") || "");
   } else if (ct.includes("application/json")) {
     const body = await request.json<any>();
     name = body?.name || "";
@@ -24,7 +28,27 @@ export const onRequestPost: PagesFunction<{ INTAKE_KV: KVNamespace }> = async (c
     message = body?.message || "";
     company = body?.company || "";
     website = body?.website || "";
+    // JSON 経由のときの保険（必要ならクライアントで付与）
+    turnstileToken = body?.turnstile || body?.["cf-turnstile-response"] || "";
   }
+
+  // ★ Turnstile verify ここから（このブロックを追加）
+  if (!turnstileToken) {
+    return new Response("Turnstile token missing", { status: 400 });
+  }
+  const vres = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+    method: "POST",
+    body: new URLSearchParams({
+      secret: env.TURNSTILE_SECRET as string,    // Pages の環境変数に設定
+      response: turnstileToken,
+      remoteip: request.headers.get("CF-Connecting-IP") || "",
+    }),
+  });
+  const vjson = await vres.json<any>();
+  if (!vjson?.success) {
+    return new Response("Verification failed", { status: 403 });
+  }
+  // ★ Turnstile verify ここまで
 
   // 最低限のバリデーション
   if (!name || !email || !message) {
@@ -48,10 +72,9 @@ export const onRequestPost: PagesFunction<{ INTAKE_KV: KVNamespace }> = async (c
       created_at: ctime,
       referer: request.headers.get("referer") || "",
     }),
-    { expirationTtl: 60 * 60 * 24 * 14 } // 14日保持（必要に応じて調整）
+    { expirationTtl: 60 * 60 * 24 * 14 }
   );
 
-  // サンクスページへ 303 リダイレクト
   return new Response(null, {
     status: 303,
     headers: { Location: `/contact/thanks/?ticket=${encodeURIComponent(ticket)}` },
