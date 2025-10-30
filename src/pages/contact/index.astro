@@ -2,37 +2,43 @@
 // src/pages/contact/index.astro
 import Base from "../../layouts/Base.astro";
 const title = "Contact｜INCIERGE";
-const description = "ご相談フォーム。GPTでの事前相談メモがあれば自動入力されます。";
+const desc =
+  "ご相談フォーム。GPTでの事前相談メモがあれば自動入力されます。?prefill= もしくは ?gpts= で取り込み。";
 ---
-
-<Base title={title} description={description}>
+<Base title={title} description={desc}>
   <h1>Contact</h1>
+  <p>以下のフォームにご記入ください。<br/>GPTの事前相談メモは <code>?prefill=</code> または <code>?gpts=</code> で自動入力されます。</p>
 
-  <p>
-    以下のフォームにご記入ください。<br />
-    GPTでの事前相談の要約がある場合、<strong>?prefill=</strong> または <strong>?gpts=</strong> パラメータで自動入力されます。
-  </p>
-
-  <form method="POST" action="https://formspree.io/f/your_form_id" class="mt-6 space-y-4">
+  <form method="POST" action="/api/contact" class="mt-6 space-y-4">
     <label class="block">
-      <span>お名前</span>
+      <span>お名前（必須）</span>
       <input name="name" required class="w-full border rounded px-3 py-2" />
     </label>
 
     <label class="block">
-      <span>メール</span>
+      <span>メール（必須）</span>
       <input type="email" name="email" required class="w-full border rounded px-3 py-2" />
     </label>
 
     <label class="block">
-      <span>ご相談内容</span>
-      <textarea id="message" name="message" rows="10" class="w-full border rounded px-3 py-2"></textarea>
+      <span>会社名（任意）</span>
+      <input name="company" class="w-full border rounded px-3 py-2" />
+    </label>
+
+    <label class="block">
+      <span>HP（任意）</span>
+      <input name="website" class="w-full border rounded px-3 py-2" />
+    </label>
+
+    <label class="block">
+      <span>ご相談内容（必須）</span>
+      <textarea id="message" name="message" rows="10" required class="w-full border rounded px-3 py-2"></textarea>
     </label>
 
     <button type="submit" class="btn-primary">送信</button>
   </form>
 
-  <script is:inline>
+  <script>
     (function () {
       var el = document.getElementById("message");
       if (!el) return;
@@ -48,10 +54,8 @@ const description = "ご相談フォーム。GPTでの事前相談メモがあ�
           el.parentElement.insertBefore(n, el);
         } catch (e) {}
       } else {
-        try {
-          var memo = localStorage.getItem("incierge:gpts:intake");
-          if (memo) el.value = memo;
-        } catch (e) {}
+        var memo = localStorage.getItem("incierge:gpts:intake");
+        if (memo) el.value = memo;
       }
     })();
   </script>

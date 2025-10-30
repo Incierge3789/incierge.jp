@@ -1,0 +1,30 @@
+---
+// src/pages/contact/thanks/index.astro
+import Base from "../../../layouts/Base.astro";
+const title = "送信完了｜INCIERGE";
+---
+<Base title={title}>
+  <h1>送信ありがとうございました</h1>
+  <p>内容を受け付けました。通常、1〜2営業日以内にご連絡いたします。</p>
+
+  <div id="ticketBox" class="mt-4 text-sm opacity-80"></div>
+
+  <script>
+    (async () => {
+      const box = document.getElementById("ticketBox");
+      const p = new URLSearchParams(location.search);
+      const t = p.get("ticket");
+      if (!t) return;
+      box.textContent = "受付番号: " + t;
+
+      // 任意：保存内容の一部を確認表示（必要な場合のみ）
+      try {
+        const r = await fetch(`/api/contact?ticket=${encodeURIComponent(t)}`);
+        if (r.ok) {
+          const j = await r.json();
+          // ここで必要なら j.summary などを表示する処理を追加
+        }
+      } catch {}
+    })();
+  </script>
+</Base>
