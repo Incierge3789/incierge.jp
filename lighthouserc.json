@@ -1,0 +1,33 @@
+{
+  "ci": {
+    "collect": {
+      "url": [
+        "https://incierge.jp/",
+        "https://incierge.jp/faq/",
+        "https://incierge.jp/about/"
+      ],
+      "numberOfRuns": 3
+    },
+    "assert": {
+      "preset": "lighthouse:recommended",
+      "assertions": {
+        "color-contrast": "warn",
+        "errors-in-console": "off",
+        "network-dependency-tree-insight": "off",
+        "render-blocking-resources": "warn",
+        "unminified-css": "warn",
+        "unused-css-rules": "warn",
+        "robots-txt": "off",
+        "uses-long-cache-ttl": "warn",
+        "first-contentful-paint": "warn",
+        "largest-contentful-paint": "warn",
+        "speed-index": "warn",
+        "interactive": "warn"
+      }
+    },
+    "upload": {
+      "target": "filesystem",
+      "outputDir": ".lighthouseci"
+    }
+  }
+}

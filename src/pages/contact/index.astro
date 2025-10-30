@@ -1,0 +1,58 @@
+---
+// src/pages/contact/index.astro
+import Base from "../../layouts/Base.astro";
+const title = "Contact｜INCIERGE";
+const description = "ご相談フォーム。GPTでの事前相談メモがあれば自動入力されます。";
+---
+
+<Base title={title} description={description}>
+  <h1>Contact</h1>
+
+  <p>
+    以下のフォームにご記入ください。<br />
+    GPTでの事前相談の要約がある場合、<strong>?prefill=</strong> または <strong>?gpts=</strong> パラメータで自動入力されます。
+  </p>
+
+  <form method="POST" action="https://formspree.io/f/your_form_id" class="mt-6 space-y-4">
+    <label class="block">
+      <span>お名前</span>
+      <input name="name" required class="w-full border rounded px-3 py-2" />
+    </label>
+
+    <label class="block">
+      <span>メール</span>
+      <input type="email" name="email" required class="w-full border rounded px-3 py-2" />
+    </label>
+
+    <label class="block">
+      <span>ご相談内容</span>
+      <textarea id="message" name="message" rows="10" class="w-full border rounded px-3 py-2"></textarea>
+    </label>
+
+    <button type="submit" class="btn-primary">送信</button>
+  </form>
+
+  <script is:inline>
+    (function () {
+      var el = document.getElementById("message");
+      if (!el) return;
+      var p = new URLSearchParams(location.search);
+      var raw = p.get("gpts") || p.get("prefill");
+      if (raw) {
+        try {
+          var text = p.get("gpts") ? atob(decodeURIComponent(raw)) : decodeURIComponent(raw);
+          el.value = text;
+          var n = document.createElement("div");
+          n.textContent = "AI相談メモを読み込みました。必要に応じて追記・修正してください。";
+          n.className = "mt-4 text-sm opacity-80";
+          el.parentElement.insertBefore(n, el);
+        } catch (e) {}
+      } else {
+        try {
+          var memo = localStorage.getItem("incierge:gpts:intake");
+          if (memo) el.value = memo;
+        } catch (e) {}
+      }
+    })();
+  </script>
+</Base>
