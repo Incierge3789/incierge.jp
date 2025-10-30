@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+.lighthouseci/*.html
+.lighthouseci/*.json
+.lighthouseci/manifest.json
