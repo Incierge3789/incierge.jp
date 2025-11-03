@@ -22,9 +22,14 @@ const title = "送信完了｜INCIERGE";
         const r = await fetch(`/api/contact?ticket=${encodeURIComponent(t)}`);
         if (r.ok) {
           const j = await r.json();
-          // ここで必要なら j.summary などを表示する処理を追加
+          // ここで必要なら j.summary などを表示
         }
       } catch {}
     })();
+  </script>
+
+  <!-- 到達したら1回だけGoalを送る -->
+  <script is:inline>
+    if (window.plausible) window.plausible('form_submitted');
   </script>
 </Base>
