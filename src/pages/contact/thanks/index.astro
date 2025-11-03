@@ -28,8 +28,19 @@ const title = "送信完了｜INCIERGE";
     })();
   </script>
 
-  <!-- 到達したら1回だけGoalを送る -->
+  <!-- 到達したら1回だけGoalを送る（Plausible custom event） -->
   <script is:inline>
-    if (window.plausible) window.plausible('form_submitted');
+    try {
+      const p = new URLSearchParams(location.search);
+      const t = p.get("ticket");
+      // 二重送信防止（同じ ticket は1回だけ）
+      const key = t ? `pl_ev_sent_${t}` : null;
+      if (window.plausible && t && (!key || !sessionStorage.getItem(key))) {
+        window.plausible('form_submitted', { props: { ticket: t } });
+        if (key) sessionStorage.setItem(key, '1');
+      }
+    } catch (e) {
+      console.warn('plausible event failed', e);
+    }
   </script>
 </Base>
