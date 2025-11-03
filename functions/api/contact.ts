@@ -1,15 +1,17 @@
 // functions/api/contact.ts
-export const onRequestPost: PagesFunction<{
+
+type Env = {
   INTAKE_KV: KVNamespace;
   TURNSTILE_SECRET: string;
   RESEND_API_KEY: string;
-  MAIL_FROM: string;   // 例: "INCIERGE <info@incierge.jp>"
-  MAIL_TO: string;     // 例: "info@incierge.jp"
-  SITE_NAME: string;   // 例: "INCIERGE"
-}> = async (ctx) => {
+  MAIL_FROM: string;
+  MAIL_TO: string;
+  SITE_NAME: string;
+};
+
+export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   const { request, env } = ctx;
 
-  // フォームのみ受け付け
   const ct = request.headers.get("content-type") || "";
   if (!ct.includes("application/x-www-form-urlencoded")) {
     return new Response("Unsupported Content-Type", { status: 415 });
@@ -26,7 +28,6 @@ export const onRequestPost: PagesFunction<{
   if (!name || !email || !message) return new Response("Bad Request", { status: 400 });
   if (!token) return new Response("Turnstile token missing", { status: 400 });
 
-  // Turnstile 検証
   const secret = (env.TURNSTILE_SECRET || "").trim();
   const vres = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
     method: "POST",
@@ -45,36 +46,35 @@ export const onRequestPost: PagesFunction<{
     });
   }
 
-  // 保存
   const ticket = crypto.randomUUID();
-  await ctx.env.INTAKE_KV.put(
-    `contact:${ticket}`,
-    JSON.stringify({
-      ticket, name, email, company, website, message,
-      ua: request.headers.get("user-agent") || "",
-      ip: (request.headers.get("cf-connecting-ip") || "").replace(/\.\d+$/, ".***"),
-      created_at: new Date().toISOString(),
-      referer: request.headers.get("referer") || "",
-    }),
-    { expirationTtl: 60 * 60 * 24 * 14 }
-  );
+  const created_at = new Date().toISOString();
+  const body = {
+    ticket, name, email, company, website, message,
+    ua: request.headers.get("user-agent") || "",
+    ip: (request.headers.get("cf-connecting-ip") || "").replace(/\.\d+$/, ".***"),
+    created_at,
+    referer: request.headers.get("referer") || "",
+  };
 
-  // ===== Resend 送信（通知 & 自動返信）=====
+  await ctx.env.INTAKE_KV.put(`contact:${ticket}`, JSON.stringify(body), {
+    expirationTtl: 60 * 60 * 24 * 14,
+  });
+
+  const ts = created_at.replace(/[-:]/g,"").replace(/\.\d+Z/,"Z"); // 20251102T123456Z
+  await ctx.env.INTAKE_KV.put(`contact_by_time:${ts}:${ticket}`, "1", {
+    expirationTtl: 60 * 60 * 24 * 14,
+  });
+
   const RESEND = (env.RESEND_API_KEY || "").trim();
   const FROM   = (env.MAIL_FROM || "").trim();
   const TO     = (env.MAIL_TO || "").trim();
   const SITE   = (env.SITE_NAME || "INCIERGE").trim();
 
-  // 1) 管理者通知
   const adminResp = await fetch("https://api.resend.com/emails", {
     method: "POST",
-    headers: {
-      "Authorization": `Bearer ${RESEND}`,
-      "Content-Type": "application/json",
-    },
+    headers: { "Authorization": `Bearer ${RESEND}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      from: FROM,
-      to:   [TO],
+      from: FROM, to: [TO],
       subject: `【${SITE}】新しいお問い合わせ: ${name}`,
       reply_to: email,
       text: [
@@ -88,51 +88,44 @@ export const onRequestPost: PagesFunction<{
       ].join("\n"),
     }),
   });
-  const adminJson = await adminResp.json();
-  console.log("Resend admin result:", adminJson);
+  console.log("Resend admin result:", await adminResp.json());
 
-  // 2) 送信者に自動返信（サンクス）
   const ackResp = await fetch("https://api.resend.com/emails", {
     method: "POST",
-    headers: {
-      "Authorization": `Bearer ${RESEND}`,
-      "Content-Type": "application/json",
-    },
+    headers: { "Authorization": `Bearer ${RESEND}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      from: FROM,
-      to:   [email],
+      from: FROM, to: [email],
       subject: `【${SITE}】お問い合わせを受け付けました`,
       text: [
-        `${name} 様`,
-        "",
-        `${SITE} へのお問い合わせありがとうございます。以下の内容で受け付けました。担当より折り返しご連絡いたします。`,
-        "",
-        `--- ご入力内容 ---`,
-        `お名前: ${name}`,
-        `メール: ${email}`,
-        `会社名: ${company}`,
-        `HP: ${website}`,
-        `----`,
-        message,
-        "",
-        `このメールにご返信いただければ、そのままやり取り可能です。`,
+        `${name} 様`, "", `${SITE} へのお問い合わせありがとうございます。以下の内容で受け付けました。担当より折り返しご連絡いたします。`,
+        "", `--- ご入力内容 ---`,
+        `お名前: ${name}`, `メール: ${email}`, `会社名: ${company}`, `HP: ${website}`,
+        `----`, message, "", `このメールにご返信いただければ、そのままやり取り可能です。`,
       ].join("\n"),
     }),
   });
-  const ackJson = await ackResp.json();
-  console.log("Resend ack result:", ackJson);
-  // ===== /Resend =====
+  console.log("Resend ack result:", await ackResp.json());
 
-  // サンクスへリダイレクト
   return new Response(null, {
     status: 303,
     headers: { Location: `/contact/thanks/?ticket=${encodeURIComponent(ticket)}` },
   });
 };
 
-// 簡易診断
-export const onRequestGet: PagesFunction<{ TURNSTILE_SECRET: string; RESEND_API_KEY: string; MAIL_FROM: string; MAIL_TO: string; SITE_NAME: string; }> = async (ctx) => {
+// GET: thanksページ用の確認API / 環境診断
+export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   const url = new URL(ctx.request.url);
+
+  const ticket = url.searchParams.get("ticket");
+  if (ticket) {
+    const key = `contact:${ticket}`;
+    const raw = await ctx.env.INTAKE_KV.get(key);
+    if (!raw) return new Response(JSON.stringify({ ok:false, exists:false }), { status: 404, headers: { "content-type":"application/json" }});
+    return new Response(JSON.stringify({ ok:true, exists:true, item: JSON.parse(raw) }), {
+      status: 200, headers: { "content-type":"application/json" }
+    });
+  }
+
   if (url.searchParams.get("diag") === "1") {
     return new Response(JSON.stringify({
       ok: true,
@@ -145,5 +138,6 @@ export const onRequestGet: PagesFunction<{ TURNSTILE_SECRET: string; RESEND_API_
       }
     }), { status: 200, headers: { "content-type": "application/json" } });
   }
+
   return new Response("ticket required", { status: 400 });
 };
