@@ -60,6 +60,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     expirationTtl: 60 * 60 * 24 * 14,
   });
 
+await ctx.env.INTAKE_KV.put("contact_time:" + new Date().toISOString() + ":" + ticket, "1", {expirationTtl: 60*60*24*14});
   const ts = created_at.replace(/[-:]/g,"").replace(/\.\d+Z/,"Z"); // 20251102T123456Z
   await ctx.env.INTAKE_KV.put(`contact_by_time:${ts}:${ticket}`, "1", {
     expirationTtl: 60 * 60 * 24 * 14,
@@ -113,31 +114,4 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
 };
 
 // GET: thanksページ用の確認API / 環境診断
-export const onRequestGet: PagesFunction<Env> = async (ctx) => {
-  const url = new URL(ctx.request.url);
-
-  const ticket = url.searchParams.get("ticket");
-  if (ticket) {
-    const key = `contact:${ticket}`;
-    const raw = await ctx.env.INTAKE_KV.get(key);
-    if (!raw) return new Response(JSON.stringify({ ok:false, exists:false }), { status: 404, headers: { "content-type":"application/json" }});
-    return new Response(JSON.stringify({ ok:true, exists:true, item: JSON.parse(raw) }), {
-      status: 200, headers: { "content-type":"application/json" }
-    });
-  }
-
-  if (url.searchParams.get("diag") === "1") {
-    return new Response(JSON.stringify({
-      ok: true,
-      env: {
-        hasTurnstile: !!ctx.env.TURNSTILE_SECRET,
-        hasResend: !!ctx.env.RESEND_API_KEY,
-        hasMailFrom: !!ctx.env.MAIL_FROM,
-        hasMailTo: !!ctx.env.MAIL_TO,
-        siteName: ctx.env.SITE_NAME || ""
-      }
-    }), { status: 200, headers: { "content-type": "application/json" } });
-  }
-
-  return new Response("ticket required", { status: 400 });
-};
+export const onRequestGet: PagesFunction<{ INTAKE_KV: KVNamespace; }>=async(c)=>{const u=new URL(c.request.url);const t=u.searchParams.get("ticket");if(!t)return new Response("ticket required",{status:400});const k=`contact:`;const v=await c.env.INTAKE_KV.get(k);if(!v)return new Response(JSON.stringify({ok:false,found:false}),{status:404,headers:{"content-type":"application/json"}});return new Response(v,{status:200,headers:{"content-type":"application/json"}});};
