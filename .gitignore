@@ -25,3 +25,4 @@ pnpm-debug.log*
 .lighthouseci/*.html
 .lighthouseci/*.json
 .lighthouseci/manifest.json
+src/_backup/

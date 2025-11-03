@@ -2,35 +2,29 @@
 // src/pages/automation/index.astro
 import Base from "../../layouts/Base.astro";
 
-const title = "AI自動化で日々の反復作業を“即”仕組み化｜INCIERGE";
+const title = "AI業務自動化｜INCIERGE（インシェルジュ）";
 const description =
-  "ChatGPT・GAS・Slack・Notionを組み合わせて、中小企業の業務を最短2週間でAI自動化。経理・営業・問い合わせの反復作業を仕組み化し、工数/ミス/待機時間を大幅削減。無料AI自動化診断あり。";
+  "事務・営業・問い合わせの反復作業を、ChatGPT × Slack × Notionで“現場運用できる仕組み”に。最短2週間で導入、まずは無料AI診断。";
 
-// Base.astro 側で canonical は Astro.site から自動生成されます
-const ogImage = "/og/automation.png"; // 既に配置済み
+const ogImage = "/og/automation.png";
 const breadcrumbs: Array<[string, string]> = [
   ["Home", "/"],
   ["AI自動化", "/automation/"],
 ];
 
-// 価格は“明示せず、無料診断→見積り”方針。ServiceのJSON-LDをページ側で補完
 const serviceJsonLd = {
   "@context": "https://schema.org",
   "@type": "Service",
   "name": "AI自動化支援（業務・経理・問い合わせ）",
   "serviceType": "AI Automation / Workflow Automation",
-  "provider": {
-    "@type": "Organization",
-    "name": "INCIERGE",
-    "url": "https://incierge.jp"
-  },
+  "provider": { "@type": "Organization", "name": "INCIERGE", "url": "https://incierge.jp" },
   "description": "ChatGPT・GAS・Slack・Notion連携で業務を自動化。経理・営業・問い合わせの反復作業を仕組み化。",
   "areaServed": "JP",
   "offers": {
     "@type": "Offer",
     "price": "0",
     "priceCurrency": "JPY",
-    "name": "無料診断 → お見積り（案件ごとに最適化）",
+    "name": "無料診断 → お見積り（案件最適化）",
     "url": "https://incierge.jp/automation/"
   }
 };
@@ -40,20 +34,30 @@ const serviceJsonLd = {
   <!-- Hero -->
   <section class="space-y-5">
     <h1 class="text-3xl md:text-5xl font-semibold">
-      AI 自動化で、日々の反復作業を“即”仕組み化
+      事務・営業の“時間泥棒”を、AIが2週間で止める。
     </h1>
     <p class="text-lg md:text-xl">
-      ChatGPT / GAS / Slack / Notion を組み合わせて、現場に合った業務自動化を設計・実装。人手不足・残業・ミスを減らし、最短2週間で運用開始。
+      ChatGPT / GAS / Slack / Notion を組み合わせて、現場で回る自動化を設計・実装。人手不足・残業・入力作業を減らして、チームの時間を取り戻す。
     </p>
     <div class="flex gap-3">
-      <a href="/contact" class="btn-primary">無料AI自動化診断</a>
+      <a href="/contact" class="btn-primary" onclick="plausible && plausible('cta_clicked',{props:{pos:'hero'}})">無料AI診断を受ける</a>
       <a href="/contact" class="btn-ghost">問い合わせフォームへ</a>
     </div>
   </section>
 
-  <!-- Use cases -->
+  <!-- Problems -->
+  <section class="mt-12 space-y-4">
+    <h2 class="text-2xl md:text-3xl font-semibold">こんな課題、ありませんか？</h2>
+    <ul class="list-disc pl-6">
+      <li>毎月の請求処理・台帳転記・社内承認に <strong>数時間</strong> かかる</li>
+      <li>問い合わせメールの対応が <strong>属人化</strong>・抜け漏れになる</li>
+      <li>Slack・Notion を導入したが <strong>活用しきれていない</strong></li>
+    </ul>
+  </section>
+
+  <!-- Solutions -->
   <section class="mt-16 space-y-6">
-    <h2 class="text-2xl md:text-3xl font-semibold">経理・営業・問い合わせを横断して自動化</h2>
+    <h2 class="text-2xl md:text-3xl font-semibold">INCIERGEができること</h2>
     <ul class="grid md:grid-cols-3 gap-6 text-sm leading-6">
       <li class="p-5 rounded-2xl border">
         <h3 class="font-semibold mb-2">経理 自動化</h3>
@@ -65,19 +69,41 @@ const serviceJsonLd = {
       </li>
       <li class="p-5 rounded-2xl border">
         <h3 class="font-semibold mb-2">問い合わせ 自動化</h3>
-        <p>フォーム→AI要約→重み付け→Slack通知→Notion蓄積。</p>
+        <p>フォーム→AI要約→重複検出→Slack通知→Notion蓄積。</p>
       </li>
     </ul>
   </section>
 
   <!-- Effects -->
   <section class="mt-16 space-y-6">
-    <h2 class="text-2xl md:text-3xl font-semibold">どのくらい効果が出る？</h2>
+    <h2 class="text-2xl md:text-3xl font-semibold">導入効果</h2>
     <ul class="list-disc pl-6">
-      <li>請求書処理：30分/件 → <strong>5分/件（-83%）</strong></li>
+      <li>請求処理：30分/件 → <strong>5分/件（-83%）</strong></li>
       <li>初回対応：待機 → <strong>即時返信（自動）</strong></li>
       <li>日報・週報：手入力 → <strong>自動要約＆集計</strong></li>
     </ul>
+  </section>
+
+  <!-- What the diagnosis gives -->
+  <section class="mt-16 space-y-4">
+    <h2 class="text-2xl md:text-3xl font-semibold">無料AI診断で分かること（15分）</h2>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="p-5 rounded-2xl border">
+        <h3 class="font-semibold mb-1">① 自動化の優先順位</h3>
+        <p class="text-sm opacity-80">“今すぐ効く”ボトルネック工程の特定。</p>
+      </div>
+      <div class="p-5 rounded-2xl border">
+        <h3 class="font-semibold mb-1">② 概算の効果とコスト</h3>
+        <p class="text-sm opacity-80">削減見込み時間・概算コスト・ROIイメージ。</p>
+      </div>
+      <div class="p-5 rounded-2xl border">
+        <h3 class="font-semibold mb-1">③ 実装のたたき台</h3>
+        <p class="text-sm opacity-80">利用SaaS・承認フロー・運用イメージ。</p>
+      </div>
+    </div>
+    <div class="mt-4">
+      <a href="/contact" class="btn-primary" onclick="plausible && plausible('cta_clicked',{props:{pos:'mid'}})">無料AI診断を予約する</a>
+    </div>
   </section>
 
   <!-- Process -->
@@ -91,37 +117,34 @@ const serviceJsonLd = {
     </ol>
   </section>
 
-  <!-- Pricing（“価格は明示せず、構造で信頼”方式） -->
+  <!-- Pricing（見積ベース。目安は details 内） -->
   <section class="mt-16 space-y-4">
-    <h2 class="text-2xl md:text-3xl font-semibold">料金の考え方（まずは“効果の出る1フロー”から）</h2>
+    <h2 class="text-2xl md:text-3xl font-semibold">料金の考え方（“効果の出る1フロー”から）</h2>
     <ul class="list-disc pl-6 space-y-2">
-      <li><strong>案件ごとに最適構成：</strong> 既存SaaS・社内ルール・承認フローに合わせて変動</li>
-      <li><strong>小さく速く：</strong> 設計→実装→定着を短サイクルで回し、投資対効果を可視化</li>
-      <li><strong>無料診断→見積：</strong> 15–30分のヒアリング後、要件と効果見込みを提示</li>
+      <li><strong>案件最適化：</strong> 既存SaaS・社内ルール・承認フローに合わせて構成</li>
+      <li><strong>小さく速く：</strong> 設計→実装→定着を短サイクルでROIを可視化</li>
+      <li><strong>無料診断→見積：</strong> 15–30分のヒアリング後に提示</li>
     </ul>
-
     <details class="p-4 rounded-2xl border">
-      <summary class="font-semibold cursor-pointer">料金の目安を知りたい方へ（任意で開く）</summary>
+      <summary class="font-semibold cursor-pointer">料金の目安（開閉）</summary>
       <div class="mt-3 grid md:grid-cols-3 gap-6">
         <div class="p-4 rounded-xl border">
-          <h3 class="font-semibold mb-1">AI導入／単一フロー</h3>
-          <p class="text-sm text-slate-600">問い合わせ→Slack→スプレッドシート 等</p>
+          <h3 class="font-semibold mb-1">単一フロー</h3>
+          <p class="text-sm opacity-80">問い合わせ→Slack→スプレッドシート 等</p>
           <p class="mt-2">目安：<strong>¥50,000〜</strong></p>
         </div>
         <div class="p-4 rounded-xl border">
           <h3 class="font-semibold mb-1">2〜3フロー連携</h3>
-          <p class="text-sm text-slate-600">CRM登録・自動返信・承認・ログ</p>
+          <p class="text-sm opacity-80">CRM登録・自動返信・承認・ログ</p>
           <p class="mt-2">目安：<strong>¥200,000〜</strong></p>
         </div>
         <div class="p-4 rounded-xl border">
           <h3 class="font-semibold mb-1">創業・研修プログラム</h3>
-          <p class="text-sm text-slate-600">全3回／社内定着支援</p>
+          <p class="text-sm opacity-80">全3回／社内定着支援</p>
           <p class="mt-2">目安：<strong>¥30,000〜</strong></p>
         </div>
       </div>
-      <p class="text-sm text-slate-500 mt-3">
-        ※ 正式見積は無料診断後に提示。補助金対象となる場合があります（申請伴走可）。
-      </p>
+      <p class="text-sm opacity-60 mt-3">※ 正式見積は無料診断後に確定。補助金対象になる場合あり（申請伴走可）。</p>
     </details>
   </section>
 
@@ -145,14 +168,13 @@ const serviceJsonLd = {
   <!-- Final CTA -->
   <section class="mt-16 text-center space-y-4">
     <h2 class="text-2xl md:text-3xl font-semibold">無料AI自動化診断（15分）</h2>
-    <p>“時間を奪っている作業”を洗い出し、効果が出る順にロードマップをご提案します。</p>
+    <p>“時間を奪っている作業”を洗い出し、効果順にロードマップをご提案します。</p>
     <div class="flex gap-3 justify-center">
-      <a href="/contact" class="btn-primary">問い合わせる</a>
+      <a href="/contact" class="btn-primary" onclick="plausible && plausible('cta_clicked',{props:{pos:'final'}})">問い合わせる</a>
       <a href="/contact" class="btn-ghost">まず相談だけ</a>
     </div>
-    <p class="text-sm text-slate-500">山梨拠点。オンライン全国対応。</p>
+    <p class="text-sm opacity-60">山梨拠点。オンライン全国対応。</p>
   </section>
 
-  <!-- Service JSON-LD（BaseのOrganization/LocalBusinessに加えて補完） -->
   <script type="application/ld+json" set:html={JSON.stringify(serviceJsonLd)} />
 </Base>
