@@ -1,0 +1,158 @@
+---
+// src/pages/automation/index.astro
+import Base from "../../layouts/Base.astro";
+
+const title = "AI自動化で日々の反復作業を“即”仕組み化｜INCIERGE";
+const description =
+  "ChatGPT・GAS・Slack・Notionを組み合わせて、中小企業の業務を最短2週間でAI自動化。経理・営業・問い合わせの反復作業を仕組み化し、工数/ミス/待機時間を大幅削減。無料AI自動化診断あり。";
+
+// Base.astro 側で canonical は Astro.site から自動生成されます
+const ogImage = "/og/automation.png"; // 既に配置済み
+const breadcrumbs: Array<[string, string]> = [
+  ["Home", "/"],
+  ["AI自動化", "/automation/"],
+];
+
+// 価格は“明示せず、無料診断→見積り”方針。ServiceのJSON-LDをページ側で補完
+const serviceJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "AI自動化支援（業務・経理・問い合わせ）",
+  "serviceType": "AI Automation / Workflow Automation",
+  "provider": {
+    "@type": "Organization",
+    "name": "INCIERGE",
+    "url": "https://incierge.jp"
+  },
+  "description": "ChatGPT・GAS・Slack・Notion連携で業務を自動化。経理・営業・問い合わせの反復作業を仕組み化。",
+  "areaServed": "JP",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "JPY",
+    "name": "無料診断 → お見積り（案件ごとに最適化）",
+    "url": "https://incierge.jp/automation/"
+  }
+};
+---
+
+<Base {title} {description} {ogImage} {breadcrumbs}>
+  <!-- Hero -->
+  <section class="space-y-5">
+    <h1 class="text-3xl md:text-5xl font-semibold">
+      AI 自動化で、日々の反復作業を“即”仕組み化
+    </h1>
+    <p class="text-lg md:text-xl">
+      ChatGPT / GAS / Slack / Notion を組み合わせて、現場に合った業務自動化を設計・実装。人手不足・残業・ミスを減らし、最短2週間で運用開始。
+    </p>
+    <div class="flex gap-3">
+      <a href="/contact" class="btn-primary">無料AI自動化診断</a>
+      <a href="/contact" class="btn-ghost">問い合わせフォームへ</a>
+    </div>
+  </section>
+
+  <!-- Use cases -->
+  <section class="mt-16 space-y-6">
+    <h2 class="text-2xl md:text-3xl font-semibold">経理・営業・問い合わせを横断して自動化</h2>
+    <ul class="grid md:grid-cols-3 gap-6 text-sm leading-6">
+      <li class="p-5 rounded-2xl border">
+        <h3 class="font-semibold mb-2">経理 自動化</h3>
+        <p>請求書の抽出→台帳転記→仕訳メモ→Slack承認。</p>
+      </li>
+      <li class="p-5 rounded-2xl border">
+        <h3 class="font-semibold mb-2">営業 自動化</h3>
+        <p>問い合わせ→スコア→CRM登録→初回メール→担当アサイン。</p>
+      </li>
+      <li class="p-5 rounded-2xl border">
+        <h3 class="font-semibold mb-2">問い合わせ 自動化</h3>
+        <p>フォーム→AI要約→重み付け→Slack通知→Notion蓄積。</p>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Effects -->
+  <section class="mt-16 space-y-6">
+    <h2 class="text-2xl md:text-3xl font-semibold">どのくらい効果が出る？</h2>
+    <ul class="list-disc pl-6">
+      <li>請求書処理：30分/件 → <strong>5分/件（-83%）</strong></li>
+      <li>初回対応：待機 → <strong>即時返信（自動）</strong></li>
+      <li>日報・週報：手入力 → <strong>自動要約＆集計</strong></li>
+    </ul>
+  </section>
+
+  <!-- Process -->
+  <section class="mt-16 space-y-6">
+    <h2 class="text-2xl md:text-3xl font-semibold">導入プロセス（最短2週間）</h2>
+    <ol class="list-decimal pl-6 space-y-2">
+      <li>無料診断：効果が出る対象を特定</li>
+      <li>設計：データ流れ図/承認フロー定義</li>
+      <li>実装：Cloudflare Functions + 各SaaS連携</li>
+      <li>定着化：ダッシュボード・小改善</li>
+    </ol>
+  </section>
+
+  <!-- Pricing（“価格は明示せず、構造で信頼”方式） -->
+  <section class="mt-16 space-y-4">
+    <h2 class="text-2xl md:text-3xl font-semibold">料金の考え方（まずは“効果の出る1フロー”から）</h2>
+    <ul class="list-disc pl-6 space-y-2">
+      <li><strong>案件ごとに最適構成：</strong> 既存SaaS・社内ルール・承認フローに合わせて変動</li>
+      <li><strong>小さく速く：</strong> 設計→実装→定着を短サイクルで回し、投資対効果を可視化</li>
+      <li><strong>無料診断→見積：</strong> 15–30分のヒアリング後、要件と効果見込みを提示</li>
+    </ul>
+
+    <details class="p-4 rounded-2xl border">
+      <summary class="font-semibold cursor-pointer">料金の目安を知りたい方へ（任意で開く）</summary>
+      <div class="mt-3 grid md:grid-cols-3 gap-6">
+        <div class="p-4 rounded-xl border">
+          <h3 class="font-semibold mb-1">AI導入／単一フロー</h3>
+          <p class="text-sm text-slate-600">問い合わせ→Slack→スプレッドシート 等</p>
+          <p class="mt-2">目安：<strong>¥50,000〜</strong></p>
+        </div>
+        <div class="p-4 rounded-xl border">
+          <h3 class="font-semibold mb-1">2〜3フロー連携</h3>
+          <p class="text-sm text-slate-600">CRM登録・自動返信・承認・ログ</p>
+          <p class="mt-2">目安：<strong>¥200,000〜</strong></p>
+        </div>
+        <div class="p-4 rounded-xl border">
+          <h3 class="font-semibold mb-1">創業・研修プログラム</h3>
+          <p class="text-sm text-slate-600">全3回／社内定着支援</p>
+          <p class="mt-2">目安：<strong>¥30,000〜</strong></p>
+        </div>
+      </div>
+      <p class="text-sm text-slate-500 mt-3">
+        ※ 正式見積は無料診断後に提示。補助金対象となる場合があります（申請伴走可）。
+      </p>
+    </details>
+  </section>
+
+  <!-- FAQ -->
+  <section class="mt-16 space-y-6">
+    <h2 class="text-2xl md:text-3xl font-semibold">よくある質問</h2>
+    <details class="p-4 rounded-2xl border">
+      <summary class="font-semibold cursor-pointer">どの業務から自動化すべき？</summary>
+      <p>頻度・所要時間・人数・エラー率の高い作業から、まずは1フローで始めます。</p>
+    </details>
+    <details class="p-4 rounded-2xl border">
+      <summary class="font-semibold cursor-pointer">セキュリティは？</summary>
+      <p>お客様環境内（Google Workspace / Notion / Slack）での処理が基本。鍵は環境変数で管理します。</p>
+    </details>
+    <details class="p-4 rounded-2xl border">
+      <summary class="font-semibold cursor-pointer">費用と期間の目安は？</summary>
+      <p>小規模は2週間・10万円〜。無料診断後に確定見積りを提示します。</p>
+    </details>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="mt-16 text-center space-y-4">
+    <h2 class="text-2xl md:text-3xl font-semibold">無料AI自動化診断（15分）</h2>
+    <p>“時間を奪っている作業”を洗い出し、効果が出る順にロードマップをご提案します。</p>
+    <div class="flex gap-3 justify-center">
+      <a href="/contact" class="btn-primary">問い合わせる</a>
+      <a href="/contact" class="btn-ghost">まず相談だけ</a>
+    </div>
+    <p class="text-sm text-slate-500">山梨拠点。オンライン全国対応。</p>
+  </section>
+
+  <!-- Service JSON-LD（BaseのOrganization/LocalBusinessに加えて補完） -->
+  <script type="application/ld+json" set:html={JSON.stringify(serviceJsonLd)} />
+</Base>
