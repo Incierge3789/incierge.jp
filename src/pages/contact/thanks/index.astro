@@ -28,19 +28,30 @@ const title = "送信完了｜INCIERGE";
     })();
   </script>
 
-  <!-- 到達したら1回だけGoalを送る（Plausible custom event） -->
+  <!-- 到達したら1回だけ Goal を送る（確実発火＆二重防止） -->
   <script is:inline>
-    try {
-      const p = new URLSearchParams(location.search);
-      const t = p.get("ticket");
-      // 二重送信防止（同じ ticket は1回だけ）
-      const key = t ? `pl_ev_sent_${t}` : null;
-      if (window.plausible && t && (!key || !sessionStorage.getItem(key))) {
-        window.plausible('form_submitted', { props: { ticket: t } });
-        if (key) sessionStorage.setItem(key, '1');
+    (function () {
+      // 同タブ内での二重送信防止
+      if (sessionStorage.getItem('pl_form_fired')) return;
+      sessionStorage.setItem('pl_form_fired', '1');
+
+      var send = function () {
+        if (window.plausible) {
+          const p = new URLSearchParams(location.search);
+          const t = p.get("ticket");
+          window.plausible('form_submitted', { props: { has_ticket: t ? 'yes' : 'no', ticket: t || '' }});
+        } else {
+          // script.js読込前なら100ms後に再試行
+          setTimeout(send, 100);
+        }
+      };
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', send, { once: true });
+      } else {
+        send();
       }
-    } catch (e) {
-      console.warn('plausible event failed', e);
-    }
+    })();
   </script>
+
 </Base>
