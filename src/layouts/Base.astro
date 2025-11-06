@@ -100,12 +100,13 @@ const ORG = {
         }))
       })}></script>
     )}
-    <script async src="https://plausible.io/js/pa-sitTol7K5M-vDVxh6lkpr.js"></script>
+
+    <!-- 追加する（自ドメイン配下のプロキシ経由で読み込む） -->
+    <script async defer data-domain="incierge.jp" data-api="/api/plausible" src="/js/script.js"></script>
     <script>
       window.plausible = window.plausible || function(){(plausible.q = plausible.q || []).push(arguments)};
-      plausible.init = plausible.init || function(i){plausible.o = i || {}};
-      plausible.init();
     </script>
+
   </head>
 
   <body class="font-body">
