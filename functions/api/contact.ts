@@ -6,6 +6,8 @@ export const onRequestPost: PagesFunction<{
   MAIL_FROM: string;
   MAIL_TO: string;
   SITE_NAME: string;
+  SUPABASE_URL: string;
+  SUPABASE_SERVICE_ROLE: string;
 }> = async (ctx) => {
   const { request, env } = ctx;
 
@@ -46,15 +48,15 @@ export const onRequestPost: PagesFunction<{
 
   const ticket = crypto.randomUUID();
 
-  // --- 追加: 参照元/UTM を抽出（最小実装） ---
+  // --- 参照元/UTM 抽出（既存＋保持） ---
   const referer = request.headers.get("referer") || "";
   const refURL  = (() => { try { return new URL(referer); } catch { return null; } })();
   const utm = {
-    utm_source:  refURL?.searchParams.get("utm_source")  || "",
-    utm_medium:  refURL?.searchParams.get("utm_medium")  || "",
-    utm_campaign:refURL?.searchParams.get("utm_campaign")|| "",
-    utm_term:    refURL?.searchParams.get("utm_term")    || "",
-    utm_content: refURL?.searchParams.get("utm_content") || "",
+    utm_source:   refURL?.searchParams.get("utm_source")   || "",
+    utm_medium:   refURL?.searchParams.get("utm_medium")   || "",
+    utm_campaign: refURL?.searchParams.get("utm_campaign") || "",
+    utm_term:     refURL?.searchParams.get("utm_term")     || "",
+    utm_content:  refURL?.searchParams.get("utm_content")  || "",
   };
 
   const payload = {
@@ -63,7 +65,6 @@ export const onRequestPost: PagesFunction<{
     ip: (request.headers.get("cf-connecting-ip") || "").replace(/\.\d+$/, ".***"),
     created_at: new Date().toISOString(),
     referer,
-    // --- 追加: UTM保持 ---
     ...utm,
   };
 
@@ -110,7 +111,48 @@ export const onRequestPost: PagesFunction<{
   });
   console.log("Resend ack result:", await ackResp.json());
 
-  // --- 追加: Plausible に custom event 送信（props に UTM/ticket）---
+  // --- 追加: Supabase 保存 ---
+  try {
+    const SUPA_URL = (env.SUPABASE_URL || "").trim();
+    const SUPA_KEY = (env.SUPABASE_SERVICE_ROLE || "").trim();
+    if (SUPA_URL && SUPA_KEY) {
+      const ins = await fetch(`${SUPA_URL}/rest/v1/contacts`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPA_KEY,
+          "Authorization": `Bearer ${SUPA_KEY}`,
+          "Prefer": "return=minimal"
+        },
+        body: JSON.stringify({
+          ticket,
+          name,
+          email,
+          company,
+          website,
+          message,
+          referer,
+          ua: payload.ua,
+          ip_masked: payload.ip,
+          utm_source: utm.utm_source,
+          utm_medium: utm.utm_medium,
+          utm_campaign: utm.utm_campaign,
+          utm_term: utm.utm_term,
+          utm_content: utm.utm_content,
+          created_at: payload.created_at
+        })
+      });
+      if (!ins.ok) {
+        console.log("Supabase insert failed:", ins.status, await ins.text());
+      }
+    } else {
+      console.log("Supabase env missing; skip insert");
+    }
+  } catch (e) {
+    console.log("Supabase insert error:", e);
+  }
+
+  // --- Plausible に custom event 送信（既存：props に UTM/ticket）---
   try {
     await fetch("https://incierge.jp/api/plausible", {
       method: "POST",
