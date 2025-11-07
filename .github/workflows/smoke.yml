@@ -1,0 +1,54 @@
+name: Smoke test (Plausible proxy)
+
+on:
+  workflow_dispatch: {}        # 手動実行
+  push:
+    branches: [ "main" ]       # mainブランチpush時にも自動実行
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    env:
+      BASE_URL: https://incierge.jp
+    steps:
+      - name: Check out (for logs only)
+        uses: actions/checkout@v4
+
+      - name: Show target
+        run: echo "Target = $BASE_URL"
+
+      - name: 1) GET /js/script should be JS (200 + application/javascript)
+        run: |
+          set -euxo pipefail
+          curl -sS -D /tmp/h -o /tmp/body "$BASE_URL/js/script"
+          echo "---- headers ----"; cat /tmp/h
+          grep -qE '^HTTP/[0-9.]+ 200' /tmp/h
+          grep -qi 'content-type: *application/javascript' /tmp/h
+
+      - name: 2) POST /api/plausible pageview should be 202
+        run: |
+          set -euxo pipefail
+          curl -sS -i "$BASE_URL/api/plausible" \
+            -H 'Content-Type: application/json' \
+            -H "User-Agent: CI-Smoke/1.0" \
+            -H "Referer: $BASE_URL/contact/" \
+            --data '{"name":"pageview","url":"'"$BASE_URL"'/contact/","domain":"incierge.jp"}' |
+          tee /tmp/resp.txt
+          grep -qE '^HTTP/[0-9.]+ 202' /tmp/resp.txt
+
+      - name: 3) POST /api/plausible custom event should be 202
+        run: |
+          set -euxo pipefail
+          curl -sS -i "$BASE_URL/api/plausible" \
+            -H 'Content-Type: application/json' \
+            -H "User-Agent: CI-Smoke/1.0" \
+            -H "Referer: $BASE_URL/contact/thanks/?ticket=CI-SMOKE" \
+            --data '{"name":"form_submitted","url":"'"$BASE_URL"'/contact/thanks/?ticket=CI-SMOKE","domain":"incierge.jp","props":{"ticket":"CI-SMOKE"}}' |
+          tee /tmp/resp2.txt
+          grep -qE '^HTTP/[0-9.]+ 202' /tmp/resp2.txt
+
+      - name: Soft warn if plausible dropped header is present
+        run: |
+          if grep -qi '^x-plausible-dropped: 1' /tmp/resp.txt /tmp/resp2.txt 2>/dev/null; then
+            echo "::warning ::Plausible indicated drop (x-plausible-dropped: 1)"
+          fi
