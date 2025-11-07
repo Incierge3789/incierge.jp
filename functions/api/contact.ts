@@ -25,6 +25,7 @@ export const onRequestPost: PagesFunction<{
   if (!name || !email || !message) return new Response("Bad Request", { status: 400 });
   if (!token) return new Response("Turnstile token missing", { status: 400 });
 
+  // --- Turnstile 検証（既存） ---
   const secret = (env.TURNSTILE_SECRET || "").trim();
   const vres = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
     method: "POST",
@@ -44,22 +45,37 @@ export const onRequestPost: PagesFunction<{
   }
 
   const ticket = crypto.randomUUID();
+
+  // --- 追加: 参照元/UTM を抽出（最小実装） ---
+  const referer = request.headers.get("referer") || "";
+  const refURL  = (() => { try { return new URL(referer); } catch { return null; } })();
+  const utm = {
+    utm_source:  refURL?.searchParams.get("utm_source")  || "",
+    utm_medium:  refURL?.searchParams.get("utm_medium")  || "",
+    utm_campaign:refURL?.searchParams.get("utm_campaign")|| "",
+    utm_term:    refURL?.searchParams.get("utm_term")    || "",
+    utm_content: refURL?.searchParams.get("utm_content") || "",
+  };
+
   const payload = {
     ticket, name, email, company, website, message,
     ua: request.headers.get("user-agent") || "",
     ip: (request.headers.get("cf-connecting-ip") || "").replace(/\.\d+$/, ".***"),
     created_at: new Date().toISOString(),
-    referer: request.headers.get("referer") || "",
+    referer,
+    // --- 追加: UTM保持 ---
+    ...utm,
   };
 
+  // --- KV 保存（既存） ---
   try {
     await ctx.env.INTAKE_KV.put(`contact:${ticket}`, JSON.stringify(payload), { expirationTtl: 60*60*24*14 });
-    // 時系列インデックス（存在確認用）
     await ctx.env.INTAKE_KV.put(`contact_time:${Date.now()}:${ticket}`, "1", { expirationTtl: 60*60*24*14 });
   } catch (e) {
     console.log("KV put error:", e);
   }
 
+  // --- Resend 通知（既存） ---
   const RESEND = (env.RESEND_API_KEY || "").trim();
   const FROM   = (env.MAIL_FROM || "").trim();
   const TO     = (env.MAIL_TO || "").trim();
@@ -71,7 +87,9 @@ export const onRequestPost: PagesFunction<{
     body: JSON.stringify({
       from: FROM, to: [TO], subject: `【${SITE}】新しいお問い合わせ: ${name}`, reply_to: email,
       text: [
-        `チケット: ${ticket}`, `Name: ${name}`, `Email: ${email}`, `Company: ${company}`, `Website: ${website}`, `----`, message
+        `チケット: ${ticket}`, `Name: ${name}`, `Email: ${email}`, `Company: ${company}`, `Website: ${website}`, `----`, message,
+        "", `Referer: ${referer}`,
+        `utm_source=${utm.utm_source} utm_medium=${utm.utm_medium} utm_campaign=${utm.utm_campaign} utm_term=${utm.utm_term} utm_content=${utm.utm_content}`,
       ].join("\n"),
     }),
   });
@@ -92,10 +110,34 @@ export const onRequestPost: PagesFunction<{
   });
   console.log("Resend ack result:", await ackResp.json());
 
+  // --- 追加: Plausible に custom event 送信（props に UTM/ticket）---
+  try {
+    await fetch("https://incierge.jp/api/plausible", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Referer": referer || "https://incierge.jp/contact/" },
+      body: JSON.stringify({
+        name: "form_submitted",
+        url: referer || "https://incierge.jp/contact/thanks/?ticket="+encodeURIComponent(ticket),
+        domain: "incierge.jp",
+        props: { ticket, ...utm },
+      }),
+    });
+  } catch (e) {
+    console.log("plausible post skipped:", String(e));
+  }
+
+  // --- リダイレクト（既存） ---
   return new Response(null, { status: 303, headers: { Location: `/contact/thanks/?ticket=${encodeURIComponent(ticket)}` } });
 };
 
-export const onRequestGet: PagesFunction<{ INTAKE_KV: KVNamespace; TURNSTILE_SECRET: string; RESEND_API_KEY: string; MAIL_FROM: string; MAIL_TO: string; SITE_NAME: string; }> = async (ctx) => {
+export const onRequestGet: PagesFunction<{
+  INTAKE_KV: KVNamespace;
+  TURNSTILE_SECRET: string;
+  RESEND_API_KEY: string;
+  MAIL_FROM: string;
+  MAIL_TO: string;
+  SITE_NAME: string;
+}> = async (ctx) => {
   const url = new URL(ctx.request.url);
 
   if (url.searchParams.get("diag") === "1") {
