@@ -11,13 +11,11 @@ export const onRequestPost: PagesFunction<{
 }> = async (ctx) => {
   const { request, env } = ctx;
 
-  // ---- Content-Type check
   const ct = request.headers.get("content-type") || "";
   if (!ct.includes("application/x-www-form-urlencoded")) {
     return new Response("Unsupported Content-Type", { status: 415 });
   }
 
-  // ---- Parse form
   const form = await request.formData();
   const name    = String(form.get("name") || "");
   const email   = String(form.get("email") || "");
@@ -29,7 +27,7 @@ export const onRequestPost: PagesFunction<{
   if (!name || !email || !message) return new Response("Bad Request", { status: 400 });
   if (!token) return new Response("Turnstile token missing", { status: 400 });
 
-  // ---- Turnstile verify
+  // Turnstile verify
   const secret = (env.TURNSTILE_SECRET || "").trim();
   const vres = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
     method: "POST",
@@ -50,15 +48,15 @@ export const onRequestPost: PagesFunction<{
 
   const ticket = crypto.randomUUID();
 
-  // ---- UTM/referrer
+  // referer / utm
   const referer = request.headers.get("referer") || "";
   const refURL  = (() => { try { return new URL(referer); } catch { return null; } })();
   const utm = {
-    utm_source:   refURL?.searchParams.get("utm_source")   || "",
-    utm_medium:   refURL?.searchParams.get("utm_medium")   || "",
-    utm_campaign: refURL?.searchParams.get("utm_campaign") || "",
-    utm_term:     refURL?.searchParams.get("utm_term")     || "",
-    utm_content:  refURL?.searchParams.get("utm_content")  || "",
+    utm_source:  refURL?.searchParams.get("utm_source")  || "",
+    utm_medium:  refURL?.searchParams.get("utm_medium")  || "",
+    utm_campaign:refURL?.searchParams.get("utm_campaign")|| "",
+    utm_term:    refURL?.searchParams.get("utm_term")    || "",
+    utm_content: refURL?.searchParams.get("utm_content") || "",
   };
 
   const payload = {
@@ -70,7 +68,7 @@ export const onRequestPost: PagesFunction<{
     ...utm,
   };
 
-  // ---- Save to KV (for backup + thank-you page)
+  // KV save
   try {
     await ctx.env.INTAKE_KV.put(`contact:${ticket}`, JSON.stringify(payload), { expirationTtl: 60*60*24*14 });
     await ctx.env.INTAKE_KV.put(`contact_time:${Date.now()}:${ticket}`, "1", { expirationTtl: 60*60*24*14 });
@@ -78,7 +76,41 @@ export const onRequestPost: PagesFunction<{
     console.log("KV put error:", e);
   }
 
-  // ---- Notify via Resend
+  // Supabase insert（本文ログ付き）
+  try {
+    const SUPA_URL = (env.SUPABASE_URL || "").trim();
+    const SUPA_KEY = (env.SUPABASE_SERVICE_ROLE || "").trim();
+    if (SUPA_URL && SUPA_KEY) {
+      const ins = await fetch(`${SUPA_URL}/rest/v1/contacts`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPA_KEY,
+          "Authorization": `Bearer ${SUPA_KEY}`,
+          "Prefer": "return=representation"
+        },
+        body: JSON.stringify({
+          ticket, name, email, company, website, message,
+          user_agent: payload.ua,
+          ip_masked: payload.ip,
+          referer,
+          ...utm
+        }),
+      });
+      if (!ins.ok) {
+        const body = await ins.text();
+        console.log("SUPABASE insert NG:", ins.status, body);
+      } else {
+        console.log("SUPABASE insert OK");
+      }
+    } else {
+      console.log("SUPABASE env missing");
+    }
+  } catch (e) {
+    console.log("SUPABASE error:", e);
+  }
+
+  // Resend (admin & ack)
   const RESEND = (env.RESEND_API_KEY || "").trim();
   const FROM   = (env.MAIL_FROM || "").trim();
   const TO     = (env.MAIL_TO || "").trim();
@@ -96,7 +128,7 @@ export const onRequestPost: PagesFunction<{
       ].join("\n"),
     }),
   });
-  console.log("Resend admin status:", adminResp.status);
+  console.log("Resend admin result:", await adminResp.json());
 
   const ackResp = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -111,40 +143,9 @@ export const onRequestPost: PagesFunction<{
       ].join("\n"),
     }),
   });
-  console.log("Resend ack status:", ackResp.status);
+  console.log("Resend ack result:", await ackResp.json());
 
-  // ---- Insert to Supabase (with logs)
-  const SUPA_URL = (env.SUPABASE_URL || "").trim();
-  const SUPA_KEY = (env.SUPABASE_SERVICE_ROLE || "").trim();
-  try {
-    if (SUPA_URL && SUPA_KEY) {
-      const ins = await fetch(`${SUPA_URL}/rest/v1/contacts`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "apikey": SUPA_KEY,
-          "Authorization": `Bearer ${SUPA_KEY}`,
-          "Prefer": "return=minimal"
-        },
-        body: JSON.stringify({
-          ticket,
-          name, email, company, website, message,
-          user_agent: payload.ua,
-          ip_masked: payload.ip,
-          referer,
-          ...utm
-        }),
-      });
-      console.log("SUPA_INSERT status:", ins.status);
-      if (!ins.ok) console.log("SUPA_INSERT body:", await ins.text());
-    } else {
-      console.log("SUPA_INSERT skipped: missing env (url/key)");
-    }
-  } catch (e) {
-    console.log("SUPA_INSERT error:", String(e));
-  }
-
-  // ---- Plausible (best-effort)
+  // Plausible event
   try {
     await fetch("https://incierge.jp/api/plausible", {
       method: "POST",
@@ -156,7 +157,9 @@ export const onRequestPost: PagesFunction<{
         props: { ticket, ...utm },
       }),
     });
-  } catch {}
+  } catch (e) {
+    console.log("plausible post skipped:", String(e));
+  }
 
   return new Response(null, { status: 303, headers: { Location: `/contact/thanks/?ticket=${encodeURIComponent(ticket)}` } });
 };
@@ -171,22 +174,37 @@ export const onRequestGet: PagesFunction<{
   SUPABASE_URL: string;
   SUPABASE_SERVICE_ROLE: string;
 }> = async (ctx) => {
-  const { env, request } = ctx;
-  const url = new URL(request.url);
+  const url = new URL(ctx.request.url);
 
-  // ---- diag: now includes Supabase
-  if (url.searchParams.get("diag") === "1") {
-    const hasKV = !!env.INTAKE_KV;
-    const hasTurnstile = !!env.TURNSTILE_SECRET;
-    const hasResend = !!env.RESEND_API_KEY;
-    const hasSupabaseUrl = !!(env.SUPABASE_URL || "").toString().trim();
-    const hasSupabaseKey = !!(env.SUPABASE_SERVICE_ROLE || "").toString().trim();
-    return new Response(JSON.stringify({ ok:true, hasKV, hasTurnstile, hasResend, hasSupabaseUrl, hasSupabaseKey }), {
+  // 既存 diag=1 に加え、diag=2 で Supabase の可用性も返す
+  if (url.searchParams.get("diag") === "2") {
+    const hasKV = !!ctx.env.INTAKE_KV;
+    const hasTurnstile = !!ctx.env.TURNSTILE_SECRET;
+    const hasResend = !!ctx.env.RESEND_API_KEY;
+    const hasSupabaseUrl = !!ctx.env.SUPABASE_URL;
+    const hasSupabaseKey = !!ctx.env.SUPABASE_SERVICE_ROLE;
+
+    let restReady = false;
+    if (hasSupabaseUrl) {
+      try {
+        const r = await fetch(`${ctx.env.SUPABASE_URL}/rest/v1/ready`);
+        restReady = r.ok;
+      } catch {}
+    }
+    return new Response(JSON.stringify({ ok:true, hasKV, hasTurnstile, hasResend, hasSupabaseUrl, hasSupabaseKey, restReady }), {
       status: 200, headers: { "content-type": "application/json" }
     });
   }
 
-  // ---- fetch by ticket (for thanks page)
+  if (url.searchParams.get("diag") === "1") {
+    const hasKV = !!ctx.env.INTAKE_KV;
+    const hasTurnstile = !!ctx.env.TURNSTILE_SECRET;
+    const hasResend = !!ctx.env.RESEND_API_KEY;
+    return new Response(JSON.stringify({ ok:true, hasKV, hasTurnstile, hasResend }), {
+      status: 200, headers: { "content-type": "application/json" }
+    });
+  }
+
   const t = url.searchParams.get("ticket");
   if (!t) return new Response("ticket required", { status: 400 });
 
