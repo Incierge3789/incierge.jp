@@ -1,24 +1,38 @@
-name: Smoke after Cloudflare Pages deploy
+name: Smoke test after Cloudflare Pages deploy
 
 on:
-  workflow_run:
-    # ← GitHub → Actions で実際に表示されるワークフロー名に合わせてください
-    workflows: ["Cloudflare Pages", "pages build and deploy"]
-    types: [completed]
+  push:
+    branches: [ "main" ]     # mainにpushされたら自動実行
+  workflow_dispatch: {}       # 必要に応じて手動でも実行可
 
 jobs:
-  post-deploy-smoke:
-    # デプロイが成功したときだけ実行
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+  smoke:
     runs-on: ubuntu-latest
     env:
       BASE_URL: https://incierge.jp
+
     steps:
       - name: Check out (for logs only)
         uses: actions/checkout@v4
 
       - name: Show target
         run: echo "Target = $BASE_URL"
+
+      # 🔸 デプロイの反映待ち（最大3分 / 5秒間隔）
+      - name: Wait until Pages goes live
+        run: |
+          set -euxo pipefail
+          for i in $(seq 1 36); do
+            code=$(curl -sS -o /dev/null -w "%{http_code}" "$BASE_URL/js/script")
+            if [ "$code" = "200" ]; then
+              echo "LIVE OK ($code)"
+              exit 0
+            fi
+            echo "Not live yet ($code). retry..."
+            sleep 5
+          done
+          echo "Timed out waiting for $BASE_URL"
+          exit 1
 
       - name: 1) GET /js/script should be JS (200 + application/javascript)
         run: |
@@ -37,7 +51,7 @@ jobs:
             -H "Referer: $BASE_URL/contact/" \
             --data '{"name":"pageview","url":"'"$BASE_URL"'/contact/","domain":"incierge.jp"}' |
           tee /tmp/resp.txt
-          grep -qE '^HTTP/[0-9.]+ 202' /tmp/resp.txt
+          grep -qE '^HTTP/[0-9.]+ 202' /tmp/resp.txt || (echo "::error ::Expected 202" && exit 1)
 
       - name: 3) POST /api/plausible custom event should be 202
         run: |
@@ -48,7 +62,7 @@ jobs:
             -H "Referer: $BASE_URL/contact/thanks/?ticket=CI-SMOKE" \
             --data '{"name":"form_submitted","url":"'"$BASE_URL"'/contact/thanks/?ticket=CI-SMOKE","domain":"incierge.jp","props":{"ticket":"CI-SMOKE"}}' |
           tee /tmp/resp2.txt
-          grep -qE '^HTTP/[0-9.]+ 202' /tmp/resp2.txt
+          grep -qE '^HTTP/[0-9.]+ 202' /tmp/resp2.txt || (echo "::error ::Expected 202" && exit 1)
 
       - name: Soft warn if plausible dropped header is present
         run: |
