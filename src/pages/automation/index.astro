@@ -686,5 +686,129 @@ const description =
         </p>
       </div>
     </section>
+
+    {/* Gemini Bot 浮遊CTA */}
+    <button
+      id="gemini-fab"
+      type="button"
+      class="fixed bottom-4 right-4 z-50 inline-flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg shadow-blue-500/40 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent sm:bottom-6 sm:right-6"
+      aria-label="AIにまず相談してみる（Gemini Bot）"
+    >
+      💬
+    </button>
+
+    {/* 初期吹き出し */}
+    <div
+      id="gemini-fab-bubble"
+      class="fixed bottom-20 right-4 z-40 max-w-xs rounded-2xl bg-white px-4 py-3 text-xs leading-relaxed text-gray-900 shadow-lg shadow-slate-900/10 ring-1 ring-gray-200 transition-opacity duration-300 sm:bottom-24 sm:right-6"
+    >
+      <div class="mb-2 flex items-start gap-2">
+        <span class="mt-[2px] inline-flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-[10px] font-semibold text-white">
+          AI
+        </span>
+        <p class="text-[12px] leading-relaxed">
+          いま困っている作業を<span class="font-semibold">1つだけ</span>教えてください。
+        </p>
+      </div>
+      <div class="flex items-center justify-between gap-3">
+        <p class="text-[11px] text-gray-500">
+          右下のボタンから、いつでも相談できます。
+        </p>
+        <button
+          type="button"
+          data-close
+          class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-[11px] text-gray-500 hover:bg-gray-200"
+          aria-label="吹き出しを閉じる"
+        >
+          ×
+        </button>
+      </div>
+    </div>
+
+    {/* Gemini チャットモーダル */}
+    <div
+      id="gemini-modal"
+      class="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-slate-900/40 opacity-0 pointer-events-none transition-opacity duration-200"
+      aria-hidden="true"
+    >
+      {/* モーダル本体 */}
+      <div
+        class="w-full max-w-md rounded-3xl bg-white shadow-[0_24px_80px_rgba(15,23,42,0.35)] mx-3 mb-4 sm:mb-0 sm:mx-4 overflow-hidden border border-slate-900/10"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="gemini-modal-title"
+      >
+        {/* ヘッダー：ブランドカラー寄せ（濃紺 × ゴールド） */}
+        <div class="flex items-center justify-between gap-3 bg-slate-950 text-amber-300 px-4 py-3">
+          <div class="flex items-center gap-2">
+            <div class="flex h-7 w-7 items-center justify-center rounded-full bg-amber-300/10 border border-amber-300/40">
+              <span class="text-[11px] font-semibold tracking-wide">AI</span>
+            </div>
+            <div>
+              <p id="gemini-modal-title" class="text-xs font-semibold uppercase tracking-[0.18em]">
+                INCIERGE CONCIERGE
+              </p>
+              <p class="text-[11px] text-amber-100/80">
+                即効AI導入パック 専用コンシェルジュ
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-slate-900 text-slate-200 text-xs hover:bg-slate-800"
+            aria-label="チャットを閉じる"
+            data-gemini-modal-close
+          >
+            ×
+          </button>
+        </div>
+
+        {/* メッセージ領域 */}
+        <div class="flex flex-col gap-3 px-4 pt-3 pb-3 max-h-[60vh] sm:max-h-[65vh] overflow-y-auto text-[13px] bg-slate-50/60">
+          {/* 初期メッセージ（AI側） */}
+          <div class="flex items-start gap-2">
+            <div class="mt-1 flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-[11px] font-semibold text-white">
+              AI
+            </div>
+            <div class="rounded-2xl bg-white px-3 py-2 shadow-sm shadow-slate-200/70 border border-slate-200">
+              <p class="leading-relaxed">
+                こんにちは、INCIERGEのAIコンシェルジュです。<br />
+                <span class="font-semibold">「いま困っている作業を1つだけ」</span>教えていただけますか？
+              </p>
+              <p class="mt-1 text-[11px] text-slate-500">
+                その1つを起点に、/automation のライト・スタンダード・伴走プランのどれが合いそうか一緒に整理します。
+              </p>
+            </div>
+          </div>
+
+          {/* ここに今後JSでログを積んでいく */}
+          <div id="gemini-chat-log" class="space-y-3"></div>
+        </div>
+
+        {/* 入力エリア */}
+        <div class="border-t border-slate-200 bg-white px-4 py-3">
+          <form id="gemini-chat-form" class="flex items-end gap-2">
+            <textarea
+              id="gemini-chat-input"
+              class="flex-1 resize-none rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-[13px] leading-relaxed text-slate-900 shadow-inner shadow-slate-900/5 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-400"
+              rows="2"
+              placeholder="いま一番しんどい作業を、1つだけ教えてください。（例：毎朝のSlackチェック、日程調整 など）"
+            ></textarea>
+            <button
+              type="submit"
+              class="inline-flex h-9 items-center justify-center rounded-full bg-blue-600 px-4 text-[12px] font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1 focus:ring-offset-white"
+            >
+              送信
+            </button>
+          </form>
+          <p class="mt-1 text-[10px] text-slate-400">
+            ※ ここで整理した内容は、必要に応じて /contact フォームにそのまま転記できます。
+          </p>
+        </div>
+      </div>
+    </div>
+
+
+  <script type="module" src="/scripts/automation-gemini.js"></script>
   </main>
 </Base>
