@@ -10,26 +10,32 @@ const description =
   <main class="bg-[#FAFAFA]">
     {/* Hero */}
     <section class="bg-white">
-      <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-20 lg:px-8">
-        <div class="grid items-center gap-12 md:grid-cols-2">
-          <div>
-            <p class="mb-4 text-sm font-medium tracking-wide text-blue-600">
+      <div class="mx-auto max-w-6xl px-4 pt-20 pb-16 sm:px-6 lg:px-8">
+        <div class="grid items-center gap-12 lg:grid-cols-[minmax(0,3fr)_minmax(0,2.4fr)]">
+          {/* 左：テキスト */}
+          <div class="max-w-xl">
+            <p class="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-600">
               INCIERGE /automation
             </p>
-            <h1 class="mb-6 text-3xl font-semibold leading-tight text-gray-900 md:text-4xl lg:text-5xl">
-              AI担当がいなくても、今日から業務が軽くなる。
-              <br />
-              小さな一つから、ムダが消える。
-              <br />
-              仕組みづくりも運用も、すべてお任せください。
+
+
+            <h1
+              class="mb-6 text-3xl font-semibold tracking-tight leading-relaxed text-gray-900 sm:text-4xl lg:text-5xl whitespace-pre-line break-keep"
+            >
+              {`AI担当がいなくても、
+                今日から業務が軽くなる。
+
+                小さな一つから、
+                ムダが消える。
+
+                仕組みづくりも運用も、
+                すべてお任せください。`}
             </h1>
-            <div class="mb-8">
-              <p class="text-base leading-relaxed text-gray-700">
-                「いま困っていることを、簡単に教えてください。
-                <br class="hidden sm:block" />
-                AIが2〜3個、今日から消せるムダを見つけます。」
-              </p>
-            </div>
+
+            <p class="mb-8 text-sm leading-relaxed text-gray-700 sm:text-base">
+              「いま困っていることを、簡単に教えてください。AIが2〜3個、今日から消せるムダを見つけます。」
+            </p>
+
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
               <a
                 href="/contact"
@@ -40,9 +46,15 @@ const description =
             </div>
           </div>
 
-          {/* Hero Visual（簡易モック） */}
-          <div class="relative">
-            <div class="relative mx-auto max-w-md rounded-3xl border border-gray-200 bg-gray-50 p-4 shadow-sm">
+          {/* 右：ビジュアル */}
+          <div class="relative flex justify-center lg:justify-end">
+            {/* うっすらした背景のアクセント */}
+            <div
+              class="pointer-events-none absolute -left-6 -top-6 h-20 w-32 rounded-3xl bg-blue-100/40 blur-md"
+              aria-hidden="true"
+            ></div>
+
+            <div class="relative w-full max-w-md rounded-3xl border border-gray-200 bg-gray-50/80 p-4 shadow-[0_18px_45px_rgba(15,23,42,0.08)] backdrop-blur">
               <div class="mb-4 flex items-center justify-between">
                 <div class="flex items-center gap-2">
                   <span class="h-2 w-2 rounded-full bg-green-400"></span>
@@ -51,6 +63,7 @@ const description =
                 </div>
                 <span class="text-xs text-gray-400">Slack / daily_summary</span>
               </div>
+
               <div class="space-y-3">
                 <div class="flex gap-2">
                   <div class="h-8 w-8 flex-shrink-0 rounded-full bg-blue-200"></div>
@@ -156,37 +169,42 @@ const description =
     </section>
 
     {/* Before / After */}
-    <section class="bg-white">
-      <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
-        <h2 class="mb-8 text-2xl font-semibold text-gray-900 md:text-3xl">
+    <section class="py-16 bg-gray-50">
+      <div class="mx-auto max-w-5xl px-6">
+        <h2 class="text-3xl font-semibold text-gray-900 mb-10 md:text-3xl">
           たった1つ自動化すると、会社はこう変わります。
         </h2>
-        <div class="grid gap-10 md:grid-cols-2">
-          <div>
-            <h3 class="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-500">
-              Before
-            </h3>
-            <ul class="space-y-3 text-base leading-relaxed text-gray-700">
-              <li>Before：毎日の報告がバラバラ</li>
-              <li>Before：問い合わせの抜け漏れ</li>
-              <li>Before：誰も改善できない</li>
-              <li>Before：社長が全部確認</li>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* BEFORE */}
+          <div class="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
+            <span class="inline-block text-xs font-semibold text-gray-600 bg-gray-100 px-3 py-1 rounded-full mb-4 tracking-wide">
+              BEFORE
+            </span>
+            <ul class="space-y-3 text-sm md:text-base leading-relaxed text-gray-700">
+              <li>・毎日の報告がバラバラ</li>
+              <li>・問い合わせの抜け漏れ</li>
+              <li>・誰も改善できない</li>
+              <li>・社長が全部確認</li>
             </ul>
           </div>
-          <div>
-            <h3 class="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-500">
-              After
-            </h3>
-            <ul class="space-y-3 text-base leading-relaxed text-gray-700">
-              <li>After：必要な情報が自動でまとまる</li>
-              <li>After：自動通知でミスがゼロに</li>
-              <li>After：改善できる“仕組み”が会社に残る</li>
-              <li>After：必要な時だけ通知が届く</li>
+
+          {/* AFTER */}
+          <div class="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
+            <span class="inline-block text-xs font-semibold text-white bg-blue-600 px-3 py-1 rounded-full mb-4 tracking-wide">
+              AFTER
+            </span>
+            <ul class="space-y-3 text-sm md:text-base leading-relaxed text-gray-700">
+              <li>・必要な情報が自動でまとまる</li>
+              <li>・自動通知でミスがゼロに</li>
+              <li>・改善できる“仕組み”が会社に残る</li>
+              <li>・必要な時だけ通知が届く</li>
             </ul>
           </div>
         </div>
+
         <p class="mt-6 text-sm text-gray-600">
-          → “作業”ではなく、“仕組み”を作ることがポイントです。
+          ※ ポイントは「作業」ではなく、「仕組み」を作ることです。
         </p>
       </div>
     </section>
@@ -268,46 +286,320 @@ const description =
       </div>
     </section>
 
+    {/* Flow - 導入の流れ */}
+    <section class="py-24 bg-gray-50">
+      <div class="mx-auto max-w-5xl px-6">
+        <h2 class="text-3xl font-semibold text-gray-900 mb-4">
+          導入の流れ
+        </h2>
+        <p class="text-sm md:text-base text-gray-700 mb-10">
+          お問い合わせ〜運用開始までのステップです。難しいことはすべてこちらで整理します。
+        </p>
+
+        <ol class="space-y-6">
+          <li class="flex gap-4">
+            <div class="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white">
+              1
+            </div>
+            <div>
+              <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-1">
+                STEP1：無料相談（オンライン／チャット）
+              </h3>
+              <p class="text-sm md:text-base text-gray-700 leading-relaxed">
+                いま困っていることを1〜3つ、簡単に教えてください。
+                「どの業務から手をつけるべきか」も一緒に整理します。
+              </p>
+            </div>
+          </li>
+
+          <li class="flex gap-4">
+            <div class="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white">
+              2
+            </div>
+            <div>
+              <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-1">
+                STEP2：対象業務の選定・ご提案
+              </h3>
+              <p class="text-sm md:text-base text-gray-700 leading-relaxed">
+                ヒアリング内容をもとに、「まず1つだけ」効果の高い業務を選定。
+                ライト／スタンダード／伴走プランの中から、最適な始め方をご提案します。
+              </p>
+            </div>
+          </li>
+
+          <li class="flex gap-4">
+            <div class="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white">
+              3
+            </div>
+            <div>
+              <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-1">
+                STEP3：設計（ツール・連携・フローの整理）
+              </h3>
+              <p class="text-sm md:text-base text-gray-700 leading-relaxed">
+                Slack／LINE／GAS／カレンダー／スプレッドシートなど、
+                既に使っているツールを前提に、最小限の構成でフローを設計します。
+              </p>
+            </div>
+          </li>
+
+          <li class="flex gap-4">
+            <div class="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white">
+              4
+            </div>
+            <div>
+              <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-1">
+                STEP4：実装・テスト
+              </h3>
+              <p class="text-sm md:text-base text-gray-700 leading-relaxed">
+                設計どおりに仕組みを構築し、実データでテストします。
+                この時点で「どんな通知が、どこに、いつ飛ぶか」を一緒に確認します。
+              </p>
+            </div>
+          </li>
+
+          <li class="flex gap-4">
+            <div class="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white">
+              5
+            </div>
+            <div>
+              <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-1">
+                STEP5：レクチャー・簡易マニュアル
+              </h3>
+              <p class="text-sm md:text-base text-gray-700 leading-relaxed">
+                実際の画面を見ながら、社長・担当者さま向けに使い方を説明。
+                必要な場合は、簡単なマニュアル（テキストベース）もお渡しします。
+              </p>
+            </div>
+          </li>
+
+          <li class="flex gap-4">
+            <div class="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white">
+              6
+            </div>
+            <div>
+              <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-1">
+                STEP6：運用開始・フォロー
+              </h3>
+              <p class="text-sm md:text-base text-gray-700 leading-relaxed">
+                本番運用を開始し、数日〜1週間様子を見ながら微調整します。
+                伴走プランの場合は、毎月のミーティングで追加の自動化や改善も行います。
+              </p>
+            </div>
+          </li>
+        </ol>
+
+        <p class="mt-8 text-xs md:text-sm text-gray-500">
+          ※ ライトプランの場合、STEP1〜4までを最短1日で完了できます。
+        </p>
+      </div>
+    </section>
+
     {/* ケース例 */}
     <section class="bg-white">
       <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
         <h2 class="mb-6 text-2xl font-semibold text-gray-900 md:text-3xl">
           ケース例（実績ベース）
         </h2>
-        <div class="grid gap-6 md:grid-cols-2">
-          {[
-            "問い合わせの抜け漏れ防止",
-            "報告・共有の自動化",
-            "日程調整の手間ゼロ",
-            "スタッフの作業を自動で整理",
-            "毎日の業務ログの要約",
-            "クライアントごとの台帳づくり"
-          ].map((item) => (
-            <div class="rounded-2xl border border-gray-200 bg-gray-50 p-5 text-sm leading-relaxed text-gray-800">
-              {item}
-            </div>
-          ))}
+
+        <div class="grid gap-6 md:grid-cols-3">
+          {/* 事例① */}
+          <article class="flex flex-col rounded-2xl border border-gray-200 bg-gray-50 p-6 text-sm leading-relaxed text-gray-800">
+            <p class="mb-1 text-xs font-semibold tracking-wide text-blue-600">
+              CASE 01
+            </p>
+            <h3 class="mb-1 text-base font-semibold text-gray-900">
+              Slack × GAS × 自動台帳化
+            </h3>
+            <p class="mb-4 text-xs text-gray-600">
+              「作業が人に依存しない。現場の抜け漏れゼロへ。」
+            </p>
+
+            <h4 class="mb-1 text-xs font-semibold text-gray-700">課題（Before）</h4>
+            <ul class="mb-3 list-disc space-y-1 pl-4">
+              <li>作業記録が人ごとにバラバラ</li>
+              <li>Slack通知を追いきれず、重要情報を見逃す</li>
+              <li>スプレッドシート更新が止まり、社長が状況を把握できない</li>
+              <li>チャンネル作成や用途説明の更新ミスが頻発</li>
+            </ul>
+
+            <h4 class="mb-1 text-xs font-semibold text-gray-700">解決策（What we delivered）</h4>
+            <ul class="mb-3 list-disc space-y-1 pl-4">
+              <li>Slackチャンネル作成 → Bot自動参加</li>
+              <li>イベントIDによる“重複防止”で安定化</li>
+              <li>投稿内容・用途説明・更新履歴をすべて自動ログ化</li>
+              <li>スプレッドシート or Notionに証跡として保存</li>
+            </ul>
+
+            <h4 class="mb-1 text-xs font-semibold text-gray-700">成果（After）</h4>
+            <ul class="list-disc space-y-1 pl-4">
+              <li>重要情報の見逃しがゼロに</li>
+              <li>作業ログが自動で台帳化</li>
+              <li>社長が“状況を3秒で把握”できる状態に</li>
+              <li>必要な作業を人に依存しない仕組みに</li>
+            </ul>
+          </article>
+
+          {/* 事例② */}
+          <article class="flex flex-col rounded-2xl border border-gray-200 bg-gray-50 p-6 text-sm leading-relaxed text-gray-800">
+            <p class="mb-1 text-xs font-semibold tracking-wide text-blue-600">
+              CASE 02
+            </p>
+            <h3 class="mb-1 text-base font-semibold text-gray-900">
+              LINE × Google Calendar 自動日程調整Bot
+            </h3>
+            <p class="mb-4 text-xs text-gray-600">
+              「日程調整の往復メッセージが完全に消える。」
+            </p>
+
+            <h4 class="mb-1 text-xs font-semibold text-gray-700">課題（Before）</h4>
+            <ul class="mb-3 list-disc space-y-1 pl-4">
+              <li>日程調整のDMが延々と続く</li>
+              <li>ダブルブッキング／ミス／調整漏れが多い</li>
+              <li>社長が“調整役”になってしまう</li>
+              <li>メンバーのスケジュール把握に時間がかかる</li>
+            </ul>
+
+            <h4 class="mb-1 text-xs font-semibold text-gray-700">解決策（What we delivered）</h4>
+            <ul class="mb-3 list-disc space-y-1 pl-4">
+              <li>LINEで「希望日」を送信するだけ</li>
+              <li>Google Calendarに自動登録</li>
+              <li>Meetリンクも自動発行</li>
+              <li>Slack／メールへ自動通知</li>
+              <li>リマインドも完全自動化</li>
+            </ul>
+
+            <h4 class="mb-1 text-xs font-semibold text-gray-700">成果（After）</h4>
+            <ul class="list-disc space-y-1 pl-4">
+              <li>日程調整のDMが“ゼロ”になった</li>
+              <li>調整の属人化が完全に解消</li>
+              <li>予約〜通知〜リマインドまで一連の動きが自動化</li>
+              <li>社長とスタッフの時間が大幅に増えた</li>
+            </ul>
+          </article>
+
+          {/* 事例③ */}
+          <article class="flex flex-col rounded-2xl border border-gray-200 bg-gray-50 p-6 text-sm leading-relaxed text-gray-800">
+            <p class="mb-1 text-xs font-semibold tracking-wide text-blue-600">
+              CASE 03
+            </p>
+            <h3 class="mb-1 text-base font-semibold text-gray-900">
+              Slack “見逃しゼロ” 朝イチダイジェストBot
+            </h3>
+            <p class="mb-4 text-xs text-gray-600">
+              「昨日の重要メッセージ・タスク・期限を、毎朝1つに要約。」
+            </p>
+
+            <h4 class="mb-1 text-xs font-semibold text-gray-700">課題（Before）</h4>
+            <ul class="mb-3 list-disc space-y-1 pl-4">
+              <li>Slackが多すぎて重要な投稿を見逃す</li>
+              <li>クライアントチャンネルが増え、追いきれない</li>
+              <li>タスク・期限・依頼事項が埋もれる</li>
+              <li>社長が毎朝“状況キャッチアップ”に時間を使う</li>
+            </ul>
+
+            <h4 class="mb-1 text-xs font-semibold text-gray-700">解決策（What we delivered）</h4>
+            <ul class="mb-3 list-disc space-y-1 pl-4">
+              <li>AIがチャンネル横断でメッセージを読み取り</li>
+              <li>重要ワード／依頼／期限付きタスクを抽出</li>
+              <li>毎朝9:00に「昨日のサマリ」を自動投稿</li>
+              <li>長文は短く、曖昧な指示は明確化</li>
+              <li>Slack AIではできない“能動型アラート”を実現</li>
+            </ul>
+
+            <h4 class="mb-1 text-xs font-semibold text-gray-700">成果（After）</h4>
+            <ul class="list-disc space-y-1 pl-4">
+              <li>重要メッセージの見逃しゼロ</li>
+              <li>朝の5分で状況把握が完了</li>
+              <li>社長の“管理コスト”が大幅減少</li>
+              <li>クライアント対応が早くなり信頼度が向上</li>
+            </ul>
+          </article>
+        </div>
+
+        {/* まとめブロック */}
+        <div class="mt-10 rounded-2xl bg-blue-50 px-6 py-5 text-sm leading-relaxed text-blue-900">
+          <p class="font-medium mb-2">まとめ</p>
+          <p class="mb-1">
+            この3つの事例は、「AI導入は難しい」を「今日から使える」レベルまで落とし込んだ“即効型AI導入”です。
+          </p>
+          <ul class="mt-2 list-disc space-y-1 pl-5">
+            <li>即導入（1〜3日）</li>
+            <li>中小企業向けに最適化</li>
+            <li>部署単位ではなく“1つの課題”から始められる</li>
+            <li>無駄な大規模システム導入が不要</li>
+          </ul>
         </div>
       </div>
     </section>
 
+
     {/* INCIERGEが選ばれる理由 */}
-    <section class="bg-gray-50">
-      <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
-        <h2 class="mb-4 text-2xl font-semibold text-gray-900 md:text-3xl">
-          INCIERGEが選ばれる理由
+    <section class="py-24 bg-white">
+      <div class="mx-auto max-w-5xl px-6">
+        <h2 class="text-3xl font-semibold text-gray-900 mb-12">
+          INCIERGEが選ばれる6つの理由
         </h2>
-        <p class="mb-4 text-base leading-relaxed text-gray-700">
-          AIではなく、“人の仕事が軽くなる仕組み”を作ります。
-        </p>
-        <ul class="space-y-2 text-base leading-relaxed text-gray-700">
-          <li>・今日から改善が始まるスピード</li>
-          <li>・社長の手間ゼロ（丸ごと代行）</li>
-          <li>・現場に合わせたシンプル設計</li>
-          <li>・内製化まで同伴</li>
-          <li>・地方企業・小規模組織と相性が強い</li>
-          <li>・“ツール”ではなく“成果”を売る姿勢</li>
-        </ul>
+
+        <div class="space-y-12">
+          <div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">
+              ① 最短1〜3日で“動く仕組み”が手に入る
+            </h3>
+            <p class="text-gray-700 leading-relaxed">
+              設計だけではなく、実際に動く完成品まで一気に作りきります。
+              「まず1つ動くものがほしい」という要望に応えます。
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">
+              ② 現場で使われている“実装ベース”のAI導入
+            </h3>
+            <p class="text-gray-700 leading-relaxed">
+              Slack Bot、LINE Bot、GAS、自動ログ化など、あなた自身が日々使っている実用コードをベースにしています。
+              抽象的な話や机上の空論はありません。
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">
+              ③ 中小企業の“1つの課題”から始められる
+            </h3>
+            <p class="text-gray-700 leading-relaxed">
+              難しいDXや大規模システムは不要。日報・作業ログ・日程調整など、
+              まずは1つの業務のムダを消すところから始められます。
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">
+              ④ 全ツールを横断してつなげる力
+            </h3>
+            <p class="text-gray-700 leading-relaxed">
+              Slack・GAS・LINE・Calendar・Notionなど、会社全体の情報フローをつなげて最適化できます。
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">
+              ⑤ 社長・スタッフの手間はほぼゼロ
+            </h3>
+            <p class="text-gray-700 leading-relaxed">
+              必要なのは「困っていることを1〜3個教えるだけ」。
+              そこから設計〜実装〜運用まで丸ごとお任せできます。
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">
+              ⑥ 全てのログが自動で台帳化される安心設計
+            </h3>
+            <p class="text-gray-700 leading-relaxed">
+              「ちゃんと動いている？」という不安を解消するために、作業ログ・通知・処理結果を自動で台帳化します。
+              スプレッドシート or Notionに証跡が残ります。
+            </p>
+          </div>
+        </div>
       </div>
     </section>
 
