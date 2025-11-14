@@ -3,56 +3,76 @@
 export const onRequestPost: PagesFunction = async (context) => {
   const { request, env } = context;
 
-  if (request.method !== "POST") {
-    return new Response("Method Not Allowed", { status: 405 });
-  }
+  const json = (status: number, data: unknown) =>
+    new Response(JSON.stringify(data), {
+      status,
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+    });
 
-  const apiKey = env.GEMINI_API_KEY;
-  if (!apiKey) {
-    return new Response("Missing GEMINI_API_KEY", { status: 500 });
-  }
-
-  let body: { message?: string } = {};
   try {
-    body = await request.json();
-  } catch {
-    return new Response("Invalid JSON", { status: 400 });
-  }
+    // 1) メソッドチェック
+    if (request.method !== "POST") {
+      return json(405, { error: "METHOD_NOT_ALLOWED" });
+    }
 
-  const userMessage = (body.message || "").trim();
-  if (!userMessage) {
-    return new Response("Empty message", { status: 400 });
-  }
+    // 2) APIキー確認
+    const apiKey = env.GEMINI_API_KEY;
+    if (!apiKey) {
+      return json(500, { error: "MISSING_GEMINI_API_KEY" });
+    }
 
-  // プロンプトファイルを静的アセットとして読み込む
-  const baseUrl = new URL(request.url);
+    // 3) リクエストボディ
+    let body: any;
+    try {
+      body = await request.json();
+    } catch (e) {
+      return json(400, { error: "INVALID_JSON", detail: String(e) });
+    }
 
-  const commonReq = new Request(
-    new URL("/prompts/common/system_incierge_concierge_en.txt", baseUrl),
-  );
-  const lpReq = new Request(
-    new URL("/prompts/automation/lp_mode_automation_en.txt", baseUrl),
-  );
+    const userMessage = (body?.message ?? "").toString().trim();
+    if (!userMessage) {
+      return json(400, { error: "EMPTY_MESSAGE" });
+    }
 
-  const [commonRes, lpRes] = await Promise.all([
-    // Pages Functions では ASSETS から静的ファイルを読める
-    // @ts-ignore
-    env.ASSETS.fetch(commonReq),
-    // @ts-ignore
-    env.ASSETS.fetch(lpReq),
-  ]);
+    // 4) プロンプト読み込み（ASSETS経由）
+    const baseUrl = new URL(request.url);
 
-  if (!commonRes.ok || !lpRes.ok) {
-    return new Response("Failed to load prompt files", { status: 500 });
-  }
+    const commonReq = new Request(
+      new URL("/prompts/common/system_incierge_concierge_en.txt", baseUrl),
+    );
+    const lpReq = new Request(
+      new URL("/prompts/automation/lp_mode_automation_en.txt", baseUrl),
+    );
 
-  const [commonPrompt, lpPrompt] = await Promise.all([
-    commonRes.text(),
-    lpRes.text(),
-  ]);
+    let commonPrompt: string;
+    let lpPrompt: string;
+    try {
+      // @ts-ignore ASSETS は Pages Functions 固有
+      const [commonRes, lpRes] = await Promise.all([
+        env.ASSETS.fetch(commonReq),
+        env.ASSETS.fetch(lpReq),
+      ]);
 
-  // Gemini への最終プロンプト（英語指示＋日本語回答）
-  const systemPrompt = `${commonPrompt.trim()}
+      if (!commonRes.ok || !lpRes.ok) {
+        return json(500, {
+          error: "PROMPT_LOAD_FAILED",
+          detail: {
+            commonStatus: commonRes.status,
+            lpStatus: lpRes.status,
+          },
+        });
+      }
+
+      [commonPrompt, lpPrompt] = await Promise.all([
+        commonRes.text(),
+        lpRes.text(),
+      ]);
+    } catch (e) {
+      return json(500, { error: "PROMPT_FETCH_EXCEPTION", detail: String(e) });
+    }
+
+    // 5) Gemini へ送る最終プロンプト
+    const systemPrompt = `${commonPrompt.trim()}
 
 ---
 
@@ -64,45 +84,57 @@ User input (in Japanese):
 "${userMessage}"
 `;
 
-  const payload = {
-    contents: [
-      {
-        role: "user",
-        parts: [{ text: systemPrompt }],
-      },
-    ],
-  };
+    const payload = {
+      contents: [
+        {
+          role: "user",
+          parts: [{ text: systemPrompt }],
+        },
+      ],
+    };
 
-  const geminiUrl =
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" +
-    encodeURIComponent(apiKey);
+    const geminiUrl =
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" +
+      encodeURIComponent(apiKey);
 
-  const geminiRes = await fetch(geminiUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  });
+    // 6) Gemini 呼び出し（例外も拾う）
+    let geminiRes: Response;
+    try {
+      geminiRes = await fetch(geminiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+    } catch (e) {
+      // ネットワークエラー・タイムアウトなど
+      return json(502, { error: "GEMINI_FETCH_ERROR", detail: String(e) });
+    }
 
-  if (!geminiRes.ok) {
-    const text = await geminiRes.text().catch(() => "");
-    return new Response(
-      `Gemini API error: ${geminiRes.status} ${text}`,
-      { status: 502 },
-    );
+    if (!geminiRes.ok) {
+      const text = await geminiRes.text().catch(() => "");
+      return json(502, {
+        error: "GEMINI_API_ERROR",
+        status: geminiRes.status,
+        body: text.slice(0, 2000), // 念のため縮める
+      });
+    }
+
+    let data: any;
+    try {
+      data = await geminiRes.json();
+    } catch (e) {
+      return json(500, { error: "GEMINI_JSON_PARSE_ERROR", detail: String(e) });
+    }
+
+    const replyText =
+      data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ||
+      "すみません、少し混み合っているようです。もう一度だけ試してもらえますか？";
+
+    return json(200, { reply: replyText });
+  } catch (e) {
+    // 予期しない例外も全部ここで JSON で返す
+    return json(500, { error: "UNHANDLED_EXCEPTION", detail: String(e) });
   }
-
-  const data = await geminiRes.json<any>();
-
-  const replyText =
-    data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ||
-    "すみません、少し混み合っているようです。もう一度だけ試してもらえますか？";
-
-  return new Response(JSON.stringify({ reply: replyText }), {
-    status: 200,
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-    },
-  });
 };
