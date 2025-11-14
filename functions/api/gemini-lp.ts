@@ -97,6 +97,13 @@ User input (in Japanese):
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" +
       encodeURIComponent(apiKey);
 
+    // ここからログ追加ポイント
+    console.log("GEMINI_LP_REQUEST", {
+      userLen: userMessage.length,
+      promptLen: systemPrompt.length,
+      promptHead: systemPrompt.slice(0, 120),
+    });
+
     // 6) Gemini 呼び出し（例外も拾う）
     let geminiRes: Response;
     try {
@@ -108,12 +115,19 @@ User input (in Japanese):
         body: JSON.stringify(payload),
       });
     } catch (e) {
+      console.error("GEMINI_LP_FETCH_EXCEPTION", String(e));
       // ネットワークエラー・タイムアウトなど
       return json(502, { error: "GEMINI_FETCH_ERROR", detail: String(e) });
     }
 
+    console.log("GEMINI_LP_RESPONSE_STATUS", geminiRes.status);
+
     if (!geminiRes.ok) {
       const text = await geminiRes.text().catch(() => "");
+      console.error(
+        "GEMINI_LP_API_ERROR_BODY",
+        text.slice(0, 500),
+      );
       return json(502, {
         error: "GEMINI_API_ERROR",
         status: geminiRes.status,
@@ -125,6 +139,7 @@ User input (in Japanese):
     try {
       data = await geminiRes.json();
     } catch (e) {
+      console.error("GEMINI_LP_JSON_PARSE_ERROR", String(e));
       return json(500, { error: "GEMINI_JSON_PARSE_ERROR", detail: String(e) });
     }
 
@@ -132,8 +147,14 @@ User input (in Japanese):
       data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ||
       "すみません、少し混み合っているようです。もう一度だけ試してもらえますか？";
 
+    console.log("GEMINI_LP_REPLY_OK", {
+      replyLen: replyText.length,
+      replyHead: replyText.slice(0, 80),
+    });
+
     return json(200, { reply: replyText });
   } catch (e) {
+    console.error("GEMINI_LP_UNHANDLED", String(e));
     // 予期しない例外も全部ここで JSON で返す
     return json(500, { error: "UNHANDLED_EXCEPTION", detail: String(e) });
   }
