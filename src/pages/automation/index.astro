@@ -1,180 +1,398 @@
 ---
-// src/pages/automation/index.astro
 import Base from "../../layouts/Base.astro";
 
-const title = "AI業務自動化｜INCIERGE（インシェルジュ）";
+const title = "即効AI導入パック /automation | INCIERGE";
 const description =
-  "事務・営業・問い合わせの反復作業を、ChatGPT × Slack × Notionで“現場運用できる仕組み”に。最短2週間で導入、まずは無料AI診断。";
-
-const ogImage = "/og/automation.png";
-const breadcrumbs: Array<[string, string]> = [
-  ["Home", "/"],
-  ["AI自動化", "/automation/"],
-];
-
-const serviceJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "name": "AI自動化支援（業務・経理・問い合わせ）",
-  "serviceType": "AI Automation / Workflow Automation",
-  "provider": { "@type": "Organization", "name": "INCIERGE", "url": "https://incierge.jp" },
-  "description": "ChatGPT・GAS・Slack・Notion連携で業務を自動化。経理・営業・問い合わせの反復作業を仕組み化。",
-  "areaServed": "JP",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "JPY",
-    "name": "無料診断 → お見積り（案件最適化）",
-    "url": "https://incierge.jp/automation/"
-  }
-};
+  "AI担当がいなくても、今日から業務が軽くなる。小さな一つからムダが消える、INCIERGEの即効AI導入パック。ライト・スタンダード・伴走プランで中小企業の自動化を支援します。";
 ---
 
-<Base {title} {description} {ogImage} {breadcrumbs}>
-  <!-- Hero -->
-  <section class="space-y-5">
-    <h1 class="text-3xl md:text-5xl font-semibold">
-      事務・営業の“時間泥棒”を、AIが2週間で止める。
-    </h1>
-    <p class="text-lg md:text-xl">
-      ChatGPT / GAS / Slack / Notion を組み合わせて、現場で回る自動化を設計・実装。人手不足・残業・入力作業を減らして、チームの時間を取り戻す。
-    </p>
-    <div class="flex gap-3">
-      <a href="/contact" class="btn-primary" onclick="plausible && plausible('cta_clicked',{props:{pos:'hero'}})">無料AI診断を受ける</a>
-      <a href="/contact" class="btn-ghost">問い合わせフォームへ</a>
-    </div>
-  </section>
+<Base title={title} description={description}>
+  <main class="bg-[#FAFAFA]">
+    {/* Hero */}
+    <section class="bg-white">
+      <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-20 lg:px-8">
+        <div class="grid items-center gap-12 md:grid-cols-2">
+          <div>
+            <p class="mb-4 text-sm font-medium tracking-wide text-blue-600">
+              INCIERGE /automation
+            </p>
+            <h1 class="mb-6 text-3xl font-semibold leading-tight text-gray-900 md:text-4xl lg:text-5xl">
+              AI担当がいなくても、今日から業務が軽くなる。
+              <br />
+              小さな一つから、ムダが消える。
+              <br />
+              仕組みづくりも運用も、すべてお任せください。
+            </h1>
+            <div class="mb-8">
+              <p class="text-base leading-relaxed text-gray-700">
+                「いま困っていることを、簡単に教えてください。
+                <br class="hidden sm:block" />
+                AIが2〜3個、今日から消せるムダを見つけます。」
+              </p>
+            </div>
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <a
+                href="/contact"
+                class="inline-flex items-center justify-center rounded-full bg-blue-600 px-8 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
+              >
+                無料相談する
+              </a>
+            </div>
+          </div>
 
-  <!-- Problems -->
-  <section class="mt-12 space-y-4">
-    <h2 class="text-2xl md:text-3xl font-semibold">こんな課題、ありませんか？</h2>
-    <ul class="list-disc pl-6">
-      <li>毎月の請求処理・台帳転記・社内承認に <strong>数時間</strong> かかる</li>
-      <li>問い合わせメールの対応が <strong>属人化</strong>・抜け漏れになる</li>
-      <li>Slack・Notion を導入したが <strong>活用しきれていない</strong></li>
-    </ul>
-  </section>
-
-  <!-- Solutions -->
-  <section class="mt-16 space-y-6">
-    <h2 class="text-2xl md:text-3xl font-semibold">INCIERGEができること</h2>
-    <ul class="grid md:grid-cols-3 gap-6 text-sm leading-6">
-      <li class="p-5 rounded-2xl border">
-        <h3 class="font-semibold mb-2">経理 自動化</h3>
-        <p>請求書の抽出→台帳転記→仕訳メモ→Slack承認。</p>
-      </li>
-      <li class="p-5 rounded-2xl border">
-        <h3 class="font-semibold mb-2">営業 自動化</h3>
-        <p>問い合わせ→スコア→CRM登録→初回メール→担当アサイン。</p>
-      </li>
-      <li class="p-5 rounded-2xl border">
-        <h3 class="font-semibold mb-2">問い合わせ 自動化</h3>
-        <p>フォーム→AI要約→重複検出→Slack通知→Notion蓄積。</p>
-      </li>
-    </ul>
-  </section>
-
-  <!-- Effects -->
-  <section class="mt-16 space-y-6">
-    <h2 class="text-2xl md:text-3xl font-semibold">導入効果</h2>
-    <ul class="list-disc pl-6">
-      <li>請求処理：30分/件 → <strong>5分/件（-83%）</strong></li>
-      <li>初回対応：待機 → <strong>即時返信（自動）</strong></li>
-      <li>日報・週報：手入力 → <strong>自動要約＆集計</strong></li>
-    </ul>
-  </section>
-
-  <!-- What the diagnosis gives -->
-  <section class="mt-16 space-y-4">
-    <h2 class="text-2xl md:text-3xl font-semibold">無料AI診断で分かること（15分）</h2>
-    <div class="grid md:grid-cols-3 gap-6">
-      <div class="p-5 rounded-2xl border">
-        <h3 class="font-semibold mb-1">① 自動化の優先順位</h3>
-        <p class="text-sm opacity-80">“今すぐ効く”ボトルネック工程の特定。</p>
-      </div>
-      <div class="p-5 rounded-2xl border">
-        <h3 class="font-semibold mb-1">② 概算の効果とコスト</h3>
-        <p class="text-sm opacity-80">削減見込み時間・概算コスト・ROIイメージ。</p>
-      </div>
-      <div class="p-5 rounded-2xl border">
-        <h3 class="font-semibold mb-1">③ 実装のたたき台</h3>
-        <p class="text-sm opacity-80">利用SaaS・承認フロー・運用イメージ。</p>
-      </div>
-    </div>
-    <div class="mt-4">
-      <a href="/contact" class="btn-primary" onclick="plausible && plausible('cta_clicked',{props:{pos:'mid'}})">無料AI診断を予約する</a>
-    </div>
-  </section>
-
-  <!-- Process -->
-  <section class="mt-16 space-y-6">
-    <h2 class="text-2xl md:text-3xl font-semibold">導入プロセス（最短2週間）</h2>
-    <ol class="list-decimal pl-6 space-y-2">
-      <li>無料診断：効果が出る対象を特定</li>
-      <li>設計：データ流れ図/承認フロー定義</li>
-      <li>実装：Cloudflare Functions + 各SaaS連携</li>
-      <li>定着化：ダッシュボード・小改善</li>
-    </ol>
-  </section>
-
-  <!-- Pricing（見積ベース。目安は details 内） -->
-  <section class="mt-16 space-y-4">
-    <h2 class="text-2xl md:text-3xl font-semibold">料金の考え方（“効果の出る1フロー”から）</h2>
-    <ul class="list-disc pl-6 space-y-2">
-      <li><strong>案件最適化：</strong> 既存SaaS・社内ルール・承認フローに合わせて構成</li>
-      <li><strong>小さく速く：</strong> 設計→実装→定着を短サイクルでROIを可視化</li>
-      <li><strong>無料診断→見積：</strong> 15–30分のヒアリング後に提示</li>
-    </ul>
-    <details class="p-4 rounded-2xl border">
-      <summary class="font-semibold cursor-pointer">料金の目安（開閉）</summary>
-      <div class="mt-3 grid md:grid-cols-3 gap-6">
-        <div class="p-4 rounded-xl border">
-          <h3 class="font-semibold mb-1">単一フロー</h3>
-          <p class="text-sm opacity-80">問い合わせ→Slack→スプレッドシート 等</p>
-          <p class="mt-2">目安：<strong>¥50,000〜</strong></p>
-        </div>
-        <div class="p-4 rounded-xl border">
-          <h3 class="font-semibold mb-1">2〜3フロー連携</h3>
-          <p class="text-sm opacity-80">CRM登録・自動返信・承認・ログ</p>
-          <p class="mt-2">目安：<strong>¥200,000〜</strong></p>
-        </div>
-        <div class="p-4 rounded-xl border">
-          <h3 class="font-semibold mb-1">創業・研修プログラム</h3>
-          <p class="text-sm opacity-80">全3回／社内定着支援</p>
-          <p class="mt-2">目安：<strong>¥30,000〜</strong></p>
+          {/* Hero Visual（簡易モック） */}
+          <div class="relative">
+            <div class="relative mx-auto max-w-md rounded-3xl border border-gray-200 bg-gray-50 p-4 shadow-sm">
+              <div class="mb-4 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="h-2 w-2 rounded-full bg-green-400"></span>
+                  <span class="h-2 w-2 rounded-full bg-yellow-300"></span>
+                  <span class="h-2 w-2 rounded-full bg-red-400"></span>
+                </div>
+                <span class="text-xs text-gray-400">Slack / daily_summary</span>
+              </div>
+              <div class="space-y-3">
+                <div class="flex gap-2">
+                  <div class="h-8 w-8 flex-shrink-0 rounded-full bg-blue-200"></div>
+                  <div class="flex-1 space-y-1">
+                    <div class="h-3 w-1/2 rounded bg-gray-200"></div>
+                    <div class="h-2 w-3/4 rounded bg-gray-100"></div>
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <div class="h-8 w-8 flex-shrink-0 rounded-full bg-purple-200"></div>
+                  <div class="flex-1 space-y-1">
+                    <div class="h-3 w-2/3 rounded bg-gray-200"></div>
+                    <div class="h-2 w-1/2 rounded bg-gray-100"></div>
+                  </div>
+                </div>
+                <div class="rounded-2xl bg-blue-50 p-3 text-xs text-blue-900">
+                  <p class="font-medium">AI要約Botが今日の動きを整理しました。</p>
+                  <p class="mt-1 text-[11px] text-blue-800">
+                    ミーティング3件／重要対応2件／明日のタスク3件を抽出しています。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <p class="text-sm opacity-60 mt-3">※ 正式見積は無料診断後に確定。補助金対象になる場合あり（申請伴走可）。</p>
-    </details>
-  </section>
+    </section>
 
-  <!-- FAQ -->
-  <section class="mt-16 space-y-6">
-    <h2 class="text-2xl md:text-3xl font-semibold">よくある質問</h2>
-    <details class="p-4 rounded-2xl border">
-      <summary class="font-semibold cursor-pointer">どの業務から自動化すべき？</summary>
-      <p>頻度・所要時間・人数・エラー率の高い作業から、まずは1フローで始めます。</p>
-    </details>
-    <details class="p-4 rounded-2xl border">
-      <summary class="font-semibold cursor-pointer">セキュリティは？</summary>
-      <p>お客様環境内（Google Workspace / Notion / Slack）での処理が基本。鍵は環境変数で管理します。</p>
-    </details>
-    <details class="p-4 rounded-2xl border">
-      <summary class="font-semibold cursor-pointer">費用と期間の目安は？</summary>
-      <p>小規模は2週間・10万円〜。無料診断後に確定見積りを提示します。</p>
-    </details>
-  </section>
+    {/* Pain */}
+    <section class="bg-gray-50">
+      <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+        <div class="grid gap-12 md:grid-cols-2">
+          <div>
+            <h2 class="mb-4 text-2xl font-semibold text-gray-900 md:text-3xl">
+              まず、こんなお悩みはありませんか？
+            </h2>
+            <ul class="mb-6 space-y-2 text-base leading-relaxed text-gray-700">
+              <li>・手作業が多く、同じミスが繰り返される</li>
+              <li>・情報がバラバラで、誰も全体を把握できない</li>
+              <li>・社内に“詳しい人”がいない</li>
+              <li>・忙しすぎて改善まで手が回らない</li>
+              <li>・どこから手をつけていいか分からない</li>
+            </ul>
+            <p class="text-sm text-gray-600">
+              → この5つが揃った会社は、わずかな改善でも効果が跳ね上がります。
+            </p>
+          </div>
+          <div class="flex items-center">
+            <div class="w-full rounded-3xl border border-dashed border-gray-300 bg-white p-6 text-sm text-gray-500">
+              <p class="mb-2 font-medium text-gray-700">現場のリアルな状況</p>
+              <p class="mb-1">
+                ・スプレッドシート／メール／Slack に情報が散らばっている
+              </p>
+              <p class="mb-1">
+                ・「誰が、何を、いつまでに」が見えづらい
+              </p>
+              <p>・忙しさが優先され、改善は“後回し”になっている</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <!-- Final CTA -->
-  <section class="mt-16 text-center space-y-4">
-    <h2 class="text-2xl md:text-3xl font-semibold">無料AI自動化診断（15分）</h2>
-    <p>“時間を奪っている作業”を洗い出し、効果順にロードマップをご提案します。</p>
-    <div class="flex gap-3 justify-center">
-      <a href="/contact" class="btn-primary" onclick="plausible && plausible('cta_clicked',{props:{pos:'final'}})">問い合わせる</a>
-      <a href="/contact" class="btn-ghost">まず相談だけ</a>
-    </div>
-    <p class="text-sm opacity-60">山梨拠点。オンライン全国対応。</p>
-  </section>
+    {/* AI導入がうまくいかない理由 */}
+    <section class="bg-white">
+      <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+        <h2 class="mb-4 text-2xl font-semibold text-gray-900 md:text-3xl">
+          実は、AI導入がうまくいかない理由は同じです。
+        </h2>
+        <ul class="mb-6 space-y-2 text-base leading-relaxed text-gray-700">
+          <li>・ツールだけ導入しても“動かない”</li>
+          <li>・最初に大きく手を広げて失敗する</li>
+          <li>・現場が使わず、形だけの仕組みになる</li>
+          <li>・トラブルが起きると、誰も直せない</li>
+          <li>・結局、改善が止まってしまう</li>
+        </ul>
+        <p class="text-sm text-gray-600">
+          ⇒ だからこそ、“最初の1つ”を確実に成果にする。それがすべての基盤になります。
+        </p>
+      </div>
+    </section>
 
-  <script type="application/ld+json" set:html={JSON.stringify(serviceJsonLd)} />
+    {/* automation が解決すること */}
+    <section class="bg-gray-50">
+      <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+        <h2 class="mb-4 text-2xl font-semibold text-gray-900 md:text-3xl">
+          INCIERGE /automation が解決すること
+        </h2>
+        <p class="mb-4 text-base leading-relaxed text-gray-700">
+          使われる“現場目線のAI導入”に特化しています。
+        </p>
+        <ul class="mb-6 space-y-2 text-base leading-relaxed text-gray-700">
+          <li>・今日から動く、小さな改善</li>
+          <li>・社長の負担ゼロ（設計〜運用まで代行）</li>
+          <li>・現場が迷わないシンプルな仕組み</li>
+          <li>・成果が出たら、次の業務へ横展開</li>
+          <li>・トラブル対応もすべて任せられる</li>
+        </ul>
+        <p class="text-sm text-gray-600">
+          → やるのは1つだけ。早く、確実に、動くところから。
+        </p>
+      </div>
+    </section>
+
+    {/* Before / After */}
+    <section class="bg-white">
+      <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+        <h2 class="mb-8 text-2xl font-semibold text-gray-900 md:text-3xl">
+          たった1つ自動化すると、会社はこう変わります。
+        </h2>
+        <div class="grid gap-10 md:grid-cols-2">
+          <div>
+            <h3 class="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-500">
+              Before
+            </h3>
+            <ul class="space-y-3 text-base leading-relaxed text-gray-700">
+              <li>Before：毎日の報告がバラバラ</li>
+              <li>Before：問い合わせの抜け漏れ</li>
+              <li>Before：誰も改善できない</li>
+              <li>Before：社長が全部確認</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-500">
+              After
+            </h3>
+            <ul class="space-y-3 text-base leading-relaxed text-gray-700">
+              <li>After：必要な情報が自動でまとまる</li>
+              <li>After：自動通知でミスがゼロに</li>
+              <li>After：改善できる“仕組み”が会社に残る</li>
+              <li>After：必要な時だけ通知が届く</li>
+            </ul>
+          </div>
+        </div>
+        <p class="mt-6 text-sm text-gray-600">
+          → “作業”ではなく、“仕組み”を作ることがポイントです。
+        </p>
+      </div>
+    </section>
+
+    {/* 料金プラン */}
+    <section class="bg-gray-50" id="plans">
+      <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+        <h2 class="mb-4 text-2xl font-semibold text-gray-900 md:text-3xl">
+          【料金プラン】
+        </h2>
+        <p class="mb-8 text-base leading-relaxed text-gray-700">
+          小さく試せる3つのプラン
+        </p>
+
+        <div class="grid gap-8 md:grid-cols-3">
+          {/* ライト */}
+          <div class="flex flex-col rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+            <h3 class="mb-1 text-lg font-semibold text-gray-900">
+              ライト（33,000円）
+            </h3>
+            <p class="mb-4 text-sm text-gray-500">
+              今日から動く、はじめての自動化。
+            </p>
+            <ul class="mb-4 space-y-2 text-sm leading-relaxed text-gray-700">
+              <li>・通知や台帳づくりなど“小さな1つ”を確実に改善</li>
+              <li>・ヒアリング〜導入まで最短1日</li>
+              <li>・現場に合う形で、すぐに使える状態に仕上げます</li>
+            </ul>
+            <p class="mt-auto text-xs text-gray-500">
+              ※ 初めての会社は このプランが一番早く成果が出ます。
+            </p>
+          </div>
+
+          {/* スタンダード */}
+          <div class="relative flex flex-col rounded-2xl border-2 border-blue-500 bg-white p-6 shadow-md">
+            <div class="absolute -top-3 right-4 rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">
+              おすすめ
+            </div>
+            <h3 class="mb-1 text-lg font-semibold text-gray-900">
+              スタンダード（77,000〜110,000円）
+            </h3>
+            <p class="mb-4 text-sm text-gray-500">
+              業務全体の流れが軽くなる、自動化セット。
+            </p>
+            <ul class="mb-4 space-y-2 text-sm leading-relaxed text-gray-700">
+              <li>・日程調整</li>
+              <li>・報告・連絡・共有の自動化</li>
+              <li>・社内ルールの整理</li>
+              <li>・台帳の整備</li>
+              <li>・部署単位での改善</li>
+            </ul>
+            <p class="mt-auto text-xs text-gray-500">
+              ※ 最短3〜5日で運用開始。
+              <br />
+              小規模組織の“本番運用”に最適です。
+            </p>
+          </div>
+
+          {/* 伴走 */}
+          <div class="flex flex-col rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+            <h3 class="mb-1 text-lg font-semibold text-gray-900">
+              伴走プラン（月3〜5万円）
+            </h3>
+            <p class="mb-4 text-sm text-gray-500">
+              毎月“会社のどこかが軽くなる”状態をつくる。
+            </p>
+            <ul class="mb-4 space-y-2 text-sm leading-relaxed text-gray-700">
+              <li>・月1〜2回の改善ミーティング</li>
+              <li>・新しい自動化の追加</li>
+              <li>・社員向けのAIレクチャー</li>
+              <li>・トラブル対応</li>
+              <li>・現場の習慣づくりの支援</li>
+            </ul>
+            <p class="mt-auto text-xs text-gray-500">
+              → 社内にAI担当が1人増えた状態。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ケース例 */}
+    <section class="bg-white">
+      <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+        <h2 class="mb-6 text-2xl font-semibold text-gray-900 md:text-3xl">
+          ケース例（実績ベース）
+        </h2>
+        <div class="grid gap-6 md:grid-cols-2">
+          {[
+            "問い合わせの抜け漏れ防止",
+            "報告・共有の自動化",
+            "日程調整の手間ゼロ",
+            "スタッフの作業を自動で整理",
+            "毎日の業務ログの要約",
+            "クライアントごとの台帳づくり"
+          ].map((item) => (
+            <div class="rounded-2xl border border-gray-200 bg-gray-50 p-5 text-sm leading-relaxed text-gray-800">
+              {item}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* INCIERGEが選ばれる理由 */}
+    <section class="bg-gray-50">
+      <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+        <h2 class="mb-4 text-2xl font-semibold text-gray-900 md:text-3xl">
+          INCIERGEが選ばれる理由
+        </h2>
+        <p class="mb-4 text-base leading-relaxed text-gray-700">
+          AIではなく、“人の仕事が軽くなる仕組み”を作ります。
+        </p>
+        <ul class="space-y-2 text-base leading-relaxed text-gray-700">
+          <li>・今日から改善が始まるスピード</li>
+          <li>・社長の手間ゼロ（丸ごと代行）</li>
+          <li>・現場に合わせたシンプル設計</li>
+          <li>・内製化まで同伴</li>
+          <li>・地方企業・小規模組織と相性が強い</li>
+          <li>・“ツール”ではなく“成果”を売る姿勢</li>
+        </ul>
+      </div>
+    </section>
+
+    {/* FAQ */}
+    <section class="bg-white">
+      <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+        <h2 class="mb-6 text-2xl font-semibold text-gray-900 md:text-3xl">
+          よくある質問（FAQ）
+        </h2>
+        <div class="space-y-4">
+          <details class="group rounded-2xl border border-gray-200 bg-gray-50 p-4">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4">
+              <span class="text-base font-medium text-gray-900">
+                Q. AIに詳しくなくても大丈夫ですか？
+              </span>
+              <span class="text-sm text-gray-500 group-open:hidden">＋</span>
+              <span class="hidden text-sm text-gray-500 group-open:inline">−</span>
+            </summary>
+            <div class="mt-2 text-sm leading-relaxed text-gray-700">
+              → 全く問題ありません。設計・構築・運用まで、すべて代行します。
+            </div>
+          </details>
+
+          <details class="group rounded-2xl border border-gray-200 bg-gray-50 p-4">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4">
+              <span class="text-base font-medium text-gray-900">
+                Q. 社員が使いこなせるか心配です。
+              </span>
+              <span class="text-sm text-gray-500 group-open:hidden">＋</span>
+              <span class="hidden text-sm text-gray-500 group-open:inline">−</span>
+            </summary>
+            <div class="mt-2 text-sm leading-relaxed text-gray-700">
+              → 誰でも使える形に作るのでご安心ください。
+            </div>
+          </details>
+
+          <details class="group rounded-2xl border border-gray-200 bg-gray-50 p-4">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4">
+              <span class="text-base font-medium text-gray-900">
+                Q. 費用対効果が心配です。
+              </span>
+              <span class="text-sm text-gray-500 group-open:hidden">＋</span>
+              <span class="hidden text-sm text-gray-500 group-open:inline">−</span>
+            </summary>
+            <div class="mt-2 text-sm leading-relaxed text-gray-700">
+              → 最初の1業務だけを対象にし、“確実に成果が出る形”で始めます。
+            </div>
+          </details>
+
+          <details class="group rounded-2xl border border-gray-200 bg-gray-50 p-4">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4">
+              <span class="text-base font-medium text-gray-900">
+                Q. 地方の小さな会社でも相談できますか？
+              </span>
+              <span class="text-sm text-gray-500 group-open:hidden">＋</span>
+              <span class="hidden text-sm text-gray-500 group-open:inline">−</span>
+            </summary>
+            <div class="mt-2 text-sm leading-relaxed text-gray-700">
+              → むしろ相性抜群です。業務がすぐに軽くなります。
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    {/* 最終CTA */}
+    <section class="bg-gradient-to-b from-blue-50 to-blue-100">
+      <div class="mx-auto max-w-6xl px-4 py-16 text-center sm:px-6 lg:px-8">
+        <h2 class="mb-4 text-2xl font-semibold text-gray-900 md:text-3xl">
+          まずは、あなたの会社の“今すぐ軽くできる部分”を見つけます。
+        </h2>
+        <div class="mb-4 flex justify-center">
+          <a
+            href="/contact"
+            class="inline-flex items-center justify-center rounded-full bg-blue-600 px-10 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
+          >
+            無料相談する
+          </a>
+        </div>
+        <p class="text-sm leading-relaxed text-gray-800">
+          「いま困っていることを、簡単に教えてください。
+          <br class="hidden sm:block" />
+          AIが2〜3個、今日から消せるムダを見つけます。」
+        </p>
+      </div>
+    </section>
+  </main>
 </Base>
