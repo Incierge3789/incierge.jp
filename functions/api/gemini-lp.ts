@@ -91,6 +91,11 @@ User input (in Japanese):
           parts: [{ text: systemPrompt }],
         },
       ],
+      generationConfig: {
+        maxOutputTokens: 600, // 1回答の最大トークン数（必要なら調整）
+        temperature: 0.5,     // ブレを抑えめに
+        topP: 0.9,
+      },
     };
 
     const geminiUrl =
@@ -124,10 +129,7 @@ User input (in Japanese):
 
     if (!geminiRes.ok) {
       const text = await geminiRes.text().catch(() => "");
-      console.error(
-        "GEMINI_LP_API_ERROR_BODY",
-        text.slice(0, 500),
-      );
+      console.error("GEMINI_LP_API_ERROR_BODY", text.slice(0, 500));
       return json(502, {
         error: "GEMINI_API_ERROR",
         status: geminiRes.status,
