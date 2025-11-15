@@ -1,4 +1,5 @@
 // functions/api/gemini-lp.ts
+// functions/api/gemini-lp.ts
 
 export const onRequestPost: PagesFunction = async (context) => {
   const { request, env } = context;
@@ -71,24 +72,23 @@ export const onRequestPost: PagesFunction = async (context) => {
       return json(500, { error: "PROMPT_FETCH_EXCEPTION", detail: String(e) });
     }
 
-    // 5) Gemini へ送る最終プロンプト
-    const systemPrompt = `${commonPrompt.trim()}
+    // 5) systemInstruction と user 発話を分離
+    const systemInstruction = `${commonPrompt.trim()}
 
 ---
 
 ${lpPrompt.trim()}
-
----
-
-User input (in Japanese):
-"${userMessage}"
 `;
 
     const payload = {
+      systemInstruction: {
+        role: "system",
+        parts: [{ text: systemInstruction }],
+      },
       contents: [
         {
           role: "user",
-          parts: [{ text: systemPrompt }],
+          parts: [{ text: userMessage }],
         },
       ],
       generationConfig: {
@@ -102,11 +102,12 @@ User input (in Japanese):
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" +
       encodeURIComponent(apiKey);
 
-    // ここからログ追加ポイント
+    // ログ
     console.log("GEMINI_LP_REQUEST", {
       userLen: userMessage.length,
-      promptLen: systemPrompt.length,
-      promptHead: systemPrompt.slice(0, 120),
+      userHead: userMessage.slice(0, 80),
+      sysLen: systemInstruction.length,
+      sysHead: systemInstruction.slice(0, 120),
     });
 
     // 6) Gemini 呼び出し（例外も拾う）
