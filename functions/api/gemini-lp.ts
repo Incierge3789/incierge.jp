@@ -34,7 +34,7 @@ export const onRequestPost: PagesFunction = async (context) => {
       return json(400, { error: "EMPTY_MESSAGE" });
     }
 
-    // 4) /automation 専用プロンプト（日本語）だけを読む
+    // 4) /public 配下のプロンプトを ASSETS 経由で読む
     const baseUrl = new URL(request.url);
     const lpReq = new Request(
       new URL("/prompts/automation/lp_mode_automation_jp.txt", baseUrl),
@@ -51,12 +51,13 @@ export const onRequestPost: PagesFunction = async (context) => {
           detail: { lpStatus: lpRes.status },
         });
       }
+
       lpPrompt = await lpRes.text();
     } catch (e) {
       return json(500, { error: "PROMPT_FETCH_EXCEPTION", detail: String(e) });
     }
 
-    // 5) systemInstruction に明示的に分離
+    // 5) systemInstruction として日本語プロンプトを丸ごと渡す
     const systemInstruction = lpPrompt.trim();
 
     const payload = {
@@ -71,7 +72,7 @@ export const onRequestPost: PagesFunction = async (context) => {
         },
       ],
       generationConfig: {
-        maxOutputTokens: 400, // LP用なのでやや短め
+        maxOutputTokens: 400, // /automation 用ならこのくらいで十分
         temperature: 0.4,
         topP: 0.9,
       },
@@ -81,7 +82,7 @@ export const onRequestPost: PagesFunction = async (context) => {
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" +
       encodeURIComponent(apiKey);
 
-    // リクエストログ
+    // ログ（system と user を分ける）
     console.log("GEMINI_LP_REQUEST", {
       userLen: userMessage.length,
       userHead: userMessage.slice(0, 80),
@@ -94,7 +95,9 @@ export const onRequestPost: PagesFunction = async (context) => {
     try {
       geminiRes = await fetch(geminiUrl, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(payload),
       });
     } catch (e) {
@@ -114,7 +117,6 @@ export const onRequestPost: PagesFunction = async (context) => {
       });
     }
 
-    // 7) レスポンス解析（finishReason / promptFeedback もログ）
     let data: any;
     try {
       data = await geminiRes.json();
@@ -123,7 +125,6 @@ export const onRequestPost: PagesFunction = async (context) => {
       return json(500, { error: "GEMINI_JSON_PARSE_ERROR", detail: String(e) });
     }
 
-    const promptFeedback = data?.promptFeedback;
     const candidate = data?.candidates?.[0];
     const finishReason = candidate?.finishReason;
     const parts = candidate?.content?.parts ?? [];
@@ -139,25 +140,18 @@ export const onRequestPost: PagesFunction = async (context) => {
     if (!text) {
       console.error("GEMINI_LP_EMPTY_TEXT", {
         finishReason,
-        promptFeedback,
         rawCandidate: JSON.stringify(candidate).slice(0, 500),
       });
     }
 
     const replyText =
       text ||
-      [
-        "すみません、うまく回答を生成できませんでした。",
-        "",
-        "「いま一番つらい作業」を、日本語で一文だけ教えてもらえますか？",
-        "（例：『毎朝のメール確認』『Slackの未読チェック』『日程調整』など）",
-      ].join("\n");
+      "すみません、うまく回答を生成できませんでした。\n\n「いま一番つらい作業」を、日本語で一文だけ教えてもらえますか？\n（例：『毎朝のメール確認』『Slackの未読チェック』『日程調整』など）";
 
     console.log("GEMINI_LP_REPLY_OK", {
       replyLen: replyText.length,
       replyHead: replyText.slice(0, 80),
       finishReason,
-      promptFeedback,
     });
 
     return json(200, { reply: replyText });
