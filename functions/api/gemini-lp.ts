@@ -34,45 +34,29 @@ export const onRequestPost: PagesFunction = async (context) => {
       return json(400, { error: "EMPTY_MESSAGE" });
     }
 
-    // 4) プロンプト読み込み（ASSETS経由）
+    // 4) /automation 専用プロンプト（日本語）だけを読む
     const baseUrl = new URL(request.url);
-
-    const commonReq = new Request(
-      new URL("/prompts/common/system_incierge_concierge_en.txt", baseUrl),
-    );
     const lpReq = new Request(
-      new URL("/prompts/automation/lp_mode_automation_en.txt", baseUrl),
+      new URL("/prompts/automation/lp_mode_automation_jp.txt", baseUrl),
     );
 
-    let commonPrompt: string;
     let lpPrompt: string;
     try {
       // @ts-ignore ASSETS は Pages Functions 固有
-      const [commonRes, lpRes] = await Promise.all([
-        env.ASSETS.fetch(commonReq),
-        env.ASSETS.fetch(lpReq),
-      ]);
+      const lpRes = await env.ASSETS.fetch(lpReq);
 
-      if (!commonRes.ok || !lpRes.ok) {
+      if (!lpRes.ok) {
         return json(500, {
           error: "PROMPT_LOAD_FAILED",
-          detail: {
-            commonStatus: commonRes.status,
-            lpStatus: lpRes.status,
-          },
+          detail: { lpStatus: lpRes.status },
         });
       }
-
-      [commonPrompt, lpPrompt] = await Promise.all([
-        commonRes.text(),
-        lpRes.text(),
-      ]);
+      lpPrompt = await lpRes.text();
     } catch (e) {
       return json(500, { error: "PROMPT_FETCH_EXCEPTION", detail: String(e) });
     }
 
-    // 5) /automation 専用の systemInstruction に絞る
-    //   → まずは lpPrompt のみを使う（共通は後で整理する）
+    // 5) systemInstruction に明示的に分離
     const systemInstruction = lpPrompt.trim();
 
     const payload = {
@@ -87,8 +71,8 @@ export const onRequestPost: PagesFunction = async (context) => {
         },
       ],
       generationConfig: {
-        maxOutputTokens: 600,
-        temperature: 0.5,
+        maxOutputTokens: 400, // LP用なのでやや短め
+        temperature: 0.4,
         topP: 0.9,
       },
     };
@@ -97,7 +81,7 @@ export const onRequestPost: PagesFunction = async (context) => {
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" +
       encodeURIComponent(apiKey);
 
-    // ログ（system と user を分けて確認）
+    // リクエストログ
     console.log("GEMINI_LP_REQUEST", {
       userLen: userMessage.length,
       userHead: userMessage.slice(0, 80),
@@ -110,9 +94,7 @@ export const onRequestPost: PagesFunction = async (context) => {
     try {
       geminiRes = await fetch(geminiUrl, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
     } catch (e) {
@@ -132,6 +114,7 @@ export const onRequestPost: PagesFunction = async (context) => {
       });
     }
 
+    // 7) レスポンス解析（finishReason / promptFeedback もログ）
     let data: any;
     try {
       data = await geminiRes.json();
@@ -140,7 +123,7 @@ export const onRequestPost: PagesFunction = async (context) => {
       return json(500, { error: "GEMINI_JSON_PARSE_ERROR", detail: String(e) });
     }
 
-    // 7) parts をすべて join してテキスト抽出（構造ゆらぎ対策）
+    const promptFeedback = data?.promptFeedback;
     const candidate = data?.candidates?.[0];
     const finishReason = candidate?.finishReason;
     const parts = candidate?.content?.parts ?? [];
@@ -156,18 +139,25 @@ export const onRequestPost: PagesFunction = async (context) => {
     if (!text) {
       console.error("GEMINI_LP_EMPTY_TEXT", {
         finishReason,
+        promptFeedback,
         rawCandidate: JSON.stringify(candidate).slice(0, 500),
       });
     }
 
     const replyText =
       text ||
-      "すみません、少し混み合っているようです。もう一度だけ試してもらえますか？";
+      [
+        "すみません、うまく回答を生成できませんでした。",
+        "",
+        "「いま一番つらい作業」を、日本語で一文だけ教えてもらえますか？",
+        "（例：『毎朝のメール確認』『Slackの未読チェック』『日程調整』など）",
+      ].join("\n");
 
     console.log("GEMINI_LP_REPLY_OK", {
       replyLen: replyText.length,
       replyHead: replyText.slice(0, 80),
       finishReason,
+      promptFeedback,
     });
 
     return json(200, { reply: replyText });
