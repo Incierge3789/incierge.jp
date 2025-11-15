@@ -72,9 +72,11 @@ export const onRequestPost: PagesFunction = async (context) => {
         },
       ],
       generationConfig: {
-        maxOutputTokens: 400, // /automation 用ならこのくらいで十分
+        // ★ 出力をやや抑えつつ、プレーンテキストで返してもらう
+        maxOutputTokens: 256,
         temperature: 0.4,
         topP: 0.9,
+        responseMimeType: "text/plain",
       },
     };
 
@@ -130,17 +132,19 @@ export const onRequestPost: PagesFunction = async (context) => {
     const parts = candidate?.content?.parts ?? [];
 
     let text = "";
-    if (Array.isArray(parts)) {
+    if (Array.isArray(parts) && parts.length > 0) {
       text = parts
         .map((p: any) => (typeof p?.text === "string" ? p.text : ""))
         .join("\n\n")
         .trim();
     }
 
+    // ★ 空レス時は data 全体をある程度出す
     if (!text) {
       console.error("GEMINI_LP_EMPTY_TEXT", {
         finishReason,
-        rawCandidate: JSON.stringify(candidate).slice(0, 500),
+        // 念のためレスポンス全体も 1200 文字まで見る
+        full: JSON.stringify(data).slice(0, 1200),
       });
     }
 
