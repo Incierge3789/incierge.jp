@@ -1,198 +1,162 @@
-// public/scripts/automation-gemini.js
-// /automation 専用 INCIERGE CONCIERGE フロントロジック
-// - モーダルの開閉
-// - ユーザーメッセージ表示
-// - Gemini呼び出し（自動リトライ＋エラーハンドリング）
+// functions/api/gemini-lp.ts
 
-document.addEventListener("DOMContentLoaded", () => {
-  const modal = document.getElementById("gemini-modal");
-  const openBtn = document.getElementById("gemini-open");
-  const closeBtn = document.getElementById("gemini-close");
-  const form = document.getElementById("gemini-chat-form");
-  const textarea = document.getElementById("gemini-chat-input");
-  const messages = document.getElementById("gemini-chat-messages");
+export const onRequest: PagesFunction = async (context) => {
+  const { request, env } = context;
 
-  if (!form || !textarea || !messages) {
-    console.warn("INCIERGE GEMINI: 必要な要素が見つかりませんでした。");
-    return;
-  }
+  const json = (status: number, data: unknown) =>
+    new Response(JSON.stringify(data), {
+      status,
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+    });
 
-  // --------------------------------------------------
-  // UI ヘルパー
-  // --------------------------------------------------
-  function scrollToBottom() {
-    messages.scrollTop = messages.scrollHeight;
-  }
-
-  function addMessage(role, text) {
-    const wrapper = document.createElement("div");
-    wrapper.className =
-      role === "user"
-        ? "flex justify-end mb-3"
-        : "flex justify-start mb-3";
-
-    const bubble = document.createElement("div");
-    bubble.className =
-      role === "user"
-        ? "max-w-[80%] rounded-2xl px-3 py-2 text-[13px] leading-relaxed bg-blue-600 text-white shadow-md"
-        : "max-w-[80%] rounded-2xl px-3 py-2 text-[13px] leading-relaxed bg-white text-slate-900 shadow border border-slate-200";
-
-    bubble.textContent = text;
-    wrapper.appendChild(bubble);
-    messages.appendChild(wrapper);
-    scrollToBottom();
-  }
-
-  function addSystemMessage(text) {
-    const wrapper = document.createElement("div");
-    wrapper.className = "flex justify-center mb-2";
-    const bubble = document.createElement("div");
-    bubble.className =
-      "max-w-[90%] rounded-xl px-2 py-1 text-[11px] leading-relaxed bg-slate-100 text-slate-600";
-    bubble.textContent = text;
-    wrapper.appendChild(bubble);
-    messages.appendChild(wrapper);
-    scrollToBottom();
-  }
-
-  function setThinking(isThinking) {
-    if (isThinking) {
-      textarea.setAttribute("disabled", "true");
-    } else {
-      textarea.removeAttribute("disabled");
-    }
-  }
-
-  // --------------------------------------------------
-  // Gemini 呼び出し（自動リトライ付き）
-  // --------------------------------------------------
-  async function callGeminiWithRetry(message, options = {}) {
-    const {
-      maxRetries = 2, // 合計 1 + 2 回 = 最大 3 回トライ
-      timeoutMs = 15000,
-      onRetry = null,
-    } = options;
-
-    let lastError = null;
-
-    for (let attempt = 0; attempt <= maxRetries; attempt++) {
-      try {
-        const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), timeoutMs);
-
-        const res = await fetch("/api/gemini-lp", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message }),
-          signal: controller.signal,
-        });
-
-        clearTimeout(timer);
-
-        if (!res.ok) {
-          const text = await res.text().catch(() => "");
-          throw new Error(`HTTP ${res.status}: ${text.slice(0, 200)}`);
-        }
-
-        const data = await res.json();
-        return data; // 正常終了
-
-      } catch (err) {
-        lastError = err;
-
-        const isAbort = err.name === "AbortError";
-        const isNetwork =
-          err instanceof TypeError &&
-          String(err.message || "").includes("Failed to fetch");
-
-        const retriable = isAbort || isNetwork;
-
-        if (attempt < maxRetries && retriable) {
-          if (typeof onRetry === "function") {
-            onRetry({ attempt, maxRetries, error: err });
-          }
-          // 200ms → 400ms → … で少しだけ待つ
-          await new Promise((r) => setTimeout(r, 200 + attempt * 200));
-          continue;
-        }
-
-        // リトライ不可 or 回数上限
-        throw err;
-      }
+  try {
+    // 1) メソッドチェック（POST 以外は 405）
+    if (request.method !== "POST") {
+      return json(405, { error: "METHOD_NOT_ALLOWED" });
     }
 
-    throw lastError || new Error("Unknown error in callGeminiWithRetry");
-  }
+    // 2) APIキー確認
+    const apiKey = env.GEMINI_API_KEY;
+    if (!apiKey) {
+      return json(500, { error: "MISSING_GEMINI_API_KEY" });
+    }
 
-  // --------------------------------------------------
-  // モーダル開閉
-  // --------------------------------------------------
-  if (openBtn && modal) {
-    openBtn.addEventListener("click", () => {
-      modal.classList.remove("hidden");
-      modal.setAttribute("aria-hidden", "false");
-      textarea.focus();
-    });
-  }
-
-  if (closeBtn && modal) {
-    closeBtn.addEventListener("click", () => {
-      modal.classList.add("hidden");
-      modal.setAttribute("aria-hidden", "true");
-    });
-  }
-
-  // モーダル外クリックで閉じる（任意）
-  if (modal) {
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) {
-        modal.classList.add("hidden");
-        modal.setAttribute("aria-hidden", "true");
-      }
-    });
-  }
-
-  // --------------------------------------------------
-  // フォーム送信ハンドラ（ここが今回の本丸）
-  // --------------------------------------------------
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const userText = textarea.value.trim();
-    if (!userText) return;
-
-    // ユーザーのメッセージを表示
-    addMessage("user", userText);
-
-    // 入力欄リセット
-    textarea.value = "";
-    setThinking(true);
-
+    // 3) リクエストボディ
+    let body: any;
     try {
-      const data = await callGeminiWithRetry(userText, {
-        maxRetries: 2,
-        timeoutMs: 15000,
-        onRetry({ attempt }) {
-          if (attempt === 0) {
-            addSystemMessage("通信が少し不安定なようです。再接続を試しています…");
-          }
-        },
-      });
-
-      const reply =
-        (data && typeof data.reply === "string" && data.reply.trim()) ||
-        "すみません、うまく回答を生成できませんでした。\n\n「いま一番つらい作業」を、日本語で一文だけ教えてもらえますか？\n（例：『毎朝のメール確認』『Slackの未読チェック』『日程調整』など）";
-
-      addMessage("bot", reply);
-    } catch (err) {
-      console.error("GEMINI_LP_FRONT_ERROR", err);
-      addMessage(
-        "bot",
-        "通信が少し不安定なようです。\nしばらく時間をおいてから、もう一度お試しください。"
-      );
-    } finally {
-      setThinking(false);
-      textarea.focus();
+      body = await request.json();
+    } catch (e) {
+      return json(400, { error: "INVALID_JSON", detail: String(e) });
     }
-  });
-});
+
+    const userMessage = (body?.message ?? "").toString().trim();
+    if (!userMessage) {
+      return json(400, { error: "EMPTY_MESSAGE" });
+    }
+
+    // 4) /public 配下のプロンプトを ASSETS 経由で読む
+    const baseUrl = new URL(request.url);
+    const lpReq = new Request(
+      new URL("/prompts/automation/lp_mode_automation_jp.txt", baseUrl),
+    );
+
+    let lpPrompt: string;
+    try {
+      // @ts-ignore ASSETS は Pages Functions 固有
+      const lpRes = await env.ASSETS.fetch(lpReq);
+
+      if (!lpRes.ok) {
+        return json(500, {
+          error: "PROMPT_LOAD_FAILED",
+          detail: { lpStatus: lpRes.status },
+        });
+      }
+
+      lpPrompt = await lpRes.text();
+    } catch (e) {
+      return json(500, { error: "PROMPT_FETCH_EXCEPTION", detail: String(e) });
+    }
+
+    // 5) systemInstruction として日本語プロンプトを丸ごと渡す
+    const systemInstruction = lpPrompt.trim();
+
+    const payload = {
+      systemInstruction: {
+        role: "system",
+        parts: [{ text: systemInstruction }],
+      },
+      contents: [
+        {
+          role: "user",
+          parts: [{ text: userMessage }],
+        },
+      ],
+      generationConfig: {
+        maxOutputTokens: 400,
+        temperature: 0.4,
+        topP: 0.9,
+      },
+    };
+
+    const geminiUrl =
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" +
+      encodeURIComponent(apiKey);
+
+    // ログ
+    console.log("GEMINI_LP_REQUEST", {
+      userLen: userMessage.length,
+      userHead: userMessage.slice(0, 80),
+      sysLen: systemInstruction.length,
+      sysHead: systemInstruction.slice(0, 120),
+    });
+
+    // 6) Gemini 呼び出し
+    let geminiRes: Response;
+    try {
+      geminiRes = await fetch(geminiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+    } catch (e) {
+      console.error("GEMINI_LP_FETCH_EXCEPTION", String(e));
+      return json(502, { error: "GEMINI_FETCH_ERROR", detail: String(e) });
+    }
+
+    console.log("GEMINI_LP_RESPONSE_STATUS", geminiRes.status);
+
+    if (!geminiRes.ok) {
+      const text = (await geminiRes.text().catch(() => "")) || "";
+      console.error("GEMINI_LP_API_ERROR_BODY", text.slice(0, 500));
+      return json(502, {
+        error: "GEMINI_API_ERROR",
+        status: geminiRes.status,
+        body: text.slice(0, 2000),
+      });
+    }
+
+    let data: any;
+    try {
+      data = await geminiRes.json();
+    } catch (e) {
+      console.error("GEMINI_LP_JSON_PARSE_ERROR", String(e));
+      return json(500, { error: "GEMINI_JSON_PARSE_ERROR", detail: String(e) });
+    }
+
+    const candidate = data?.candidates?.[0];
+    const finishReason = candidate?.finishReason;
+    const parts = candidate?.content?.parts ?? [];
+
+    let text = "";
+    if (Array.isArray(parts) && parts.length > 0) {
+      text = parts
+        .map((p: any) => (typeof p?.text === "string" ? p.text : ""))
+        .join("\n\n")
+        .trim();
+    }
+
+    if (!text) {
+      console.error("GEMINI_LP_EMPTY_TEXT", {
+        finishReason,
+        full: JSON.stringify(data).slice(0, 1200),
+      });
+    }
+
+    const replyText =
+      text ||
+      "すみません、うまく回答を生成できませんでした。\n\n「いま一番つらい作業」を、日本語で一文だけ教えてもらえますか？\n（例：『毎朝のメール確認』『Slackの未読チェック』『日程調整』など）";
+
+    console.log("GEMINI_LP_REPLY_OK", {
+      replyLen: replyText.length,
+      replyHead: replyText.slice(0, 80),
+      finishReason,
+    });
+
+    return json(200, { reply: replyText });
+  } catch (e) {
+    console.error("GEMINI_LP_UNHANDLED", String(e));
+    return json(500, { error: "UNHANDLED_EXCEPTION", detail: String(e) });
+  }
+};

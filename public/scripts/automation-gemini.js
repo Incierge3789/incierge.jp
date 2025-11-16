@@ -1,176 +1,199 @@
 // public/scripts/automation-gemini.js
-
-// public/scripts/automation-gemini.js
+// /automation 専用 INCIERGE CONCIERGE フロントロジック
+// - モーダルの開閉
+// - ユーザーメッセージ表示
+// - Gemini呼び出し（自動リトライ＋エラーハンドリング）
 
 document.addEventListener("DOMContentLoaded", () => {
-  const fab = document.getElementById("gemini-fab");
-  const bubble = document.getElementById("gemini-fab-bubble");
   const modal = document.getElementById("gemini-modal");
-  const modalCloseButtons = document.querySelectorAll("[data-gemini-modal-close]");
-  const chatForm = document.getElementById("gemini-chat-form");
-  const chatInput = document.getElementById("gemini-chat-input");
-  const chatLog = document.getElementById("gemini-chat-log");
+  const openBtn = document.getElementById("gemini-open");
+  const closeBtn = document.getElementById("gemini-close");
+  const form = document.getElementById("gemini-chat-form");
+  const textarea = document.getElementById("gemini-chat-input");
+  const messages = document.getElementById("gemini-chat-messages");
 
-  // ===== 吹き出し制御 =====
-  if (fab && bubble) {
-    let hideTimeout;
+  if (!form || !textarea || !messages) {
+    console.warn("INCIERGE GEMINI: 必要な要素が見つかりませんでした。");
+    return;
+  }
 
-    const hideBubble = () => {
-      bubble.classList.add("opacity-0", "pointer-events-none");
-    };
+  // --------------------------------------------------
+  // UI ヘルパー
+  // --------------------------------------------------
+  function scrollToBottom() {
+    messages.scrollTop = messages.scrollHeight;
+  }
 
-    const showBubble = () => {
-      bubble.classList.remove("opacity-0", "pointer-events-none");
-    };
+  function addMessage(role, text) {
+    const wrapper = document.createElement("div");
+    wrapper.className =
+      role === "user"
+        ? "flex justify-end mb-3"
+        : "flex justify-start mb-3";
 
-    // 初期表示（数秒だけ見せて自動で消す）
-    showBubble();
-    hideTimeout = window.setTimeout(hideBubble, 8000);
+    const bubble = document.createElement("div");
+    bubble.className =
+      role === "user"
+        ? "max-w-[80%] rounded-2xl px-3 py-2 text-[13px] leading-relaxed bg-blue-600 text-white shadow-md"
+        : "max-w-[80%] rounded-2xl px-3 py-2 text-[13px] leading-relaxed bg-white text-slate-900 shadow border border-slate-200";
 
-    const closeBtn = bubble.querySelector("[data-close]");
-    if (closeBtn) {
-      closeBtn.addEventListener("click", () => {
-        hideBubble();
-        if (hideTimeout) window.clearTimeout(hideTimeout);
-      });
+    bubble.textContent = text;
+    wrapper.appendChild(bubble);
+    messages.appendChild(wrapper);
+    scrollToBottom();
+  }
+
+  function addSystemMessage(text) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "flex justify-center mb-2";
+    const bubble = document.createElement("div");
+    bubble.className =
+      "max-w-[90%] rounded-xl px-2 py-1 text-[11px] leading-relaxed bg-slate-100 text-slate-600";
+    bubble.textContent = text;
+    wrapper.appendChild(bubble);
+    messages.appendChild(wrapper);
+    scrollToBottom();
+  }
+
+  function setThinking(isThinking) {
+    if (isThinking) {
+      textarea.setAttribute("disabled", "true");
+    } else {
+      textarea.removeAttribute("disabled");
+    }
+  }
+
+  // --------------------------------------------------
+  // Gemini 呼び出し（自動リトライ付き）
+  // --------------------------------------------------
+  async function callGeminiWithRetry(message, options = {}) {
+    const {
+      maxRetries = 2, // 合計 1 + 2 回 = 最大 3 回トライ
+      timeoutMs = 15000,
+      onRetry = null,
+    } = options;
+
+    let lastError = null;
+
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      try {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+        const res = await fetch("/api/gemini-lp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message }),
+          signal: controller.signal,
+        });
+
+        clearTimeout(timer);
+
+        if (!res.ok) {
+          const text = await res.text().catch(() => "");
+          throw new Error(`HTTP ${res.status}: ${text.slice(0, 200)}`);
+        }
+
+        const data = await res.json();
+        return data; // 正常終了
+
+      } catch (err) {
+        lastError = err;
+
+        const isAbort = err.name === "AbortError";
+        const isNetwork =
+          err instanceof TypeError &&
+          String(err.message || "").includes("Failed to fetch");
+
+        const retriable = isAbort || isNetwork;
+
+        if (attempt < maxRetries && retriable) {
+          if (typeof onRetry === "function") {
+            onRetry({ attempt, maxRetries, error: err });
+          }
+          // 200ms → 400ms → … で少しだけ待つ
+          await new Promise((r) => setTimeout(r, 200 + attempt * 200));
+          continue;
+        }
+
+        // リトライ不可 or 回数上限
+        throw err;
+      }
     }
 
-    // FAB → 吹き出し再表示
-    fab.addEventListener("click", () => {
-      showBubble();
-      if (hideTimeout) window.clearTimeout(hideTimeout);
-      hideTimeout = window.setTimeout(hideBubble, 8000);
+    throw lastError || new Error("Unknown error in callGeminiWithRetry");
+  }
+
+  // --------------------------------------------------
+  // モーダル開閉
+  // --------------------------------------------------
+  if (openBtn && modal) {
+    openBtn.addEventListener("click", () => {
+      modal.classList.remove("hidden");
+      modal.setAttribute("aria-hidden", "false");
+      textarea.focus();
     });
   }
 
-  // ===== モーダル開閉 =====
-  const openModal = () => {
-    if (!modal) return;
-    modal.classList.remove("opacity-0", "pointer-events-none");
-  };
-
-  const closeModal = () => {
-    if (!modal) return;
-    modal.classList.add("opacity-0", "pointer-events-none");
-  };
-
-  if (fab) {
-    fab.addEventListener("click", () => {
-      openModal();
+  if (closeBtn && modal) {
+    closeBtn.addEventListener("click", () => {
+      modal.classList.add("hidden");
+      modal.setAttribute("aria-hidden", "true");
     });
   }
 
-  modalCloseButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      closeModal();
-    });
-  });
-
+  // モーダル外クリックで閉じる（任意）
   if (modal) {
     modal.addEventListener("click", (e) => {
       if (e.target === modal) {
-        closeModal();
+        modal.classList.add("hidden");
+        modal.setAttribute("aria-hidden", "true");
       }
     });
   }
 
-  // Escキーで閉じる
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      closeModal();
+  // --------------------------------------------------
+  // フォーム送信ハンドラ（ここが今回の本丸）
+  // --------------------------------------------------
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const userText = textarea.value.trim();
+    if (!userText) return;
+
+    // ユーザーのメッセージを表示
+    addMessage("user", userText);
+
+    // 入力欄リセット
+    textarea.value = "";
+    setThinking(true);
+
+    try {
+      const data = await callGeminiWithRetry(userText, {
+        maxRetries: 2,
+        timeoutMs: 15000,
+        onRetry({ attempt }) {
+          if (attempt === 0) {
+            addSystemMessage("通信が少し不安定なようです。再接続を試しています…");
+          }
+        },
+      });
+
+      const reply =
+        (data && typeof data.reply === "string" && data.reply.trim()) ||
+        "すみません、うまく回答を生成できませんでした。\n\n「いま一番つらい作業」を、日本語で一文だけ教えてもらえますか？\n（例：『毎朝のメール確認』『Slackの未読チェック』『日程調整』など）";
+
+      addMessage("bot", reply);
+    } catch (err) {
+      console.error("GEMINI_LP_FRONT_ERROR", err);
+      addMessage(
+        "bot",
+        "通信が少し不安定なようです。\nしばらく時間をおいてから、もう一度お試しください。"
+      );
+    } finally {
+      setThinking(false);
+      textarea.focus();
     }
   });
-
-  // ===== チャット送信処理 =====
-
-  const appendMessage = (role, text) => {
-    if (!chatLog) return;
-    const wrapper = document.createElement("div");
-    wrapper.className = "flex items-start gap-2";
-
-    if (role === "user") {
-      wrapper.classList.add("justify-end");
-      wrapper.innerHTML = `
-        <div class="rounded-2xl bg-blue-600 px-3 py-2 text-[13px] leading-relaxed text-white shadow-sm shadow-blue-500/40 max-w-[80%]">
-          ${escapeHtml(text)}
-        </div>
-      `;
-    } else {
-      wrapper.innerHTML = `
-        <div class="mt-1 flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-[11px] font-semibold text-white">
-          AI
-        </div>
-        <div class="rounded-2xl bg-white px-3 py-2 shadow-sm shadow-slate-200/70 border border-slate-200 max-w-[80%] text-[13px] leading-relaxed text-slate-900">
-          ${escapeHtml(text).replace(/\n/g, "<br />")}
-        </div>
-      `;
-    }
-
-    chatLog.appendChild(wrapper);
-
-    // スクロール最下部へ
-    const container = chatLog.parentElement;
-    if (container) {
-      container.scrollTop = container.scrollHeight;
-    }
-  };
-
-  const setSendingState = (sending) => {
-    if (!chatForm) return;
-    const submitBtn = chatForm.querySelector("button[type='submit']");
-    if (submitBtn) {
-      submitBtn.disabled = sending;
-      submitBtn.textContent = sending ? "送信中…" : "送信";
-    }
-  };
-
-  const escapeHtml = (str) => {
-    return str
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
-  };
-
-  if (chatForm && chatInput) {
-    chatForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const message = chatInput.value.trim();
-      if (!message) return;
-
-      appendMessage("user", message);
-      chatInput.value = "";
-      setSendingState(true);
-
-      try {
-        const res = await fetch("/api/gemini-lp", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ message }),
-        });
-
-        if (!res.ok) {
-          appendMessage(
-            "assistant",
-            "すみません、サーバー側でエラーが発生しました。少し時間をおいてもう一度お試しください。"
-          );
-        } else {
-          const data = await res.json();
-          const reply =
-            (data && data.reply) ||
-            "すみません、うまく応答を生成できませんでした。もう一度だけ試してもらえますか？";
-          appendMessage("assistant", reply);
-        }
-      } catch (err) {
-        console.error(err);
-        appendMessage(
-          "assistant",
-          "通信に失敗しました。ネットワーク環境をご確認のうえ、再度お試しください。"
-        );
-      } finally {
-        setSendingState(false);
-      }
-    });
-  }
 });
+(bas
