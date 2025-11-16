@@ -1,6 +1,6 @@
 // functions/api/gemini-lp.ts
 
-export const onRequest: PagesFunction = async (context) => {
+export const onRequestPost: PagesFunction = async (context) => {
   const { request, env } = context;
 
   const json = (status: number, data: unknown) =>
@@ -10,7 +10,7 @@ export const onRequest: PagesFunction = async (context) => {
     });
 
   try {
-    // 1) メソッドチェック（POST 以外は 405）
+    // 1) メソッドチェック
     if (request.method !== "POST") {
       return json(405, { error: "METHOD_NOT_ALLOWED" });
     }
@@ -72,9 +72,14 @@ export const onRequest: PagesFunction = async (context) => {
         },
       ],
       generationConfig: {
-        maxOutputTokens: 400,
+        maxOutputTokens: 400, // /automation 用ならこのくらいで十分
         temperature: 0.4,
         topP: 0.9,
+      },
+      // ★ thinking を明示的に抑制（ここが今回の追加）
+      thinkingConfig: {
+        includeThoughts: false, // 思考テキストは一切返さない
+        budgetTokens: 0,        // thinking 用のトークンバジェット 0
       },
     };
 
@@ -82,7 +87,7 @@ export const onRequest: PagesFunction = async (context) => {
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" +
       encodeURIComponent(apiKey);
 
-    // ログ
+    // ログ（system と user を分ける）
     console.log("GEMINI_LP_REQUEST", {
       userLen: userMessage.length,
       userHead: userMessage.slice(0, 80),
@@ -137,6 +142,7 @@ export const onRequest: PagesFunction = async (context) => {
         .trim();
     }
 
+    // ★ 空レス時は data 全体をある程度出す
     if (!text) {
       console.error("GEMINI_LP_EMPTY_TEXT", {
         finishReason,
