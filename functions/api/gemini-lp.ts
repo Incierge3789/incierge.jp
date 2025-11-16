@@ -72,9 +72,14 @@ export const onRequestPost: PagesFunction = async (context) => {
         },
       ],
       generationConfig: {
-        maxOutputTokens: 400, // /automation 用ならこのくらいで十分
+        maxOutputTokens: 400,
         temperature: 0.4,
         topP: 0.9,
+      },
+      // ★ thinking を切るためのトップレベル設定（公式ドキュメント系の構造に合わせる）
+      thinkingConfig: {
+        includeThoughts: false,
+        budgetTokens: 0,
       },
     };
 
