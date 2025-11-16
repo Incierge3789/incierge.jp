@@ -78,8 +78,7 @@ export const onRequestPost: PagesFunction = async (context) => {
       },
       // ★ thinking を切るためのトップレベル設定（公式ドキュメント系の構造に合わせる）
       thinkingConfig: {
-        includeThoughts: false,
-        budgetTokens: 0,
+        thinkingBudget: 0,
       },
     };
 
