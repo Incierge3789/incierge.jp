@@ -76,11 +76,6 @@ export const onRequestPost: PagesFunction = async (context) => {
         temperature: 0.4,
         topP: 0.9,
       },
-      // ★ thinking を明示的に抑制（ここが今回の追加）
-      thinkingConfig: {
-        includeThoughts: false, // 思考テキストは一切返さない
-        budgetTokens: 0,        // thinking 用のトークンバジェット 0
-      },
     };
 
     const geminiUrl =
