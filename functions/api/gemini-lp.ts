@@ -72,11 +72,12 @@ export const onRequestPost: PagesFunction = async (context) => {
         },
       ],
       generationConfig: {
-        // ★ 出力をやや抑えつつ、プレーンテキストで返してもらう
-        maxOutputTokens: 256,
+        maxOutputTokens: 400, // /automation 用ならこのくらいで十分
         temperature: 0.4,
         topP: 0.9,
-        responseMimeType: "text/plain",
+        thinkingConfig: {
+          thinkingBudget: 0, // 「考えるトークン」を0にして、出力に回す
+        },
       },
     };
 
