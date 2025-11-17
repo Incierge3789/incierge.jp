@@ -6,11 +6,24 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   const modal = document.getElementById("gemini-modal");
-  const openBtn = document.getElementById("gemini-open");
-  const closeBtn = document.getElementById("gemini-close");
+
+  // 💬 浮遊ボタンでモーダルを開く（HTML側の id に合わせる）
+  const openBtn = document.getElementById("gemini-fab");
+
+  // モーダルの × ボタン（data 属性で取得）
+  const closeBtn = document.querySelector("[data-gemini-modal-close]");
+
   const form = document.getElementById("gemini-chat-form");
   const textarea = document.getElementById("gemini-chat-input");
-  const messages = document.getElementById("gemini-chat-messages");
+
+  // メッセージログ領域（HTML側の id に合わせる）
+  const messages = document.getElementById("gemini-chat-log");
+
+  // 初期吹き出し（任意）
+  const fabBubble = document.getElementById("gemini-fab-bubble");
+  const fabBubbleClose = fabBubble
+    ? fabBubble.querySelector("[data-close]")
+    : null;
 
   if (!form || !textarea || !messages) {
     console.warn("INCIERGE GEMINI: 必要な要素が見つかりませんでした。");
@@ -96,7 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const data = await res.json();
         return data; // 正常終了
-
       } catch (err) {
         lastError = err;
 
@@ -129,16 +141,30 @@ document.addEventListener("DOMContentLoaded", () => {
   // --------------------------------------------------
   if (openBtn && modal) {
     openBtn.addEventListener("click", () => {
-      modal.classList.remove("hidden");
+      modal.classList.remove("opacity-0", "pointer-events-none");
       modal.setAttribute("aria-hidden", "false");
       textarea.focus();
+
+      // 最初に開いたタイミングで初期吹き出しを消す（任意）
+      if (fabBubble) {
+        fabBubble.classList.add("opacity-0");
+        fabBubble.classList.add("pointer-events-none");
+      }
     });
   }
 
   if (closeBtn && modal) {
     closeBtn.addEventListener("click", () => {
-      modal.classList.add("hidden");
+      modal.classList.add("opacity-0", "pointer-events-none");
       modal.setAttribute("aria-hidden", "true");
+    });
+  }
+
+  // 初期吹き出しの × ボタン
+  if (fabBubble && fabBubbleClose) {
+    fabBubbleClose.addEventListener("click", () => {
+      fabBubble.classList.add("opacity-0");
+      fabBubble.classList.add("pointer-events-none");
     });
   }
 
@@ -146,7 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (modal) {
     modal.addEventListener("click", (e) => {
       if (e.target === modal) {
-        modal.classList.add("hidden");
+        modal.classList.add("opacity-0", "pointer-events-none");
         modal.setAttribute("aria-hidden", "true");
       }
     });
