@@ -68,13 +68,42 @@ document.addEventListener("DOMContentLoaded", () => {
     scrollToBottom();
   }
 
+
+
+  // ローディング用バブルを共有変数で管理
+  let thinkingBubbleEl = null;
+
   function setThinking(isThinking) {
     if (isThinking) {
       textarea.setAttribute("disabled", "true");
+
+      // すでに表示中なら二重で出さない
+      if (thinkingBubbleEl) return;
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "flex justify-start mb-3";
+      const bubble = document.createElement("div");
+      bubble.className =
+        "max-w-[80%] rounded-2xl px-3 py-2 text-[12px] leading-relaxed bg-slate-100 text-slate-700 border border-slate-200";
+
+      bubble.textContent = "あなたに合う提案を準備しています…";
+
+      wrapper.appendChild(bubble);
+      messages.appendChild(wrapper);
+      thinkingBubbleEl = wrapper;
+      scrollToBottom();
     } else {
       textarea.removeAttribute("disabled");
+
+      // ローディング用バブルを消す
+      if (thinkingBubbleEl && thinkingBubbleEl.parentNode) {
+        thinkingBubbleEl.parentNode.removeChild(thinkingBubbleEl);
+      }
+      thinkingBubbleEl = null;
     }
   }
+
+
 
   // --------------------------------------------------
   // Gemini 呼び出し（自動リトライ付き）
