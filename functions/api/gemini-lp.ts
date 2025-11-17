@@ -80,7 +80,7 @@ export const onRequestPost: PagesFunction = async (context) => {
       ],
       generationConfig: {
         // プランCとして、少し余裕を持たせる
-        maxOutputTokens: 800,
+        maxOutputTokens: 1000,
         temperature: 0.4,
         topP: 0.9,
       },
