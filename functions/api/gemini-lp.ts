@@ -1,5 +1,12 @@
 // functions/api/gemini-lp.ts
 
+
+const FALLBACK_MESSAGE = `すみません、うまく回答を生成できませんでした。
+
+「いま一番つらい作業」を、日本語で一文だけ教えてもらえますか？
+（例：『毎朝のメール確認』『Slackの未読チェック』『日程調整』など）`;
+
+
 export const onRequestPost: PagesFunction = async (context) => {
   const { request, env } = context;
 
