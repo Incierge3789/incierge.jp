@@ -72,14 +72,12 @@ export const onRequestPost: PagesFunction = async (context) => {
         },
       ],
       generationConfig: {
-        maxOutputTokens: 400,
+        // プランCとして、少し余裕を持たせる
+        maxOutputTokens: 800,
         temperature: 0.4,
         topP: 0.9,
       },
-      // ★ thinking を切るためのトップレベル設定（公式ドキュメント系の構造に合わせる）
-      thinkingConfig: {
-        thinkingBudget: 0,
-      },
+      // ★ thinkingConfig はこの API では未対応なので送らない
     };
 
     const geminiUrl =
@@ -141,7 +139,6 @@ export const onRequestPost: PagesFunction = async (context) => {
         .trim();
     }
 
-    // ★ 空レス時は data 全体をある程度出す
     if (!text) {
       console.error("GEMINI_LP_EMPTY_TEXT", {
         finishReason,
