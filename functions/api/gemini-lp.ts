@@ -7,6 +7,10 @@ const FALLBACK_MESSAGE = `すみません、うまく回答を生成できませ
 （例：『毎朝のメール確認』『Slackの未読チェック』『日程調整』など）`;
 
 
+
+const BUSY_MESSAGE = `現在AI側が混み合っています。
+もう一度お試しください。`;
+
 export const onRequestPost: PagesFunction = async (context) => {
   const { request, env } = context;
 
@@ -119,10 +123,26 @@ export const onRequestPost: PagesFunction = async (context) => {
       console.log("GEMINI_LP_RESPONSE_STATUS", geminiRes.status);
 
       if (!geminiRes.ok) {
-        const text = (await geminiRes.text().catch(() => "")) || "";
-        console.error("GEMINI_LP_API_ERROR_BODY", text.slice(0, 500));
+        const textBody = (await geminiRes.text().catch(() => "")) || "";
+
+        // ★ 503（モデルが混み合っている）だけは専用メッセージを返す
+        if (geminiRes.status === 503) {
+          console.warn("GEMINI_LP_BUSY", {
+            status: geminiRes.status,
+            bodyHead: textBody.slice(0, 200),
+          });
+
+          // ここでは throw せず、「普通の応答テキスト」として返す
+          return {
+            text: BUSY_MESSAGE,
+            finishReason: "BUSY" as const,
+          };
+        }
+
+        // 503 以外は従来通りエラーとして扱う
+        console.error("GEMINI_LP_API_ERROR_BODY", textBody.slice(0, 500));
         throw new Error(
-          `GEMINI_API_ERROR:${geminiRes.status}:${text.slice(0, 2000)}`
+          `GEMINI_API_ERROR:${geminiRes.status}:${textBody.slice(0, 2000)}`
         );
       }
 
