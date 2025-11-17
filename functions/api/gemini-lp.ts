@@ -185,8 +185,16 @@ export const onRequestPost: PagesFunction = async (context) => {
       finishReason = second.finishReason;
     }
 
-    const isFallback = !text;
-    const replyText = text || FALLBACK_MESSAGE;
+    // --- ここから下を差し替え ---
+
+    let isFallback = false;
+    let replyText = text;
+
+    // 「本文が空」または「MAX_TOKENSで終わったら」→ /contact誘導メッセージへ
+    if (!text || finishReason === "MAX_TOKENS") {
+      isFallback = true;
+      replyText = BUSY_MESSAGE;
+    }
 
     console.log("GEMINI_LP_REPLY_OK", {
       replyLen: replyText.length,
