@@ -99,62 +99,70 @@ export const onRequestPost: PagesFunction = async (context) => {
       sysHead: systemInstruction.slice(0, 120),
     });
 
-    // 6) Gemini 呼び出し
-    let geminiRes: Response;
-    try {
-      geminiRes = await fetch(geminiUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-    } catch (e) {
-      console.error("GEMINI_LP_FETCH_EXCEPTION", String(e));
-      return json(502, { error: "GEMINI_FETCH_ERROR", detail: String(e) });
+
+    // 6) Gemini 呼び出し（本文が空ならサーバー側で1回だけリトライ）
+    async function callGeminiOnce() {
+      let geminiRes: Response;
+      try {
+        geminiRes = await fetch(geminiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+      } catch (e) {
+        console.error("GEMINI_LP_FETCH_EXCEPTION", String(e));
+        throw new Error(`GEMINI_FETCH_ERROR:${String(e)}`);
+      }
+
+      console.log("GEMINI_LP_RESPONSE_STATUS", geminiRes.status);
+
+      if (!geminiRes.ok) {
+        const text = (await geminiRes.text().catch(() => "")) || "";
+        console.error("GEMINI_LP_API_ERROR_BODY", text.slice(0, 500));
+        throw new Error(
+          `GEMINI_API_ERROR:${geminiRes.status}:${text.slice(0, 2000)}`
+        );
+      }
+
+      let data: any;
+      try {
+        data = await geminiRes.json();
+      } catch (e) {
+        console.error("GEMINI_LP_JSON_PARSE_ERROR", String(e));
+        throw new Error(`GEMINI_JSON_PARSE_ERROR:${String(e)}`);
+      }
+
+      const candidate = data?.candidates?.[0];
+      const finishReason = candidate?.finishReason ?? null;
+      const parts = candidate?.content?.parts ?? [];
+
+      let text = "";
+      if (Array.isArray(parts) && parts.length > 0) {
+        text = parts
+          .map((p: any) => (typeof p?.text === "string" ? p.text : ""))
+          .join("\n\n")
+          .trim();
+      }
+
+      return { text, finishReason };
     }
 
-    console.log("GEMINI_LP_RESPONSE_STATUS", geminiRes.status);
+    // 6-b) まず1回だけ試す
+    let { text, finishReason } = await callGeminiOnce();
+    let triedRetry = false;
 
-    if (!geminiRes.ok) {
-      const text = (await geminiRes.text().catch(() => "")) || "";
-      console.error("GEMINI_LP_API_ERROR_BODY", text.slice(0, 500));
-      return json(502, {
-        error: "GEMINI_API_ERROR",
-        status: geminiRes.status,
-        body: text.slice(0, 2000),
-      });
-    }
-
-    let data: any;
-    try {
-      data = await geminiRes.json();
-    } catch (e) {
-      console.error("GEMINI_LP_JSON_PARSE_ERROR", String(e));
-      return json(500, { error: "GEMINI_JSON_PARSE_ERROR", detail: String(e) });
-    }
-
-    const candidate = data?.candidates?.[0];
-    const finishReason = candidate?.finishReason;
-    const parts = candidate?.content?.parts ?? [];
-
-    let text = "";
-    if (Array.isArray(parts) && parts.length > 0) {
-      text = parts
-        .map((p: any) => (typeof p?.text === "string" ? p.text : ""))
-        .join("\n\n")
-        .trim();
-    }
-
+    // 6-c) もし本文が空なら、内部で1回だけリトライ（ユーザーには見せない）
     if (!text) {
-      console.error("GEMINI_LP_EMPTY_TEXT", {
-        finishReason,
-        full: JSON.stringify(data).slice(0, 1200),
-      });
+      console.warn("GEMINI_LP_EMPTY_TEXT_FIRST_TRY", { finishReason });
+      triedRetry = true;
+      const second = await callGeminiOnce();
+      text = second.text;
+      finishReason = second.finishReason;
     }
 
     const isFallback = !text;
-
     const replyText = text || FALLBACK_MESSAGE;
 
     console.log("GEMINI_LP_REPLY_OK", {
@@ -162,13 +170,15 @@ export const onRequestPost: PagesFunction = async (context) => {
       replyHead: replyText.slice(0, 80),
       finishReason,
       isFallback,
+      triedRetry,
     });
 
     return json(200, {
       reply: replyText,
       meta: {
         isFallback,
-        finishReason: finishReason ?? null,
+        finishReason,
+        triedRetry,
       },
     });
   } catch (e) {
