@@ -220,11 +220,13 @@ document.addEventListener("DOMContentLoaded", () => {
     addMessage("user", userText);
 
     // 入力欄リセット
+    // 入力欄リセット
     textarea.value = "";
     setThinking(true);
 
     try {
-      const data = await callGeminiWithRetry(userText, {
+      // ① 1回目のリクエスト
+      let data = await callGeminiWithRetry(userText, {
         maxRetries: 2,
         timeoutMs: 15000,
         onRetry({ attempt }) {
@@ -234,9 +236,25 @@ document.addEventListener("DOMContentLoaded", () => {
         },
       });
 
+      // ② サーバ側が「fallback を返したかどうか」
+      const isFallback = !!(data && data.meta && data.meta.isFallback);
+
+      // ③ fallback だった場合は、ユーザーに見せる前にもう一度だけ投げ直す
+      if (isFallback) {
+        addSystemMessage(
+          "INCIERGEが、あなたに合う提案をもう一度だけ組み立て直しています…"
+        );
+
+        data = await callGeminiWithRetry(userText, {
+          maxRetries: 1,
+          timeoutMs: 15000,
+        });
+      }
+
+      // ④ 最終的な返信テキストを決定
       const reply =
         (data && typeof data.reply === "string" && data.reply.trim()) ||
-        "すみません、うまく回答を生成できませんでした。\n\n「いま一番つらい作業」を、日本語で一文だけ教えてもらえますか？\n（例：『毎朝のメール確認』『Slackの未読チェック』『日程調整』など）";
+        "すみません、うまく回答を生成できませんでした。\nお手数ですが、少し時間をおいてからもう一度お試しください。";
 
       addMessage("bot", reply);
     } catch (err) {

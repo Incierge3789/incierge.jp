@@ -146,17 +146,24 @@ export const onRequestPost: PagesFunction = async (context) => {
       });
     }
 
-    const replyText =
-      text ||
-      "すみません、うまく回答を生成できませんでした。\n\n「いま一番つらい作業」を、日本語で一文だけ教えてもらえますか？\n（例：『毎朝のメール確認』『Slackの未読チェック』『日程調整』など）";
+    const isFallback = !text;
+
+    const replyText = text || FALLBACK_MESSAGE;
 
     console.log("GEMINI_LP_REPLY_OK", {
       replyLen: replyText.length,
       replyHead: replyText.slice(0, 80),
       finishReason,
+      isFallback,
     });
 
-    return json(200, { reply: replyText });
+    return json(200, {
+      reply: replyText,
+      meta: {
+        isFallback,
+        finishReason: finishReason ?? null,
+      },
+    });
   } catch (e) {
     console.error("GEMINI_LP_UNHANDLED", String(e));
     return json(500, { error: "UNHANDLED_EXCEPTION", detail: String(e) });
