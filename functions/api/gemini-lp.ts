@@ -8,8 +8,11 @@ const FALLBACK_MESSAGE = `すみません、うまく回答を生成できませ
 
 
 
-const BUSY_MESSAGE = `現在AI側が混み合っています。
-もう一度お試しください。`;
+const BUSY_MESSAGE = `いまの内容だけでも、十分にご相談としてお伺いできます。
+
+このまま「無料相談フォーム」から送っていただければ、
+こちらで状況を整理したうえで、どのプランが合いそうかご提案します。`;
+
 
 export const onRequestPost: PagesFunction = async (context) => {
   const { request, env } = context;
@@ -84,7 +87,7 @@ export const onRequestPost: PagesFunction = async (context) => {
       ],
       generationConfig: {
         // プランCとして、少し余裕を持たせる
-        maxOutputTokens: 1000,
+        maxOutputTokens: 700,
         temperature: 0.4,
         topP: 0.9,
       },
