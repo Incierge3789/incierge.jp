@@ -14,10 +14,13 @@ const description =
         <div class="grid items-center gap-12 lg:grid-cols-[minmax(0,3fr)_minmax(0,2.4fr)]">
           {/* 左：テキスト */}
           <div class="max-w-xl">
-            <p class="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-600">
+            <p class="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-blue-600">
               INCIERGE /automation
             </p>
 
+            <p class="mb-2 inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-[11px] font-medium text-blue-700">
+              「まず1つだけムダな作業を消したい」中小企業向け
+            </p>
 
             <h1
               class="mb-6 text-3xl font-semibold tracking-tight leading-relaxed text-gray-900 sm:text-4xl lg:text-5xl whitespace-pre-line break-keep"
@@ -29,20 +32,33 @@ const description =
                 仕組みづくりも運用も、まるごと任せられる。`}
             </h1>
 
-            <p class="mb-8 text-sm leading-relaxed text-gray-700 sm:text-base">
+            <p class="mb-6 text-sm leading-relaxed text-gray-700 sm:text-base">
               メール返信・Slackチェック・日報づくりなど、止めづらいけれど誰かの時間を奪っている作業を、
               INCIERGEが「今日から動く小さな自動化」に変えます。どこから手をつけるかも、一緒に整理します。
             </p>
 
+            <p class="mb-6 text-xs text-gray-500">
+              ※ まず「1つの業務」に絞って設計することで、失敗しないAI導入をめざします。
+            </p>
 
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
               <a
-                href="/contact"
+                href="/contact?from_automation=1"
                 class="inline-flex items-center justify-center rounded-full bg-blue-600 px-8 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
               >
                 無料相談する
               </a>
+              <a
+                href="#plans"
+                class="inline-flex items-center justify-center rounded-full border border-gray-300 bg-white px-6 py-3 text-sm font-semibold text-gray-800 shadow-sm transition hover:bg-gray-50"
+              >
+                料金プランを見る
+              </a>
             </div>
+
+            <p class="mt-3 text-[11px] text-gray-500">
+              「今どんな作業がしんどいか」だけ分かれば大丈夫です。資料や事前準備は不要です。
+            </p>
           </div>
 
           {/* 右：ビジュアル */}
@@ -177,7 +193,6 @@ const description =
       </div>
     </section>
 
-
     {/* Before / After */}
     <section class="py-16 bg-gray-50">
       <div class="mx-auto max-w-5xl px-6">
@@ -230,12 +245,15 @@ const description =
         <p class="mb-2 text-base leading-relaxed text-gray-700">
           会社の状況に合わせて選べる、3つの始め方。
         </p>
-        <p class="mb-8 text-sm leading-relaxed text-gray-700">
+        <p class="mb-6 text-sm leading-relaxed text-gray-700">
           忙しい会社ほど、まずは
           <span class="font-semibold">“ひとつだけ”ムダを減らすところ</span>
           から始めるのが最短です。INCIERGEでは
           <span class="font-semibold">「今日から使える仕組み」</span>
           を基準に、段階別の3プランを用意しています。
+        </p>
+        <p class="mb-8 text-xs text-gray-500">
+          ※ どのプランを選んでも、最初は「どの業務から手をつけるか」の整理から一緒に行います。
         </p>
 
         {/* プラン3つのカード */}
@@ -254,8 +272,14 @@ const description =
               <li>・Slack／LINE／Gmail／スプレッドシートなど、現場で使っているツール前提で設計</li>
               <li>・すぐに使えるよう、簡単な使い方メモもお渡しします</li>
             </ul>
-            <p class="mt-auto text-xs text-gray-500">
-              ※ 初めてご相談いただく会社さまには、このプランからのスタートをおすすめしています。
+            <a
+              href="/contact?from_automation=1&plan=light"
+              class="mt-auto inline-flex items-center justify-center rounded-full bg-blue-50 px-4 py-2 text-xs font-semibold text-blue-700 hover:bg-blue-100"
+            >
+              この内容で相談してみる
+            </a>
+            <p class="mt-2 text-[11px] text-gray-500">
+              ※ 初めての方は、ここからスタートして様子を見るケースが多いです。
             </p>
           </div>
 
@@ -276,8 +300,14 @@ const description =
               <li>・Slack／カレンダー／スプレッドシートなどを一気につないで最適化</li>
               <li>・3〜5営業日程度で、本番運用まで立ち上げ</li>
             </ul>
-            <p class="mt-auto text-xs text-gray-500">
-              ※ 小規模〜中規模組織で「ひと通りの仕組みを整えたい」ケースで一番選ばれているプランです。
+            <a
+              href="/contact?from_automation=1&plan=standard"
+              class="mt-auto inline-flex items-center justify-center rounded-full bg-blue-600 px-4 py-2 text-xs font-semibold text-white hover:bg-blue-700"
+            >
+              この内容で相談してみる
+            </a>
+            <p class="mt-2 text-[11px] text-gray-500">
+              ※ 「ひと通りの仕組みを整えたい」ケースで一番選ばれているプランです。
             </p>
           </div>
 
@@ -296,13 +326,19 @@ const description =
               <li>・トラブル発生時の相談・復旧対応</li>
               <li>・うまくいった仕組みを、別部署や他拠点へ横展開する支援</li>
             </ul>
-            <p class="mt-auto text-xs text-gray-500">
+            <a
+              href="/contact?from_automation=1&plan=ban_sou"
+              class="mt-auto inline-flex items-center justify-center rounded-full bg-blue-50 px-4 py-2 text-xs font-semibold text-blue-700 hover:bg-blue-100"
+            >
+              この内容で相談してみる
+            </a>
+            <p class="mt-2 text-[11px] text-gray-500">
               → 社内に「AIと自動化に詳しい人」が1人いるのと同じ状態を目指します。
             </p>
           </div>
         </div>
 
-        {/* ▼ 下のコピー */}
+        {/* ▼ 下のコピー（迷っている人向けのセールスブロック） */}
         <div class="mt-10 rounded-2xl bg-white/80 px-5 py-4 text-sm leading-relaxed text-gray-800">
           <h3 class="mb-1 text-base font-semibold text-gray-900">
             どのプランを選べばいいかわからない方へ
@@ -312,14 +348,19 @@ const description =
             最小の手間で“流れの改善”までセットで作れるため、
             導入企業の<span class="font-semibold">多くがこのプラン</span>から成果を出しています。
           </p>
-          <p class="text-xs text-gray-600">
+          <p class="mb-2 text-xs text-gray-600">
             「ライト → スタンダード → 伴走」へと後から切り替えもできるので、
             まずは<span class="font-semibold">1つのムダ削減</span>から一緒に始めましょう。
           </p>
+          <a
+            href="/contact?from_automation=1"
+            class="inline-flex items-center justify-center rounded-full bg-blue-600 px-6 py-2 text-xs font-semibold text-white shadow-sm hover:bg-blue-700"
+          >
+            まずは今の状況を相談してみる
+          </a>
         </div>
       </div>
     </section>
-
 
     {/* Flow - 導入の流れ */}
     <section class="py-24 bg-gray-50">
@@ -567,7 +608,6 @@ const description =
       </div>
     </section>
 
-
     {/* INCIERGEが選ばれる理由 */}
     <section class="py-24 bg-white">
       <div class="mx-auto max-w-5xl px-6">
@@ -708,7 +748,7 @@ const description =
         </h2>
         <div class="mb-4 flex justify-center">
           <a
-            href="/contact"
+            href="/contact?from_automation=1"
             class="inline-flex items-center justify-center rounded-full bg-blue-600 px-10 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
           >
             無料相談する
@@ -798,7 +838,6 @@ const description =
           </button>
         </div>
 
-
         {/* メッセージ領域（上：チャットログ／下：テンプレ） */}
         <div class="flex flex-col gap-2 px-4 pt-3 pb-3 max-h-[60vh] sm:max-h-[65vh] text-[13px] bg-slate-50/60">
           {/* 上：チャットログ（スクロール） */}
@@ -856,31 +895,30 @@ const description =
             </div>
           </div>
 
-
-        {/* 入力エリア */}
-        <div class="border-t border-slate-200 bg-white px-4 py-3">
-          <form id="gemini-chat-form" class="flex items-end gap-2">
-            <textarea
-              id="gemini-chat-input"
-              class="flex-1 resize-none rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-[13px] leading-relaxed text-slate-900 shadow-inner shadow-slate-900/5 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-400"
-              rows="2"
-              placeholder="いま一番しんどい作業を、1つだけ教えてください。（例：毎朝のSlackチェック、日程調整 など）"
-            ></textarea>
-            <button
-              type="submit"
-              class="inline-flex h-9 items-center justify-center rounded-full bg-blue-600 px-4 text-[12px] font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1 focus:ring-offset-white"
-            >
-              送信
-            </button>
-          </form>
-          <p class="mt-1 text-[10px] text-slate-400">
-            ※ ここで整理した内容は、必要に応じて /contact フォームにそのまま転記できます。
-          </p>
+          {/* 入力エリア */}
+          <div class="border-t border-slate-200 bg-white px-4 py-3 -mx-4 -mb-3 rounded-b-3xl">
+            <form id="gemini-chat-form" class="flex items-end gap-2">
+              <textarea
+                id="gemini-chat-input"
+                class="flex-1 resize-none rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-[13px] leading-relaxed text-slate-900 shadow-inner shadow-slate-900/5 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-400"
+                rows="2"
+                placeholder="いま一番しんどい作業を、1つだけ教えてください。（例：毎朝のSlackチェック、日程調整 など）"
+              ></textarea>
+              <button
+                type="submit"
+                class="inline-flex h-9 items-center justify-center rounded-full bg-blue-600 px-4 text-[12px] font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1 focus:ring-offset-white"
+              >
+                送信
+              </button>
+            </form>
+            <p class="mt-1 text-[10px] text-slate-400">
+              ※ ここで整理した内容は、必要に応じて /contact フォームにそのまま転記できます。
+            </p>
+          </div>
         </div>
       </div>
     </div>
 
-
-  <script type="module" src="/scripts/automation-gemini.js"></script>
+    <script type="module" src="/scripts/automation-gemini.js"></script>
   </main>
 </Base>
