@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "このまま「無料相談フォーム」から送っていただければ、\n" +
     "こちらで状況を整理したうえで、どのプランが合いそうかご提案します。";
 
-  const CONTACT_URL = "https://incierge.jp/contact/";
+  const CONTACT_BASE_PATH = "/contact/";
 
   // --------------------------------------------------
   // UI ヘルパー
@@ -73,6 +73,39 @@ document.addEventListener("DOMContentLoaded", () => {
     bubble.className =
       "max-w-[90%] rounded-xl px-2 py-1 text-[11px] leading-relaxed bg-slate-100 text-slate-600";
     bubble.textContent = text;
+    wrapper.appendChild(bubble);
+    messages.appendChild(wrapper);
+    scrollToBottom();
+  }
+
+  // ユーザーの入力内容をクエリに載せた contact URL を作る
+  function buildContactUrlFromMessage(message) {
+    const params = new URLSearchParams();
+    params.set("from_automation", "1");
+    if (message && message.length > 0) {
+      params.set("q", message);
+    }
+    return `${CONTACT_BASE_PATH}?${params.toString()}`;
+  }
+
+  // 「無料相談フォームを開く」ボタン風リンクを追加
+  function addContactLinkMessage(url) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "flex justify-center mt-2 mb-2";
+
+    const bubble = document.createElement("div");
+    bubble.className =
+      "inline-flex items-center rounded-full bg-blue-600 px-4 py-2 text-[11px] font-semibold text-white shadow cursor-pointer hover:bg-blue-700";
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.className =
+      "flex items-center gap-1 no-underline";
+    link.textContent = "→ 無料相談フォームを開く";
+
+    bubble.appendChild(link);
     wrapper.appendChild(bubble);
     messages.appendChild(wrapper);
     scrollToBottom();
@@ -140,8 +173,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // 固定の返信メッセージを表示
     addMessage("bot", FIXED_REPLY);
 
-    // /contact への誘導も、システムメッセージとして明示
-    addSystemMessage(`→ 無料相談フォームはこちらから開けます：${CONTACT_URL}`);
+    // contact URL（ユーザーの入力付き）を生成してボタン風リンクを描画
+    const contactUrl = buildContactUrlFromMessage(userText);
+    addContactLinkMessage(contactUrl);
 
     textarea.focus();
   });
