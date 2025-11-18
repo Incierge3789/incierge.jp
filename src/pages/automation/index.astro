@@ -225,10 +225,20 @@ const description =
         <h2 class="mb-4 text-2xl font-semibold text-gray-900 md:text-3xl">
           【料金プラン】
         </h2>
-        <p class="mb-8 text-base leading-relaxed text-gray-700">
+
+        {/* ▼ 上のコピー */}
+        <p class="mb-2 text-base leading-relaxed text-gray-700">
           会社の状況に合わせて選べる、3つの始め方。
         </p>
+        <p class="mb-8 text-sm leading-relaxed text-gray-700">
+          忙しい会社ほど、まずは
+          <span class="font-semibold">“ひとつだけ”ムダを減らすところ</span>
+          から始めるのが最短です。INCIERGEでは
+          <span class="font-semibold">「今日から使える仕組み」</span>
+          を基準に、段階別の3プランを用意しています。
+        </p>
 
+        {/* プラン3つのカード */}
         <div class="grid gap-8 md:grid-cols-3">
           {/* ライト */}
           <div class="flex flex-col rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
@@ -291,8 +301,25 @@ const description =
             </p>
           </div>
         </div>
+
+        {/* ▼ 下のコピー */}
+        <div class="mt-10 rounded-2xl bg-white/80 px-5 py-4 text-sm leading-relaxed text-gray-800">
+          <h3 class="mb-1 text-base font-semibold text-gray-900">
+            どのプランを選べばいいかわからない方へ
+          </h3>
+          <p class="mb-1">
+            迷ったら<span class="font-semibold">スタンダード</span>をおすすめします。
+            最小の手間で“流れの改善”までセットで作れるため、
+            導入企業の<span class="font-semibold">多くがこのプラン</span>から成果を出しています。
+          </p>
+          <p class="text-xs text-gray-600">
+            「ライト → スタンダード → 伴走」へと後から切り替えもできるので、
+            まずは<span class="font-semibold">1つのムダ削減</span>から一緒に始めましょう。
+          </p>
+        </div>
       </div>
     </section>
+
 
     {/* Flow - 導入の流れ */}
     <section class="py-24 bg-gray-50">
