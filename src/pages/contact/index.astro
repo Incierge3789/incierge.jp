@@ -49,6 +49,23 @@ const desc =
       ></textarea>
     </label>
 
+    {/* ▼ 任意：今すぐ日程を予約するブロック */}
+    <div class="mt-4 rounded border px-4 py-3 text-sm bg-slate-50">
+      <p class="mb-1 text-xs font-semibold text-slate-600">
+        任意：今すぐ日程を予約する
+      </p>
+      <p class="mb-3 leading-relaxed">
+        フォーム送信だけでも大丈夫です。すぐに日程まで決めたい方は、
+        下のボタンからオンライン面談の候補日時をお選びいただけます。
+      </p>
+      <a
+        href="/meeting?source=contact_optional"
+        class="btn-primary inline-block text-sm"
+      >
+        日程を選ぶ（オンライン面談）
+      </a>
+    </div>
+
     <div class="cf-turnstile" data-sitekey="0x4AAAAAAB9qMJ4SG87lHVc2"></div>
 
     <button type="submit" class="btn-primary">送信</button>
