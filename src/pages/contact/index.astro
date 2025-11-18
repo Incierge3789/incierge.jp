@@ -7,7 +7,10 @@ const desc =
 ---
 <Base title={title} description={desc}>
   <h1>Contact</h1>
-  <p>以下のフォームにご記入ください。<br/>GPTの事前相談メモは <code>?prefill=</code> または <code>?gpts=</code> で自動入力されます。</p>
+  <p>
+    以下のフォームにご記入ください。<br />
+    GPTの事前相談メモは <code>?prefill=</code> または <code>?gpts=</code> で自動入力されます。
+  </p>
 
   <form method="POST" action="/api/contact" class="mt-6 space-y-4">
     <label class="block">
@@ -17,7 +20,12 @@ const desc =
 
     <label class="block">
       <span>メール（必須）</span>
-      <input type="email" name="email" required class="w-full border rounded px-3 py-2" />
+      <input
+        type="email"
+        name="email"
+        required
+        class="w-full border rounded px-3 py-2"
+      />
     </label>
 
     <label class="block">
@@ -32,7 +40,13 @@ const desc =
 
     <label class="block">
       <span>ご相談内容（必須）</span>
-      <textarea id="message" name="message" rows="10" required class="w-full border rounded px-3 py-2"></textarea>
+      <textarea
+        id="message"
+        name="message"
+        rows="10"
+        required
+        class="w-full border rounded px-3 py-2"
+      ></textarea>
     </label>
 
     <div class="cf-turnstile" data-sitekey="0x4AAAAAAB9qMJ4SG87lHVc2"></div>
@@ -44,18 +58,46 @@ const desc =
     (function () {
       var el = document.getElementById("message");
       if (!el) return;
+
       var p = new URLSearchParams(location.search);
-      var raw = p.get("gpts") || p.get("prefill");
-      if (raw) {
+
+      // ① GPTs / prefill / automation からの生データ
+      var gptsRaw = p.get("gpts");
+      var prefillRaw = p.get("prefill");
+      var qRaw = p.get("q"); // /automation からの一言メモ
+
+      var text = "";
+
+      // ② 優先順位: gpts > prefill > q
+      if (gptsRaw) {
         try {
-          var text = p.get("gpts") ? atob(decodeURIComponent(raw)) : decodeURIComponent(raw);
-          el.value = text;
-          var n = document.createElement("div");
-          n.textContent = "AI相談メモを読み込みました。必要に応じて追記・修正してください。";
-          n.className = "mt-4 text-sm opacity-80";
-          el.parentElement.insertBefore(n, el);
-        } catch (e) {}
+          text = atob(decodeURIComponent(gptsRaw));
+        } catch (e) {
+          text = "";
+        }
+      } else if (prefillRaw) {
+        try {
+          text = decodeURIComponent(prefillRaw);
+        } catch (e) {
+          text = "";
+        }
+      } else if (qRaw) {
+        try {
+          text = decodeURIComponent(qRaw);
+        } catch (e) {
+          text = "";
+        }
+      }
+
+      if (text) {
+        el.value = text;
+        var n = document.createElement("div");
+        n.textContent =
+          "AI相談メモ／事前メモを読み込みました。必要に応じて追記・修正してください。";
+        n.className = "mt-4 text-sm opacity-80";
+        el.parentElement.insertBefore(n, el);
       } else {
+        // ③ どのクエリも無い場合は、ローカル保存分を最後のバックアップとして使う
         var memo = localStorage.getItem("incierge:gpts:intake");
         if (memo) el.value = memo;
       }
