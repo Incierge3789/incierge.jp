@@ -789,31 +789,37 @@ const description =
           </div>
 
           {/* 下：相談テンプレ（固定） */}
-          <div class="mt-1 rounded-2xl border border-slate-200 bg-white/90 px-3 py-2 text-[11px] text-slate-600 flex flex-wrap items-center gap-2">
-            <span class="mr-1 whitespace-nowrap">よくあるお悩み：</span>
-            <button
-              type="button"
-              class="rounded-full border border-slate-300 bg-white px-3 py-1 text-[11px] hover:bg-slate-50"
-              data-gemini-template="メールの返信がつらい"
-            >
-              メールの返信がつらい
-            </button>
-            <button
-              type="button"
-              class="rounded-full border border-slate-300 bg-white px-3 py-1 text-[11px] hover:bg-slate-50"
-              data-gemini-template="Slackの確認が多すぎて追いつきません"
-            >
-              Slackの確認がつらい
-            </button>
-            <button
-              type="button"
-              class="rounded-full border border-slate-300 bg-white px-3 py-1 text-[11px] hover:bg-slate-50"
-              data-gemini-template="日報・週報の作成に時間がかかりすぎています"
-            >
-              日報・週報が重い
-            </button>
+          <div class="mt-1 rounded-2xl border border-slate-200 bg-white/90 px-3 py-2 text-[11px] text-slate-600">
+            {/* ラベル行 */}
+            <div class="flex items-center mb-2">
+              <span class="mr-1 whitespace-nowrap">よくあるお悩み：</span>
+            </div>
+
+            {/* ボタン行：スマホは縦3つ、sm以上は横3つ */}
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <button
+                type="button"
+                class="w-full rounded-full border border-slate-300 bg-white px-3 py-2 text-[11px] text-center hover:bg-slate-50"
+                data-gemini-template="メールの返信がつらい"
+              >
+                メールの返信がつらい
+              </button>
+              <button
+                type="button"
+                class="w-full rounded-full border border-slate-300 bg-white px-3 py-2 text-[11px] text-center hover:bg-slate-50"
+                data-gemini-template="Slackの確認が多すぎて追いつきません"
+              >
+                Slackの確認がつらい
+              </button>
+              <button
+                type="button"
+                class="w-full rounded-full border border-slate-300 bg-white px-3 py-2 text-[11px] text-center hover:bg-slate-50"
+                data-gemini-template="日報・週報の作成に時間がかかりすぎています"
+              >
+                日報・週報の作成が重い
+              </button>
+            </div>
           </div>
-        </div>
 
 
         {/* 入力エリア */}
