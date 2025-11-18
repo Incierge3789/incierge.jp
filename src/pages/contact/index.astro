@@ -13,6 +13,9 @@ const desc =
   </p>
 
   <form method="POST" action="/api/contact" class="mt-6 space-y-4">
+    {/* 流入元トラッキング用（/contact?from=...） */}
+    <input type="hidden" name="source" id="contact-source" value="" />
+
     <label class="block">
       <span>お名前（必須）</span>
       <input name="name" required class="w-full border rounded px-3 py-2" />
@@ -49,7 +52,7 @@ const desc =
       ></textarea>
     </label>
 
-    {/* ▼ 任意：今すぐ日程を予約するブロック */}
+    {/* ▼ 任意：今すぐ日程を予約する */}
     <div class="mt-4 rounded border px-4 py-3 text-sm bg-slate-50">
       <p class="mb-1 text-xs font-semibold text-slate-600">
         任意：今すぐ日程を予約する
@@ -60,6 +63,7 @@ const desc =
       </p>
       <a
         href="/meeting?source=contact_optional"
+        id="open-meeting"
         class="btn-primary inline-block text-sm"
       >
         日程を選ぶ（オンライン面談）
@@ -71,52 +75,118 @@ const desc =
     <button type="submit" class="btn-primary">送信</button>
   </form>
 
+  {/* /meeting 埋め込み用モーダル */}
+  <dialog
+    id="meeting-dialog"
+    class="w-full max-w-xl rounded-lg border border-slate-200 p-0"
+  >
+    <div class="flex items-center justify-between border-b border-slate-200 px-4 py-2">
+      <h2 class="text-sm font-semibold text-slate-800">
+        日程を選ぶ（オンライン面談）
+      </h2>
+      <button
+        type="button"
+        id="close-meeting"
+        class="text-xs text-slate-500 hover:text-slate-800"
+      >
+        閉じる
+      </button>
+    </div>
+    <div class="aspect-[4/3] w-full">
+      <iframe
+        id="meeting-frame"
+        src="/meeting?source=contact_optional&embed=1"
+        class="h-full w-full border-0"
+        loading="lazy"
+      ></iframe>
+    </div>
+  </dialog>
+
   <script>
     (function () {
+      var params = new URLSearchParams(location.search);
+
+      // ▼ 1) source を hidden にセット
+      var source = params.get("from") || "contact_direct";
+      var srcInput = document.getElementById("contact-source");
+      if (srcInput) srcInput.value = source;
+
+      // ▼ 2) ご相談内容のプリフィル処理
       var el = document.getElementById("message");
-      if (!el) return;
+      if (el) {
+        // ① GPTs / prefill / automation からの生データ
+        var gptsRaw = params.get("gpts");
+        var prefillRaw = params.get("prefill");
+        var qRaw = params.get("q"); // /automation からの一言メモ
 
-      var p = new URLSearchParams(location.search);
+        var text = "";
 
-      // ① GPTs / prefill / automation からの生データ
-      var gptsRaw = p.get("gpts");
-      var prefillRaw = p.get("prefill");
-      var qRaw = p.get("q"); // /automation からの一言メモ
-
-      var text = "";
-
-      // ② 優先順位: gpts > prefill > q
-      if (gptsRaw) {
-        try {
-          text = atob(decodeURIComponent(gptsRaw));
-        } catch (e) {
-          text = "";
+        // ② 優先順位: gpts > prefill > q
+        if (gptsRaw) {
+          try {
+            text = atob(decodeURIComponent(gptsRaw));
+          } catch (e) {
+            text = "";
+          }
+        } else if (prefillRaw) {
+          try {
+            text = decodeURIComponent(prefillRaw);
+          } catch (e) {
+            text = "";
+          }
+        } else if (qRaw) {
+          try {
+            text = decodeURIComponent(qRaw);
+          } catch (e) {
+            text = "";
+          }
         }
-      } else if (prefillRaw) {
-        try {
-          text = decodeURIComponent(prefillRaw);
-        } catch (e) {
-          text = "";
-        }
-      } else if (qRaw) {
-        try {
-          text = decodeURIComponent(qRaw);
-        } catch (e) {
-          text = "";
+
+        if (text) {
+          el.value = text;
+          var n = document.createElement("div");
+          n.textContent =
+            "AI相談メモ／事前メモを読み込みました。必要に応じて追記・修正してください。";
+          n.className = "mt-4 text-sm opacity-80";
+          el.parentElement.insertBefore(n, el);
+        } else {
+          // ③ どのクエリも無い場合は、ローカル保存分を最後のバックアップとして使う
+          var memo = localStorage.getItem("incierge:gpts:intake");
+          if (memo) el.value = memo;
         }
       }
 
-      if (text) {
-        el.value = text;
-        var n = document.createElement("div");
-        n.textContent =
-          "AI相談メモ／事前メモを読み込みました。必要に応じて追記・修正してください。";
-        n.className = "mt-4 text-sm opacity-80";
-        el.parentElement.insertBefore(n, el);
-      } else {
-        // ③ どのクエリも無い場合は、ローカル保存分を最後のバックアップとして使う
-        var memo = localStorage.getItem("incierge:gpts:intake");
-        if (memo) el.value = memo;
+      // ▼ 3) 「日程を選ぶ」クリックでモーダルを開く
+      var openBtn = document.getElementById("open-meeting");
+      var dialog = document.getElementById("meeting-dialog");
+      var closeBtn = document.getElementById("close-meeting");
+
+      if (openBtn && dialog && dialog.showModal) {
+        openBtn.addEventListener("click", function (e) {
+          e.preventDefault(); // 通常遷移を止めてモーダル表示
+          dialog.showModal();
+        });
+      }
+
+      if (closeBtn && dialog) {
+        closeBtn.addEventListener("click", function () {
+          dialog.close();
+        });
+      }
+
+      // ダイアログ外クリックで閉じる（必要なければ削除してOK）
+      if (dialog) {
+        dialog.addEventListener("click", function (e) {
+          var rect = dialog.getBoundingClientRect();
+          if (
+            e.clientX < rect.left ||
+            e.clientX > rect.right ||
+            e.clientY < rect.top ||
+            e.clientY > rect.bottom
+          ) {
+            dialog.close();
+          }
+        });
       }
     })();
   </script>
