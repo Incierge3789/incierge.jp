@@ -4,6 +4,7 @@
 // - ユーザーメッセージ表示
 // - テンプレボタンからの入力
 // - 固定CTAメッセージ＋/contact 誘導
+// - 送信中フィードバック＆二重送信ガード
 
 document.addEventListener("DOMContentLoaded", () => {
   const modal = document.getElementById("gemini-modal");
@@ -18,6 +19,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const fabBubbleClose = fabBubble
     ? fabBubble.querySelector("[data-close]")
     : null;
+
+  // 送信ボタン
+  const submitBtn = form ? form.querySelector('button[type="submit"]') : null;
+  let isSending = false;
+  const SUBMIT_LABEL_DEFAULT = submitBtn ? submitBtn.textContent : "送信";
+  const SUBMIT_LABEL_SENDING = "送信中…";
 
   // 3つのテンプレボタン（data-gemini-template）
   const templateButtons = document.querySelectorAll("[data-gemini-template]");
@@ -60,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
     wrapper.className = "flex justify-center mb-2";
     const bubble = document.createElement("div");
     bubble.className =
-      "max-w-[90%] rounded-xl px-2 py-1 text-[11px] leading-relaxed bg-slate-100 text-slate-600";
+      "max-w-[90%] rounded-xl px-2 py-1 text:[11px] leading-relaxed bg-slate-100 text-slate-600";
     bubble.textContent = text;
     wrapper.appendChild(bubble);
     messages.appendChild(wrapper);
@@ -97,6 +104,23 @@ document.addEventListener("DOMContentLoaded", () => {
     wrapper.appendChild(bubble);
     messages.appendChild(wrapper);
     scrollToBottom();
+  }
+
+  function setSendingState(on) {
+    if (!submitBtn) return;
+    isSending = on;
+
+    if (on) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = SUBMIT_LABEL_SENDING;
+      submitBtn.classList.add("opacity-60", "cursor-not-allowed");
+      textarea.setAttribute("readonly", "true");
+    } else {
+      submitBtn.disabled = false;
+      submitBtn.textContent = SUBMIT_LABEL_DEFAULT;
+      submitBtn.classList.remove("opacity-60", "cursor-not-allowed");
+      textarea.removeAttribute("readonly");
+    }
   }
 
   // モーダル開く
@@ -154,20 +178,27 @@ document.addEventListener("DOMContentLoaded", () => {
   // フォーム送信 → 固定メッセージ＋contactリンク
   form.addEventListener("submit", (event) => {
     event.preventDefault();
+    if (isSending) return; // 連打ガード
 
     const userText = textarea.value.trim();
     if (!userText) return;
 
+    setSendingState(true);
+
     addMessage("user", userText);
     textarea.value = "";
 
-    addMessage("bot", FIXED_REPLY);
-    addContactLink(userText);
+    // 今回は同期処理なので、軽くディレイを入れて「送信した感」を出す
+    setTimeout(() => {
+      addMessage("bot", FIXED_REPLY);
+      addContactLink(userText);
 
-    addSystemMessage(
-      "※ フォーム側では「ご相談内容」に、いま入力した内容がそのまま入ります。"
-    );
+      addSystemMessage(
+        "※ フォーム側では「ご相談内容」に、いま入力した内容がそのまま入ります。"
+      );
 
-    textarea.focus();
+      setSendingState(false);
+      textarea.focus();
+    }, 400);
   });
 });
