@@ -2,47 +2,38 @@
 // /automation 専用 INCIERGE CONCIERGE フロントロジック
 // - モーダルの開閉
 // - ユーザーメッセージ表示
-// - 固定CTAメッセージ＋/contact 誘導（Geminiは使わない）
+// - テンプレボタンからの入力
+// - 固定CTAメッセージ＋/contact 誘導
 
 document.addEventListener("DOMContentLoaded", () => {
   const modal = document.getElementById("gemini-modal");
-
-  // 💬 浮遊ボタンでモーダルを開く（HTML側の id に合わせる）
   const openBtn = document.getElementById("gemini-fab");
-
-  // モーダルの × ボタン（data 属性で取得）
   const closeBtn = document.querySelector("[data-gemini-modal-close]");
 
   const form = document.getElementById("gemini-chat-form");
   const textarea = document.getElementById("gemini-chat-input");
-
-  // メッセージログ領域（HTML側の id に合わせる）
   const messages = document.getElementById("gemini-chat-log");
 
-  // 初期吹き出し（任意）
   const fabBubble = document.getElementById("gemini-fab-bubble");
   const fabBubbleClose = fabBubble
     ? fabBubble.querySelector("[data-close]")
     : null;
+
+  // 3つのテンプレボタン（data-gemini-template）
+  const templateButtons = document.querySelectorAll("[data-gemini-template]");
 
   if (!form || !textarea || !messages) {
     console.warn("INCIERGE GEMINI: 必要な要素が見つかりませんでした。");
     return;
   }
 
-  // --------------------------------------------------
-  // 固定の返信メッセージ（CTA）
-  // --------------------------------------------------
   const FIXED_REPLY =
     "いま書いていただいた内容だけでも、十分にご相談としてお伺いできます。\n\n" +
     "このまま「無料相談フォーム」から送っていただければ、\n" +
     "こちらで状況を整理したうえで、どのプランが合いそうかご提案します。";
 
-  const CONTACT_BASE_PATH = "/contact/";
+  const CONTACT_PATH = "/contact/";
 
-  // --------------------------------------------------
-  // UI ヘルパー
-  // --------------------------------------------------
   function scrollToBottom() {
     messages.scrollTop = messages.scrollHeight;
   }
@@ -50,9 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function addMessage(role, text) {
     const wrapper = document.createElement("div");
     wrapper.className =
-      role === "user"
-        ? "flex justify-end mb-3"
-        : "flex justify-start mb-3";
+      role === "user" ? "flex justify-end mb-3" : "flex justify-start mb-3";
 
     const bubble = document.createElement("div");
     bubble.className =
@@ -78,56 +67,52 @@ document.addEventListener("DOMContentLoaded", () => {
     scrollToBottom();
   }
 
-  // ユーザーの入力内容をクエリに載せた contact URL を作る
-  function buildContactUrlFromMessage(message) {
-    const params = new URLSearchParams();
-    params.set("from_automation", "1");
-    if (message && message.length > 0) {
-      params.set("q", message);
-    }
-    return `${CONTACT_BASE_PATH}?${params.toString()}`;
-  }
-
-  // 「無料相談フォームを開く」ボタン風リンクを追加
-  function addContactLinkMessage(url) {
+  // /contact へのリンク（q に相談内容を渡す）
+  function addContactLink(prefillText) {
     const wrapper = document.createElement("div");
-    wrapper.className = "flex justify-center mt-2 mb-2";
+    wrapper.className = "flex justify-center mb-2";
 
     const bubble = document.createElement("div");
     bubble.className =
-      "inline-flex items-center rounded-full bg-blue-600 px-4 py-2 text-[11px] font-semibold text-white shadow cursor-pointer hover:bg-blue-700";
+      "max-w-[90%] rounded-xl px-3 py-2 text-[11px] leading-relaxed bg-slate-100 text-slate-700";
+
+    const span = document.createElement("span");
+    span.textContent = "→ 無料相談フォームはこちらから開けます：";
+
+    const url = new URL(CONTACT_PATH, window.location.origin);
+    url.searchParams.set("from_automation", "1");
+    if (prefillText) {
+      url.searchParams.set("q", prefillText);
+    }
 
     const link = document.createElement("a");
-    link.href = url;
+    link.href = url.toString();
     link.target = "_blank";
     link.rel = "noopener noreferrer";
-    link.className =
-      "flex items-center gap-1 no-underline";
-    link.textContent = "→ 無料相談フォームを開く";
+    link.className = "text-blue-600 underline underline-offset-2";
+    link.textContent = "フォームを開く";
 
+    bubble.appendChild(span);
     bubble.appendChild(link);
     wrapper.appendChild(bubble);
     messages.appendChild(wrapper);
     scrollToBottom();
   }
 
-  // --------------------------------------------------
-  // モーダル開閉
-  // --------------------------------------------------
+  // モーダル開く
   if (openBtn && modal) {
     openBtn.addEventListener("click", () => {
       modal.classList.remove("opacity-0", "pointer-events-none");
       modal.setAttribute("aria-hidden", "false");
       textarea.focus();
 
-      // 最初に開いたタイミングで初期吹き出しを消す（任意）
       if (fabBubble) {
-        fabBubble.classList.add("opacity-0");
-        fabBubble.classList.add("pointer-events-none");
+        fabBubble.classList.add("opacity-0", "pointer-events-none");
       }
     });
   }
 
+  // モーダル閉じる（×）
   if (closeBtn && modal) {
     closeBtn.addEventListener("click", () => {
       modal.classList.add("opacity-0", "pointer-events-none");
@@ -135,15 +120,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 初期吹き出しの × ボタン
+  // 初期吹き出し ×
   if (fabBubble && fabBubbleClose) {
     fabBubbleClose.addEventListener("click", () => {
-      fabBubble.classList.add("opacity-0");
-      fabBubble.classList.add("pointer-events-none");
+      fabBubble.classList.add("opacity-0", "pointer-events-none");
     });
   }
 
-  // モーダル外クリックで閉じる（任意）
+  // モーダル外クリックで閉じる
   if (modal) {
     modal.addEventListener("click", (e) => {
       if (e.target === modal) {
@@ -153,29 +137,36 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // --------------------------------------------------
-  // フォーム送信ハンドラ
-  //   → ユーザー入力を受け取り、
-  //      固定のCTAメッセージ＋contactへの誘導だけを返す
-  // --------------------------------------------------
+  // テンプレボタン → テキストエリアに反映
+  if (templateButtons.length) {
+    templateButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const text =
+          btn.getAttribute("data-gemini-template") ||
+          btn.textContent.trim();
+        if (!text) return;
+        textarea.value = text;
+        textarea.focus();
+      });
+    });
+  }
+
+  // フォーム送信 → 固定メッセージ＋contactリンク
   form.addEventListener("submit", (event) => {
     event.preventDefault();
 
     const userText = textarea.value.trim();
     if (!userText) return;
 
-    // ユーザーのメッセージを表示
     addMessage("user", userText);
-
-    // 入力欄リセット
     textarea.value = "";
 
-    // 固定の返信メッセージを表示
     addMessage("bot", FIXED_REPLY);
+    addContactLink(userText);
 
-    // contact URL（ユーザーの入力付き）を生成してボタン風リンクを描画
-    const contactUrl = buildContactUrlFromMessage(userText);
-    addContactLinkMessage(contactUrl);
+    addSystemMessage(
+      "※ フォーム側では「ご相談内容」に、いま入力した内容がそのまま入ります。"
+    );
 
     textarea.focus();
   });
