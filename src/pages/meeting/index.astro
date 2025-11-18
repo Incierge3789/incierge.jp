@@ -1,0 +1,40 @@
+---
+// src/pages/meeting/index.astro
+import Base from "../../layouts/Base.astro";
+
+const title = "オンライン面談の予約｜INCIERGE";
+const desc = "INCIERGEとのオンライン面談の候補日時をお選びいただけます。";
+
+// ?embed=1 のときはヘッダー/フッターなしで表示
+const isEmbed = Astro.url.searchParams.get("embed") === "1";
+
+// TODO: ここに Googleカレンダーの「予約ページ」URL を入れる
+const calendarUrl = "https://calendar.google.com/calendar/embed?src=YOUR_GOOGLE_APPOINTMENTS_URL";
+---
+
+{isEmbed ? (
+  // ▼ 埋め込み用（/contact のモーダルから表示）
+  <div class="h-[70vh] w-full">
+    <iframe
+      src={calendarUrl}
+      class="h-full w-full border-0"
+      loading="lazy"
+    ></iframe>
+  </div>
+) : (
+  // ▼ 通常ページとして開いたとき（/meeting 直アクセス）
+  <Base title={title} description={desc}>
+    <h1 class="text-xl font-semibold">オンライン面談の予約</h1>
+    <p class="mt-2 text-sm text-slate-700">
+      下のカレンダーから、ご希望の日時をお選びください。
+    </p>
+
+    <div class="mt-6 h-[70vh] w-full">
+      <iframe
+        src={calendarUrl}
+        class="h-full w-full border-0"
+        loading="lazy"
+      ></iframe>
+    </div>
+  </Base>
+)}
