@@ -15,6 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const textarea = document.getElementById("gemini-chat-input");
   const messages = document.getElementById("gemini-chat-log");
 
+  const heroCta = document.getElementById("automation-hero-cta");
+
   const fabBubble = document.getElementById("gemini-fab-bubble");
   const fabBubbleClose = fabBubble
     ? fabBubble.querySelector("[data-close]")
@@ -40,6 +42,23 @@ document.addEventListener("DOMContentLoaded", () => {
     "こちらで状況を整理したうえで、どのプランが合いそうかご提案します。";
 
   const CONTACT_PATH = "/contact/";
+
+  function track(eventName, props) {
+    if (typeof window !== "undefined" && window.plausible) {
+      if (props) {
+        window.plausible(eventName, { props });
+      } else {
+        window.plausible(eventName);
+      }
+    }
+  }
+
+  if (heroCta) {
+    heroCta.addEventListener("click", () => {
+      track("automation_hero_click");
+    });
+  }
+
 
   function scrollToBottom() {
     messages.scrollTop = messages.scrollHeight;
@@ -133,6 +152,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (fabBubble) {
         fabBubble.classList.add("opacity-0", "pointer-events-none");
       }
+
+      track("automation_gemini_open");
     });
   }
 
@@ -196,6 +217,8 @@ document.addEventListener("DOMContentLoaded", () => {
       addSystemMessage(
         "※ フォーム側では「ご相談内容」に、いま入力した内容がそのまま入ります。"
       );
+
+      track("automation_gemini_submit");
 
       setSendingState(false);
       textarea.focus();
