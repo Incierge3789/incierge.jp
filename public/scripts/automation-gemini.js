@@ -2,7 +2,7 @@
 // /automation 専用 INCIERGE CONCIERGE フロントロジック
 // - モーダルの開閉
 // - ユーザーメッセージ表示
-// - Gemini呼び出し（自動リトライ＋エラーハンドリング）
+// - 固定CTAメッセージ＋/contact 誘導（Geminiは使わない）
 
 document.addEventListener("DOMContentLoaded", () => {
   const modal = document.getElementById("gemini-modal");
@@ -29,6 +29,16 @@ document.addEventListener("DOMContentLoaded", () => {
     console.warn("INCIERGE GEMINI: 必要な要素が見つかりませんでした。");
     return;
   }
+
+  // --------------------------------------------------
+  // 固定の返信メッセージ（CTA）
+  // --------------------------------------------------
+  const FIXED_REPLY =
+    "いま書いていただいた内容だけでも、十分にご相談としてお伺いできます。\n\n" +
+    "このまま「無料相談フォーム」から送っていただければ、\n" +
+    "こちらで状況を整理したうえで、どのプランが合いそうかご提案します。";
+
+  const CONTACT_URL = "https://incierge.jp/contact/";
 
   // --------------------------------------------------
   // UI ヘルパー
@@ -66,103 +76,6 @@ document.addEventListener("DOMContentLoaded", () => {
     wrapper.appendChild(bubble);
     messages.appendChild(wrapper);
     scrollToBottom();
-  }
-
-
-
-  // ローディング用バブルを共有変数で管理
-  let thinkingBubbleEl = null;
-
-  function setThinking(isThinking) {
-    if (isThinking) {
-      textarea.setAttribute("disabled", "true");
-
-      // すでに表示中なら二重で出さない
-      if (thinkingBubbleEl) return;
-
-      const wrapper = document.createElement("div");
-      wrapper.className = "flex justify-start mb-3";
-      const bubble = document.createElement("div");
-      bubble.className =
-        "max-w-[80%] rounded-2xl px-3 py-2 text-[12px] leading-relaxed bg-slate-100 text-slate-700 border border-slate-200";
-
-      bubble.textContent = "あなたに合う提案を準備しています…";
-
-      wrapper.appendChild(bubble);
-      messages.appendChild(wrapper);
-      thinkingBubbleEl = wrapper;
-      scrollToBottom();
-    } else {
-      textarea.removeAttribute("disabled");
-
-      // ローディング用バブルを消す
-      if (thinkingBubbleEl && thinkingBubbleEl.parentNode) {
-        thinkingBubbleEl.parentNode.removeChild(thinkingBubbleEl);
-      }
-      thinkingBubbleEl = null;
-    }
-  }
-
-
-
-  // --------------------------------------------------
-  // Gemini 呼び出し（自動リトライ付き）
-  // --------------------------------------------------
-  async function callGeminiWithRetry(message, options = {}) {
-    const {
-      maxRetries = 2, // 合計 1 + 2 回 = 最大 3 回トライ
-      timeoutMs = 15000,
-      onRetry = null,
-    } = options;
-
-    let lastError = null;
-
-    for (let attempt = 0; attempt <= maxRetries; attempt++) {
-      try {
-        const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), timeoutMs);
-
-        const res = await fetch("/api/gemini-lp", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message }),
-          signal: controller.signal,
-        });
-
-        clearTimeout(timer);
-
-        if (!res.ok) {
-          const text = await res.text().catch(() => "");
-          throw new Error(`HTTP ${res.status}: ${text.slice(0, 200)}`);
-        }
-
-        const data = await res.json();
-        return data; // 正常終了
-      } catch (err) {
-        lastError = err;
-
-        const isAbort = err.name === "AbortError";
-        const isNetwork =
-          err instanceof TypeError &&
-          String(err.message || "").includes("Failed to fetch");
-
-        const retriable = isAbort || isNetwork;
-
-        if (attempt < maxRetries && retriable) {
-          if (typeof onRetry === "function") {
-            onRetry({ attempt, maxRetries, error: err });
-          }
-          // 200ms → 400ms → … で少しだけ待つ
-          await new Promise((r) => setTimeout(r, 200 + attempt * 200));
-          continue;
-        }
-
-        // リトライ不可 or 回数上限
-        throw err;
-      }
-    }
-
-    throw lastError || new Error("Unknown error in callGeminiWithRetry");
   }
 
   // --------------------------------------------------
@@ -208,9 +121,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --------------------------------------------------
-  // フォーム送信ハンドラ（ここが今回の本丸）
+  // フォーム送信ハンドラ
+  //   → ユーザー入力を受け取り、
+  //      固定のCTAメッセージ＋contactへの誘導だけを返す
   // --------------------------------------------------
-  form.addEventListener("submit", async (event) => {
+  form.addEventListener("submit", (event) => {
     event.preventDefault();
 
     const userText = textarea.value.trim();
@@ -220,52 +135,14 @@ document.addEventListener("DOMContentLoaded", () => {
     addMessage("user", userText);
 
     // 入力欄リセット
-    // 入力欄リセット
     textarea.value = "";
-    setThinking(true);
 
-    try {
-      // ① 1回目のリクエスト
-      let data = await callGeminiWithRetry(userText, {
-        maxRetries: 2,
-        timeoutMs: 15000,
-        onRetry({ attempt }) {
-          if (attempt === 0) {
-            addSystemMessage("通信が少し不安定なようです。再接続を試しています…");
-          }
-        },
-      });
+    // 固定の返信メッセージを表示
+    addMessage("bot", FIXED_REPLY);
 
-      // ② サーバ側が「fallback を返したかどうか」
-      const isFallback = !!(data && data.meta && data.meta.isFallback);
+    // /contact への誘導も、システムメッセージとして明示
+    addSystemMessage(`→ 無料相談フォームはこちらから開けます：${CONTACT_URL}`);
 
-      // ③ fallback だった場合は、ユーザーに見せる前にもう一度だけ投げ直す
-      if (isFallback) {
-        addSystemMessage(
-          "INCIERGEが、あなたに合う提案をもう一度だけ組み立て直しています…"
-        );
-
-        data = await callGeminiWithRetry(userText, {
-          maxRetries: 1,
-          timeoutMs: 15000,
-        });
-      }
-
-      // ④ 最終的な返信テキストを決定
-      const reply =
-        (data && typeof data.reply === "string" && data.reply.trim()) ||
-        "すみません、うまく回答を生成できませんでした。\nお手数ですが、少し時間をおいてからもう一度お試しください。";
-
-      addMessage("bot", reply);
-    } catch (err) {
-      console.error("GEMINI_LP_FRONT_ERROR", err);
-      addMessage(
-        "bot",
-        "通信が少し不安定なようです。\nしばらく時間をおいてから、もう一度お試しください。"
-      );
-    } finally {
-      setThinking(false);
-      textarea.focus();
-    }
+    textarea.focus();
   });
 });
