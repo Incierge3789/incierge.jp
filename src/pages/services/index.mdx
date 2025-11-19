@@ -1,62 +1,85 @@
 ---
 layout: ../../layouts/Base.astro
 title: Services
-description: INCIERGEのサービス一覧。Web解析×AI伴走、即効AI導入パックなど、中小企業の「情報整理・自動化・伴走」を最小の構成で素早く立ち上げる支援プロセスを紹介します。
+description: INCIERGEの支援プロセス。小さく検証して定着へ。
 ---
 
-# Services
+<div class="py-10 md:py-14 space-y-10">
 
-INCIERGEは「AI × 情報 × 伴走」。課題の言語化→最小の検証→運用定着の順に進めます。  
-**料金は内容により個別見積り**です（まずは無料相談で方向性を整理）。
+  {/* 上部：サービス全体の説明 */}
+  <section class="space-y-4 max-w-3xl">
+    <h1 class="text-2xl md:text-3xl font-semibold">Services</h1>
+    <p>
+      INCIERGEは「AI × 情報 × 伴走」。課題の言語化→最小の検証→運用定着の順に進めます。
+      <br />
+      <strong>料金は内容により個別見積り</strong>です（まずは無料相談で方向性を整理）。
+    </p>
+  </section>
 
-## 支援プロセス
+  {/* 支援プロセス */}
+  <section class="space-y-4 max-w-3xl">
+    <h2 class="text-lg md:text-xl font-semibold">支援プロセス</h2>
+    <ol class="list-decimal pl-5 space-y-2">
+      <li>
+        <strong>30分ヒアリング</strong> — 目的・現状・制約を確認
+      </li>
+      <li>
+        <strong>PoC設計（2–4週）</strong> — 最小構成で検証し、成果と学びを明確化
+      </li>
+      <li>
+        <strong>定着・拡張</strong> — 週次レビューで運用を定着、必要に応じて自動化を拡張
+      </li>
+    </ol>
 
-1. **30分ヒアリング** — 目的・現状・制約を確認  
-2. **PoC設計（2–4週）** — 最小構成で検証、成果と学びを明確化  
-3. **定着・拡張** — 週次レビューで運用を定着、必要に応じて自動化を拡張
+    <div class="pt-4">
+      <a href="/contact/" class="btn-primary">無料相談へ</a>
+    </div>
+  </section>
 
-<div class="mt-8">
-  <a href="/contact/" class="btn-primary">無料相談へ</a>
+  {/* 主なサービス */}
+  <section class="space-y-4">
+    <h2 class="text-lg md:text-xl font-semibold">主なサービス</h2>
+
+    <div class="mt-4 grid gap-8 md:grid-cols-2">
+
+      <a
+        href="/web-analytics"
+        class="block rounded-2xl border border-gray-200 bg-white/80 p-5 shadow-sm hover:border-indigo-300 hover:shadow-md transition"
+      >
+        <p class="text-xs font-medium text-indigo-600">Web解析 × AI伴走</p>
+        <h3 class="mt-1 text-base font-semibold text-gray-900">
+          GA4もレポートも読まなくて大丈夫。<br />
+          「次の30日でやることリスト」だけ受け取るWeb解析サービス。
+        </h3>
+        <p class="mt-2 text-sm text-gray-700">
+          専任のWeb担当を採用する前に、月15万円で“外部Web参謀”を部分採用できるプランです。
+        </p>
+        <p class="mt-3 text-xs font-semibold text-indigo-700">詳細を見る →</p>
+      </a>
+
+      <a
+        href="/automation"
+        class="block rounded-2xl border border-gray-200 bg-white/80 p-5 shadow-sm hover:border-emerald-300 hover:shadow-md transition"
+      >
+        <p class="text-xs font-medium text-emerald-600">即効AI導入パック</p>
+        <h3 class="mt-1 text-base font-semibold text-gray-900">
+          現場のルーティン作業を、まず1つずつAIに置き換える。
+        </h3>
+        <p class="mt-2 text-sm text-gray-700">
+          Slack・スプレッドシート・Gmailなど、今あるツールを前提に、
+          小さく作ってすぐ動かす「AI自動化パック」です。
+        </p>
+        <p class="mt-3 text-xs font-semibold text-emerald-700">詳細を見る →</p>
+      </a>
+
+    </div>
+  </section>
+
+  {/* FAQへの誘導 */}
+  <section>
+    <p class="mt-2 text-sm text-gray-600">
+      その他のご質問は <a href="/faq/" class="underline underline-offset-2">FAQページ</a> にまとめています。
+    </p>
+  </section>
+
 </div>
-
----
-
-## 主なサービス
-
-<div class="mt-16 grid gap-6 md:grid-cols-2">
-
-  <a href="/web-analytics"
-     class="block rounded-2xl border border-gray-200 bg-white/80 p-5 shadow-sm hover:border-indigo-300 hover:shadow-md transition">
-    <p class="text-xs font-medium text-indigo-600">Web解析 × AI伴走</p>
-    <h2 class="mt-1 text-base font-semibold text-gray-900">
-      GA4もレポートも読まなくて大丈夫。<br />
-      「次の30日でやることリスト」だけ受け取るWeb解析サービス。
-    </h2>
-    <p class="mt-2 text-sm text-gray-700">
-      専任のWeb担当を採用する前に、月15万円で“外部Web参謀”を部分採用できるプランです。
-    </p>
-    <p class="mt-3 text-xs font-semibold text-indigo-700">
-      詳細を見る →
-    </p>
-  </a>
-
-  <a href="/automation"
-     class="block rounded-2xl border border-gray-200 bg-white/80 p-5 shadow-sm hover:border-indigo-300 hover:shadow-md transition">
-    <p class="text-xs font-medium text-emerald-600">即効AI導入パック</p>
-    <h2 class="mt-1 text-base font-semibold text-gray-900">
-      現場のルーティン作業を、まず1つずつAIに置き換える。
-    </h2>
-    <p class="mt-2 text-sm text-gray-700">
-      Slack・スプレッドシート・Gmailなど、今あるツールを前提に、
-      小さく作ってすぐ動かす「AI自動化パック」です。
-    </p>
-    <p class="mt-3 text-xs font-semibold text-emerald-700">
-      詳細を見る →
-    </p>
-  </a>
-
-</div>
-
----
-
-その他のご質問は [FAQページ](/faq/) にまとめています。
