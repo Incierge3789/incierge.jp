@@ -1,5 +1,112 @@
 ---
 layout: ../../layouts/Base.astro
 title: Works
+description: INCIERGEの支援事例。地方企業のAI活用・自動化・Web解析のプロジェクト例を紹介します。
+---
+
+# Works
+
+INCIERGEがこれまでに伴走してきたプロジェクトの一部をご紹介します。  
+実際の社名は出せないため、**業種・規模・課題のタイプ**が分かる形で整理しています。
+
+---
+
+## 最近のプロジェクト例
+
+<div class="mt-6 grid gap-6 md:grid-cols-2">
+
+  <div class="rounded-2xl bg-white/70 p-5 shadow-sm border border-gray-100">
+    <p class="text-xs font-medium text-indigo-600 mb-1">Web解析 × AIレポート</p>
+    <h2 class="text-base font-semibold text-gray-900">
+      GA4は触りたくない地方メーカーに、<br />「次の30日でやることリスト」だけを届ける設計。
+    </h2>
+    <p class="mt-2 text-sm text-gray-700">
+      従業員数50〜200名規模の製造業。Google Analytics / 広告レポートが属人化し、
+      「結局なにを変えればいいか分からない」という状態からのスタートでした。
+    </p>
+    <ul class="mt-3 text-sm text-gray-700 list-disc list-inside space-y-1">
+      <li>GA4・Search Console・広告アカウントの計測整理</li>
+      <li>AIによる月次レポート自動生成（要点だけをメール / Slackに配信）</li>
+      <li>「やめる施策・伸ばす施策」が一目で分かるダッシュボード設計</li>
+    </ul>
+  </div>
+
+  <div class="rounded-2xl bg-white/70 p-5 shadow-sm border border-gray-100">
+    <p class="text-xs font-medium text-emerald-600 mb-1">即効AI導入パック</p>
+    <h2 class="text-base font-semibold text-gray-900">
+      Slackとスプレッドシートを中心に、<br />バックオフィスの二重入力をゼロに近づける。
+    </h2>
+    <p class="mt-2 text-sm text-gray-700">
+      従業員数30〜100名のサービス業。勤怠 / 日報 / 請求 / 案件管理がバラバラのツールで管理され、
+      「入力ばかりで本業に集中できない」という課題がありました。
+    </p>
+    <ul class="mt-3 text-sm text-gray-700 list-disc list-inside space-y-1">
+      <li>Slack × Google Apps Script による申請フロー自動化</li>
+      <li>スプレッドシートの台帳化と、Notion / カレンダー連携</li>
+      <li>月次レポート・リマインドをAIが下書きする仕組みを導入</li>
+    </ul>
+  </div>
+
+  <div class="rounded-2xl bg-white/70 p-5 shadow-sm border border-gray-100 md:col-span-2">
+    <p class="text-xs font-medium text-pink-600 mb-1">AIコンテンツ運用</p>
+    <h2 class="text-base font-semibold text-gray-900">
+      YouTube・note・Threadsの「ネタ出し〜振り返り」まで、<br />AIと一緒に回せるコンテンツ基盤づくり。
+    </h2>
+    <p class="mt-2 text-sm text-gray-700">
+      代表が顔出しで情報発信をしている専門職・士業の方向けに、
+      1人で回せるコンテンツPDCAの設計と、AIプロンプトの作成・チューニングを支援しました。
+    </p>
+    <ul class="mt-3 text-sm text-gray-700 list-disc list-inside space-y-1">
+      <li>「柱テーマ × 企画フォーマット」の設計と言語化</li>
+      <li>動画台本・サムネ案・投稿文をAIで下書きするワークフロー構築</li>
+      <li>再生・CVデータをもとに、AIが次の撮影プランを提案する仕組み</li>
+    </ul>
+  </div>
+
+</div>
+
+---
+
+## こんな課題で相談されています
+
+- Webや広告の数字はあるが、**要約と次の一手**が欲しい  
+- 日次・週次でやっているルーティン作業を、**少しずつAIに置き換えたい**  
+- 代表や小さなチームでも回せる、**現実的な運用フローを一緒に作りたい**  
+- 補助金・商工会などの支援と組み合わせて、**無理なく導入したい**  
+
+---
+
+## ご相談〜稼働までの流れ
+
+1. **30分オンライン相談**  
+   課題・現状・リソース感（人・時間・予算）をヒアリングします。
+2. **PoCプランのご提案（2〜4週）**  
+   「まずここから」の最小プランと、今後の拡張イメージをセットでご提示します。
+3. **伴走・自動化の実装**  
+   Slack / GAS / Notion / Supabase / Cloudflare など、既存の環境に合わせて構築します。
+4. **振り返りと次ステップ**  
+   数値と現場の声をもとに、続ける・やめる・広げるを一緒に判断します。
+
+<div class="mt-8">
+  <a href="/contact/" class="btn-primary">自社でできることを相談する</a>
+</div>
+
+{/* 構造化データ（WebPage + パンくず） */}
+<script type="application/ld+json">{JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Works | 支援事例",
+  "url": "https://incierge.jp/works/",
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://incierge.jp/" },
+      { "@type": "ListItem", "position": 2, "name": "Works", "item": "https://incierge.jp/works/" }
+    ]
+  },
+  "description": "INCIERGEの支援事例。地方企業のAI活用・自動化・Web解析のプロジェクト例を紹介します。"
+})}</script>---
+layout: ../../layouts/Base.astro
+title: Works
 ---
 # Works
