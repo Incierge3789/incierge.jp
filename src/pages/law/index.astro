@@ -1,0 +1,110 @@
+---
+// src/pages/law/index.astro
+import Base from "../../layouts/Base.astro";
+
+const title = "特定商取引法に基づく表記｜INCIERGE";
+const desc = "INCIERGE（インシェルジュ）が提供するサービスに関する特定商取引法に基づく表記です。";
+const breadcrumbs: Array<[string, string]> = [
+  ["Home", "/"],
+  ["特定商取引法に基づく表記", "/law/"],
+];
+---
+<Base title={title} description={desc} breadcrumbs={breadcrumbs}>
+  <h1 class="mb-6 text-2xl font-bold">特定商取引法に基づく表記</h1>
+
+  <p class="mb-8 text-sm text-slate-600">
+    INCIERGE（インシェルジュ）が提供する各種サービスに関する表示です。
+  </p>
+
+  <dl class="space-y-4 text-sm leading-relaxed">
+    <div>
+      <dt class="font-semibold">事業者名</dt>
+      <dd>INCIERGE（インシェルジュ）</dd>
+    </div>
+
+    <div>
+      <dt class="font-semibold">代表者名</dt>
+      <dd>小田切 祥平</dd>
+    </div>
+
+    <div>
+      <dt class="font-semibold">所在地</dt>
+      <dd>山梨県甲斐市（※番地以下は請求時に開示いたします）</dd>
+    </div>
+
+    <div>
+      <dt class="font-semibold">電話番号</dt>
+      <dd>080-6391-6489<br /><span class="text-xs text-slate-500">※電話での営業・セールスはお受けしておりません。</span></dd>
+    </div>
+
+    <div>
+      <dt class="font-semibold">メールアドレス</dt>
+      <dd><a href="mailto:info@incierge.jp" class="text-blue-600 underline">info@incierge.jp</a></dd>
+    </div>
+
+    <div>
+      <dt class="font-semibold">URL</dt>
+      <dd><a href="https://incierge.jp" class="text-blue-600 underline">https://incierge.jp</a></dd>
+    </div>
+
+    <div>
+      <dt class="font-semibold">販売価格</dt>
+      <dd>各サービスの紹介ページ（例：/automation）に税込価格を表示します。</dd>
+    </div>
+
+    <div>
+      <dt class="font-semibold">商品代金以外の必要料金</dt>
+      <dd>
+        ・インターネット接続料金、通信料金
+        <br />・銀行振込を利用される場合の振込手数料
+      </dd>
+    </div>
+
+    <div>
+      <dt class="font-semibold">支払方法</dt>
+      <dd>クレジットカード決済（Stripe）／銀行振込</dd>
+    </div>
+
+    <div>
+      <dt class="font-semibold">支払時期</dt>
+      <dd>原則として前払い（着手前に全額をご請求します）。</dd>
+    </div>
+
+    <div>
+      <dt class="font-semibold">サービス提供時期</dt>
+      <dd>契約成立後、合意した着手日から順次提供します。</dd>
+    </div>
+
+    <div>
+      <dt class="font-semibold">キャンセル・返金について</dt>
+      <dd>
+        デジタルサービス・コンサルティングの性質上、着手後のキャンセル・返金はお受けしておりません。
+        <br />着手前に限り、全額返金にてキャンセルを承ります。
+      </dd>
+    </div>
+
+    <div>
+      <dt class="font-semibold">中途解約について</dt>
+      <dd>
+        月額伴走プランを中途解約される場合でも、当月分の料金の日割り返金は行いません。
+      </dd>
+    </div>
+
+    <div>
+      <dt class="font-semibold">動作環境</dt>
+      <dd>
+        各種オンラインサービス（Google、OpenAI 等）を利用します。
+        セキュリティソフトや社内ポリシーによりアクセス制限がある場合、
+        一部サービスが正常に動作しない可能性があります。
+      </dd>
+    </div>
+
+    <div>
+      <dt class="font-semibold">表現および商品に関する注意書き</dt>
+      <dd>
+        本サイトおよび資料に記載された実績・効果は一例であり、
+        必ずしも同様の成果を保証するものではありません。
+      </dd>
+    </div>
+  </dl>
+</Base>

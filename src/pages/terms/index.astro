@@ -1,0 +1,89 @@
+---
+// src/pages/terms/index.astro
+import Base from "../../layouts/Base.astro";
+
+const title = "利用規約｜INCIERGE";
+const desc = "INCIERGEのサービスをご利用いただく際の利用規約です。AI支援・自動化・講座・コンサルティング等に適用されます。";
+const breadcrumbs: Array<[string, string]> = [
+  ["Home", "/"],
+  ["利用規約", "/terms/"],
+];
+---
+<Base title={title} description={desc} breadcrumbs={breadcrumbs}>
+  <h1 class="mb-6 text-2xl font-bold">利用規約</h1>
+
+  <p class="mb-6 text-sm text-slate-600">
+    本利用規約（以下「本規約」）は、INCIERGE（以下「当社」）が提供するサービス（第2条に定義）をご利用いただく際の条件を定めるものです。
+    本サービスの利用者（以下「利用者」）は、本規約に同意のうえご利用ください。
+  </p>
+
+  <section class="space-y-4 text-sm leading-relaxed">
+    <h2 class="mt-6 text-lg font-semibold">第1条（定義）</h2>
+    <p>
+      本規約において「本サービス」とは、当社が提供するAIマーケティング支援、業務自動化構築、AI講座、伴走支援、Web改善、コンサルティングその他これに付随するサービスをいいます。
+    </p>
+
+    <h2 class="mt-6 text-lg font-semibold">第2条（本サービスの内容）</h2>
+    <ol class="list-decimal space-y-2 pl-5">
+      <li>当社は、オンライン面談・チャット・ドキュメント共有等の手段を用いて本サービスを提供します。</li>
+      <li>本サービスはAI技術を活用する性質上、その出力結果の完全な正確性・網羅性・最新性を保証するものではありません。</li>
+      <li>本サービスの具体的な内容・納品物は、個別に締結する契約書・見積書・提案書等により定めるものとします。</li>
+    </ol>
+
+    <h2 class="mt-6 text-lg font-semibold">第3条（利用環境の整備）</h2>
+    <p>
+      利用者は、本サービスの利用に必要なインターネット環境、端末、ソフトウェア等を自己の責任と費用において準備・維持するものとします。
+    </p>
+
+    <h2 class="mt-6 text-lg font-semibold">第4条（料金および支払方法）</h2>
+    <ol class="list-decimal space-y-2 pl-5">
+      <li>本サービスの料金は、当社ウェブサイト上の表示または当社が提示する見積書のとおりとします。</li>
+      <li>支払方法は、Stripeによるクレジットカード決済または当社が指定する銀行口座への振込とします。</li>
+      <li>原則として前払いとし、当社が別途認める場合を除き、着手後の返金は行いません。</li>
+    </ol>
+
+    <h2 class="mt-6 text-lg font-semibold">第5条（禁止事項）</h2>
+    <p>利用者は、以下の行為を行ってはならないものとします。</p>
+    <ul class="list-disc space-y-2 pl-5">
+      <li>法令または公序良俗に反する行為</li>
+      <li>当社または第三者の権利・利益を侵害する行為</li>
+      <li>本サービスにより提供される情報・ツールの不正利用・再配布</li>
+      <li>反社会的勢力等への本サービスの提供、またはこれを助長する行為</li>
+    </ul>
+
+    <h2 class="mt-6 text-lg font-semibold">第6条（契約期間・解約）</h2>
+    <ol class="list-decimal space-y-2 pl-5">
+      <li>スポット案件は、納品完了または合意した作業範囲の完了をもって終了します。</li>
+      <li>月額伴走プランは1か月単位で自動更新され、利用者が当月末までに解約の意思表示を行った場合、翌月以降の更新を停止します。</li>
+      <li>当社は、利用者が本規約に違反した場合、直ちに本サービスの提供を停止し、契約を解除できるものとします。</li>
+    </ol>
+
+    <h2 class="mt-6 text-lg font-semibold">第7条（知的財産権）</h2>
+    <ol class="list-decimal space-y-2 pl-5">
+      <li>本サービスに関連して当社が作成した資料・スクリプト・デザイン等の著作権その他の知的財産権は、特段の合意がない限り当社に帰属します。</li>
+      <li>利用者は、当社の事前の書面による承諾なく、前項の成果物を第三者に譲渡・再販売・再配布してはなりません。</li>
+    </ol>
+
+    <h2 class="mt-6 text-lg font-semibold">第8条（免責事項）</h2>
+    <ol class="list-decimal space-y-2 pl-5">
+      <li>当社は、本サービスの利用により利用者に生じた損害について、当社の故意または重過失がある場合を除き、責任を負いません。</li>
+      <li>当社が責任を負う場合であっても、その範囲は利用者が当社に支払った直近1か月分の利用料金を上限とします。</li>
+      <li>外部サービス（OpenAI、Google、Cloudflare、Supabase等）の仕様変更・障害・停止等に起因して生じた損害について、当社は責任を負いません。</li>
+    </ol>
+
+    <h2 class="mt-6 text-lg font-semibold">第9条（プライバシー）</h2>
+    <p>
+      当社は、利用者の個人情報を別途定める「プライバシーポリシー」に従って適切に取り扱います。
+    </p>
+
+    <h2 class="mt-6 text-lg font-semibold">第10条（準拠法・管轄）</h2>
+    <p>
+      本規約の準拠法は日本法とし、本サービスに関して紛争が生じた場合は、甲府地方裁判所を第一審の専属的合意管轄裁判所とします。
+    </p>
+
+    <p class="mt-8 text-xs text-slate-500">
+      制定日：2025年X月X日<br />
+      INCIERGE
+    </p>
+  </section>
+</Base>

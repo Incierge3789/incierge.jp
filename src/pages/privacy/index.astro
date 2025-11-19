@@ -1,0 +1,99 @@
+---
+// src/pages/privacy/index.astro
+import Base from "../../layouts/Base.astro";
+
+const title = "プライバシーポリシー｜INCIERGE";
+const desc = "INCIERGE（インシェルジュ）のプライバシーポリシーです。個人情報の取り扱い方針を定めています。";
+const breadcrumbs: Array<[string, string]> = [
+  ["Home", "/"],
+  ["プライバシーポリシー", "/privacy/"],
+];
+---
+<Base title={title} description={desc} breadcrumbs={breadcrumbs}>
+  <h1 class="mb-6 text-2xl font-bold">プライバシーポリシー</h1>
+
+  <p class="mb-6 text-sm text-slate-600">
+    INCIERGE（以下「当社」）は、個人情報保護の重要性を認識し、以下の方針に基づき個人情報を取り扱います。
+  </p>
+
+  <section class="space-y-4 text-sm leading-relaxed">
+    <h2 class="mt-4 text-lg font-semibold">1. 取得する情報</h2>
+    <p>当社は、以下の情報を取得する場合があります。</p>
+    <ul class="list-disc space-y-1 pl-5">
+      <li>問い合わせフォームにご入力いただく情報（氏名・メールアドレス・会社名・WebサイトURL・ご相談内容など）</li>
+      <li>オンライン面談の予約情報（Google カレンダーの予約ページ経由で取得される情報）</li>
+      <li>アクセス解析情報（ページビュー、参照元など）※Plausible Analytics を利用</li>
+      <li>AI事前相談メモ（<code>?prefill</code> / <code>?gpts</code> で渡されるテキスト情報、ローカルストレージに保存されるメモ等）</li>
+    </ul>
+
+    <h2 class="mt-4 text-lg font-semibold">2. 利用目的</h2>
+    <p>取得した情報は、以下の目的で利用します。</p>
+    <ul class="list-disc space-y-1 pl-5">
+      <li>お問い合わせへの回答、各種ご連絡のため</li>
+      <li>サービス提供・業務遂行・改善のため</li>
+      <li>講座・伴走支援・コンサルティングの進捗管理のため</li>
+      <li>不正アクセスやトラブル発生時の調査のため</li>
+    </ul>
+
+    <h2 class="mt-4 text-lg font-semibold">3. 外部サービスの利用</h2>
+    <p>
+      当社は、本サービスの提供にあたり、以下の外部サービスを利用する場合があります。
+      これらのサービス事業者が個人情報を取り扱う場合、その取り扱いについては各事業者のプライバシーポリシーに従います。
+    </p>
+    <ul class="list-disc space-y-1 pl-5">
+      <li>Cloudflare（ホスティング、Turnstile 等）</li>
+      <li>Supabase（データベース）</li>
+      <li>Google（Calendar / Meet / Workspace 等）</li>
+      <li>OpenAI / Google Gemini 等のAI関連サービス</li>
+      <li>Plausible Analytics（アクセス解析。Cookieレス計測）</li>
+    </ul>
+
+    <h2 class="mt-4 text-lg font-semibold">4. Cookie 等について</h2>
+    <p>
+      当社サイトでは、Google Analytics の代わりに Plausible Analytics を使用し、
+      Cookie に依存しない形でアクセス解析を行っています。個人を特定するためのCookieは利用していません。
+    </p>
+
+    <h2 class="mt-4 text-lg font-semibold">5. 個人情報の第三者提供</h2>
+    <p>
+      当社は、以下の場合を除き、取得した個人情報を第三者に提供しません。
+    </p>
+    <ul class="list-disc space-y-1 pl-5">
+      <li>本人の同意がある場合</li>
+      <li>法令に基づき開示を求められた場合</li>
+      <li>人の生命・身体・財産の保護のために必要であり、本人の同意を得ることが困難な場合</li>
+    </ul>
+
+    <h2 class="mt-4 text-lg font-semibold">6. セキュリティ対策</h2>
+    <p>
+      当社は、不正アクセス、紛失、改ざん等を防止するため、Cloudflare や Supabase が提供する暗号化・アクセス制御機能等を利用し、適切な安全対策を講じます。
+    </p>
+
+    <h2 class="mt-4 text-lg font-semibold">7. 開示・訂正・削除の請求</h2>
+    <p>
+      ご自身の個人情報の開示・訂正・削除をご希望される場合は、下記お問い合わせ窓口までご連絡ください。
+      本人確認を行ったうえで、合理的な範囲で速やかに対応いたします。
+    </p>
+
+    <h2 class="mt-4 text-lg font-semibold">8. プライバシーポリシーの変更</h2>
+    <p>
+      本ポリシーの内容は、法令の変更やサービス内容の変更等に応じて、予告なく改定される場合があります。
+      重要な変更がある場合は、当社ウェブサイト上でお知らせします。
+    </p>
+
+    <h2 class="mt-4 text-lg font-semibold">9. お問い合わせ窓口</h2>
+    <p>
+      本ポリシーに関するお問い合わせは、以下の窓口までご連絡ください。
+    </p>
+    <p>
+      INCIERGE（インシェルジュ）<br />
+      メール：<a href="mailto:info@incierge.jp" class="text-blue-600 underline">info@incierge.jp</a><br />
+      電話：080-6391-6489
+    </p>
+
+    <p class="mt-8 text-xs text-slate-500">
+      制定日：2025年X月X日<br />
+      INCIERGE
+    </p>
+  </section>
+</Base>
