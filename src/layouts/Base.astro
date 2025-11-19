@@ -24,8 +24,8 @@ const ORG = {
   sameAs: [
     // 必要に応じて追記
     // "https://x.com/yourid",
-    // "https://www.youtube.com/@yourid",
-    // "https://note.com/yourid"
+    // "https://www.youtube.com/@incierge",
+    // "https://note.com/incierge_lab"
   ],
   address: {
     "@type": "PostalAddress",
@@ -33,6 +33,8 @@ const ORG = {
     addressLocality: "甲斐市",
   },
   areaServed: ["山梨県", "甲信", "日本"],
+  telephone: "+81-80-6391-6489",
+  email: "info@incierge.jp",
 };
 ---
 <html lang="ja">
@@ -69,23 +71,32 @@ const ORG = {
 
 
     <!-- Organization / LocalBusiness JSON-LD -->
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": ["Organization","LocalBusiness"],
-      "name": ORG.name,
-      "url": ORG.url,
-      "logo": new URL(ogImage, Astro.site).href,
-      "image": new URL(ogImage, Astro.site).href,
-      "description": description,
-      "address": ORG.address,
-      "areaServed": ORG.areaServed,
-      "sameAs": ORG.sameAs,
-      "contactPoint": [{
-        "@type": "ContactPoint",
-        "contactType": "sales",
-        "url": "https://incierge.jp/contact/"
-      }]
-    })}></script>
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": ["Organization", "LocalBusiness"],
+        "name": ORG.name,
+        "url": ORG.url,
+        "logo": new URL(ogImage, Astro.site).href,
+        "image": new URL(ogImage, Astro.site).href,
+        "description": description,
+        "address": ORG.address,
+        "areaServed": ORG.areaServed,
+        "sameAs": ORG.sameAs,
+        "telephone": ORG.telephone,
+        "email": ORG.email,
+        "contactPoint": [
+          {
+            "@type": "ContactPoint",
+            "contactType": "customer support",
+            "telephone": ORG.telephone,
+            "email": ORG.email,
+            "url": "https://incierge.jp/contact/"
+          }
+        ]
+      })}
+    ></script>
 
     <!-- パンくず（あるときだけ出力） -->
     {breadcrumbs.length > 0 && (

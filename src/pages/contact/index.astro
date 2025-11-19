@@ -4,6 +4,9 @@ import Base from "../../layouts/Base.astro";
 const title = "Contact｜INCIERGE";
 const desc =
   "ご相談フォーム。GPTでの事前相談メモがあれば自動入力されます。?prefill= もしくは ?gpts= で取り込み。";
+
+// /contact?service=web-analytics のようなクエリを取得
+const service = Astro.url.searchParams.get("service") ?? "";
 ---
 <Base title={title} description={desc}>
   <h1>Contact</h1>
@@ -15,6 +18,9 @@ const desc =
   <form method="POST" action="/api/contact" class="mt-6 space-y-4">
     {/* 流入元トラッキング用（/contact?from=...） */}
     <input type="hidden" name="source" id="contact-source" value="" />
+
+    {/* サービス種別（/contact?service=web-analytics など） */}
+    <input type="hidden" name="service" value={service} />
 
     <label class="block">
       <span>お名前（必須）</span>
@@ -52,7 +58,7 @@ const desc =
       ></textarea>
     </label>
 
-    {/* ▼ 任意：今すぐ日程を予約する */}
+    {/* ▼ 任意：今すぐ日程を予約する（Google カレンダー予約ボタンだけ） */}
     <div class="mt-4 rounded border px-4 py-3 text-sm bg-slate-50">
       <p class="mb-1 text-xs font-semibold text-slate-600">
         任意：今すぐ日程を予約する
@@ -60,14 +66,11 @@ const desc =
       <p class="mb-3 leading-relaxed">
         フォーム送信だけでも大丈夫です。すぐに日程まで決めたい方は、
         下のボタンからオンライン面談の候補日時をお選びいただけます。
+        （オンライン面談は Google Meet を使用します）
       </p>
-      <a
-        href="/meeting?source=contact_optional"
-        id="open-meeting"
-        class="btn-primary inline-block text-sm"
-      >
-        日程を選ぶ（オンライン面談）
-      </a>
+
+      {/* ここに Google カレンダーの予約ボタンが描画される */}
+      <div id="gc-appointment-button"></div>
     </div>
 
     <div class="cf-turnstile" data-sitekey="0x4AAAAAAB9qMJ4SG87lHVc2"></div>
@@ -75,32 +78,24 @@ const desc =
     <button type="submit" class="btn-primary">送信</button>
   </form>
 
-  {/* /meeting 埋め込み用モーダル */}
-  <dialog
-    id="meeting-dialog"
-    class="w-full max-w-xl rounded-lg border border-slate-200 p-0"
-  >
-    <div class="flex items-center justify-between border-b border-slate-200 px-4 py-2">
-      <h2 class="text-sm font-semibold text-slate-800">
-        日程を選ぶ（オンライン面談）
-      </h2>
-      <button
-        type="button"
-        id="close-meeting"
-        class="text-xs text-slate-500 hover:text-slate-800"
-      >
-        閉じる
-      </button>
-    </div>
-    <div class="aspect-[4/3] w-full">
-      <iframe
-        id="meeting-frame"
-        src="/meeting?source=contact_optional&embed=1"
-        class="h-full w-full border-0"
-        loading="lazy"
-      ></iframe>
-    </div>
-  </dialog>
+  {/* ▼ カスタマーサポート */}
+  <section class="mt-8 text-sm text-slate-700">
+    <h2 class="mb-2 text-xs font-semibold text-slate-600">
+      カスタマーサポート窓口
+    </h2>
+    <p class="leading-relaxed">
+      お問い合わせ・サポートにつきましては、以下の連絡先でも承っております。<br />
+      電話：<a href="tel:08063916489" class="underline">080-6391-6489</a><br />
+      メール：<a href="mailto:info@incierge.jp" class="underline">info@incierge.jp</a>
+    </p>
+  </section>
+
+  {/* Google カレンダー予約ボタン用の CSS / JS 読み込み */}
+  <link
+    rel="stylesheet"
+    href="https://calendar.google.com/calendar/scheduling-button-script.css"
+  />
+  <script src="https://calendar.google.com/calendar/scheduling-button-script.js" async></script>
 
   <script>
     (function () {
@@ -114,14 +109,13 @@ const desc =
       // ▼ 2) ご相談内容のプリフィル処理
       var el = document.getElementById("message");
       if (el) {
-        // ① GPTs / prefill / automation からの生データ
         var gptsRaw = params.get("gpts");
         var prefillRaw = params.get("prefill");
         var qRaw = params.get("q"); // /automation からの一言メモ
 
         var text = "";
 
-        // ② 優先順位: gpts > prefill > q
+        // 優先順位: gpts > prefill > q
         if (gptsRaw) {
           try {
             text = atob(decodeURIComponent(gptsRaw));
@@ -150,44 +144,23 @@ const desc =
           n.className = "mt-4 text-sm opacity-80";
           el.parentElement.insertBefore(n, el);
         } else {
-          // ③ どのクエリも無い場合は、ローカル保存分を最後のバックアップとして使う
           var memo = localStorage.getItem("incierge:gpts:intake");
           if (memo) el.value = memo;
         }
       }
 
-      // ▼ 3) 「日程を選ぶ」クリックでモーダルを開く
-      var openBtn = document.getElementById("open-meeting");
-      var dialog = document.getElementById("meeting-dialog");
-      var closeBtn = document.getElementById("close-meeting");
+      // ▼ 3) Google カレンダー予約ボタン描画
+      window.addEventListener("load", function () {
+        var target = document.getElementById("gc-appointment-button");
+        if (!target || !window.calendar || !calendar.schedulingButton) return;
 
-      if (openBtn && dialog && dialog.showModal) {
-        openBtn.addEventListener("click", function (e) {
-          e.preventDefault(); // 通常遷移を止めてモーダル表示
-          dialog.showModal();
+        calendar.schedulingButton.load({
+          url: "https://calendar.google.com/calendar/appointments/schedules/AcZssZ3vqKZoAQfZQ-e3V3cUSkiPibKprkP2PvSWh7IbUtytQDZh5r4xAFJcIwvW4_evkYncIksqTFP_?gv=true",
+          color: "#039BE5",
+          label: "オンライン面談の日時を選ぶ",
+          target,
         });
-      }
-
-      if (closeBtn && dialog) {
-        closeBtn.addEventListener("click", function () {
-          dialog.close();
-        });
-      }
-
-      // ダイアログ外クリックで閉じる（必要なければ削除してOK）
-      if (dialog) {
-        dialog.addEventListener("click", function (e) {
-          var rect = dialog.getBoundingClientRect();
-          if (
-            e.clientX < rect.left ||
-            e.clientX > rect.right ||
-            e.clientY < rect.top ||
-            e.clientY > rect.bottom
-          ) {
-            dialog.close();
-          }
-        });
-      }
+      });
     })();
   </script>
 </Base>

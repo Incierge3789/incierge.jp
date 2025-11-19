@@ -3,38 +3,51 @@
 import Base from "../../layouts/Base.astro";
 
 const title = "オンライン面談の予約｜INCIERGE";
-const desc = "INCIERGEとのオンライン面談の候補日時をお選びいただけます。";
-
-// ?embed=1 のときはヘッダー/フッターなしで表示
-const isEmbed = Astro.url.searchParams.get("embed") === "1";
-
-// TODO: ここに Googleカレンダーの「予約ページ」URL を入れる
-const calendarUrl = "https://calendar.app.google/Sj7NVZp35HaGV22K8";
+const desc =
+  "オンライン面談の予約ページです。Googleカレンダーの予約ページから、ご希望の日時をお選びください。";
 ---
 
-{isEmbed ? (
-  // ▼ 埋め込み用（/contact のモーダルから表示）
-  <div class="h-[70vh] w-full">
-    <iframe
-      src={calendarUrl}
-      class="h-full w-full border-0"
-      loading="lazy"
-    ></iframe>
-  </div>
-) : (
-  // ▼ 通常ページとして開いたとき（/meeting 直アクセス）
-  <Base title={title} description={desc}>
-    <h1 class="text-xl font-semibold">オンライン面談の予約</h1>
-    <p class="mt-2 text-sm text-slate-700">
-      下のカレンダーから、ご希望の日時をお選びください。
+<Base title={title} description={desc}>
+  <main class="min-h-[60vh] px-4 py-10 flex flex-col items-center justify-center">
+    <h1 class="mb-3 text-lg font-semibold text-slate-900">
+      オンライン面談の予約
+    </h1>
+    <p class="mb-6 text-sm text-slate-600 text-center">
+      下のボタンから予約ページを開き、ご希望の日時をお選びください。
     </p>
 
-    <div class="mt-6 h-[70vh] w-full">
-      <iframe
-        src={calendarUrl}
-        class="h-full w-full border-0"
-        loading="lazy"
-      ></iframe>
-    </div>
-  </Base>
-)}
+    <!-- ボタンを差し込むターゲット -->
+    <div id="gcal-booking-button"></div>
+
+    <!-- Google公式のボタン用CSS -->
+    <link
+      rel="stylesheet"
+      href="https://calendar.google.com/calendar/scheduling-button-script.css"
+    />
+
+    <!-- Google公式のスクリプト本体 -->
+    <script src="https://calendar.google.com/calendar/scheduling-button-script.js" async></script>
+
+    <!-- ボタンを生成するスクリプト（Astro用に書き換え） -->
+    <script is:inline>
+      (function () {
+        var target = document.getElementById("gcal-booking-button");
+        if (!target) return;
+
+        window.addEventListener("load", function () {
+          // scheduling-button-script.js で global に生えるオブジェクト
+          // @ts-ignore
+          if (!window.calendar || !calendar.schedulingButton) return;
+
+          // ここにあなたの予約ページURLを入れる
+          calendar.schedulingButton.load({
+            url: "https://calendar.google.com/calendar/appointments/schedules/AcZssZ3vqKZoAQfZQ-e3V3cUSkiPibKprkP2PvSWh7IbUtytQDZh5r4xAFJcIwvW4_evkYncIksqTFP_?gv=true",
+            color: "#039BE5",
+            label: "オンライン面談の日時を選ぶ",
+            target,
+          });
+        });
+      })();
+    </script>
+  </main>
+</Base>
