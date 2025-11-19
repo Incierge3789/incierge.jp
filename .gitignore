@@ -26,3 +26,4 @@ pnpm-debug.log*
 .lighthouseci/*.json
 .lighthouseci/manifest.json
 src/_backup/
+turnstile_test.json
