@@ -1,85 +1,168 @@
 ---
 import Base from "../../layouts/Base.astro";
 
-const title = "地方創業 × AI支援｜INCIERGE";
+const title = "Local AI Startup｜地方・小規模事業者のためのAI伴走";
 const description =
-  "地方での創業・小規模経営に特化。ChatGPT/Notion/GASで業務を仕組み化し、少人数でも続く集客と運営を設計。甲斐市・山梨から全国対応。";
-const crumbs = [["Home","/"],["地方創業×AI支援","/local-ai-startup/"]];
+  "地方の小さな事業でも、AIを“無理なく”使い始めるための伴走プラン。山梨・甲斐市を中心に、観光・飲食・美容・サロンなどのローカルビジネスを対象としたAI活用支援。";
 
-const faq = [
-  { q: "創業準備でAIは何から始めればいい？",
-    a: "事業の言語化→情報整理→発信の自動化の順が効率的です。ChatGPTで事業の骨子を整え、Notionで業務手順を可視化、GASで繰り返し作業を自動化します。" },
-  { q: "進め方と期間は？",
-    a: "最小構成のPoC（2〜4週間）で検証し、定着後に伴走フェーズへ移行します。費用は相談後の個別見積りです。" },
-  { q: "補助金や商工会の講座と両立できる？",
-    a: "可能です。申請書の構成支援や講座の成果物を運用に接続する設計も対応します。" },
-  { q: "ITが苦手でも大丈夫？",
-    a: "対話ベースの運用マニュアルとテンプレを提供します。“続けられる設計”を重視します。" },
+const crumbs = [
+  ["Home", "/"],
+  ["Local AI Startup", "/local-ai-startup/"],
 ];
 ---
-<Base title={title} description={description} ogImage="/og.jpg" breadcrumbs={crumbs}>
-  <section class="prose max-w-3xl mx-auto py-10">
-    <h1 class="text-3xl md:text-4xl font-heading">地方創業 × AI支援</h1>
-    <p class="mt-3">{description}</p>
-    <div class="mt-6"><a href="/contact/" class="btn-primary">相談する</a></div>
 
-    <h2 class="mt-12">支援内容</h2>
-    <ul class="list-disc pl-6">
-      <li>事業の言語化・情報設計（Mission/Vision/Offer）</li>
-      <li>ChatGPT × Notion × GAS による運用の仕組み化</li>
-      <li>SNS/YouTube/LINEの最小運用セット（即日開始）</li>
-    </ul>
-
-    <h2 id="process" class="mt-12">進め方と期間</h2>
-    <p>最小構成で2〜4週間のPoC（試行）を行い、定着後に伴走フェーズへ移行します。費用は内容により変動するため、相談後に個別見積りとなります。</p>
-
-    <h2 class="mt-12">よくある質問</h2>
-    <dl>
-      {faq.map((f) => (
-        <div class="mt-4">
-          <dt class="font-semibold">{f.q}</dt>
-          <dd>{f.a}</dd>
-        </div>
-      ))}
-    </dl>
+<Base
+  title={title}
+  description={description}
+  canonical="https://incierge.jp/local-ai-startup/"
+  breadcrumbs={crumbs}
+>
+  <section class="py-20 md:py-24">
+    <h1 class="font-heading text-3xl md:text-5xl leading-tight">
+      地方の小さなビジネスに、<br />
+      <span class="gold">ちょうどいいAI活用</span>を。
+    </h1>
+    <p class="mt-6 text-base md:text-lg opacity-80 max-w-2xl">
+      山梨・甲斐市を拠点に、観光・飲食・美容・サロン・士業などの
+      「人が見て選ばれる仕事」に特化したAI伴走プランです。<br />
+      難しいDXではなく、
+      <strong>今の集客・リピート・事務作業を少しずつAIに置き換える</strong>
+      ことから始めます。
+    </p>
+    <div class="mt-8 flex flex-wrap gap-4">
+      <a href="/contact/" class="btn-primary">ローカルAI活用を相談する</a>
+      <a href="/services/" class="btn-ghost">支援メニューを見る</a>
+    </div>
   </section>
 
-  <!-- Service + FAQ + Breadcrumb JSON-LD -->
-  <script type="application/ld+json" set:html={JSON.stringify({
-    "@context":"https://schema.org",
-    "@type":"WebPage",
-    "name": title,
-    "breadcrumb": {
-      "@type":"BreadcrumbList",
-      "itemListElement":[
-        {"@type":"ListItem","position":1,"name":"Home","item":"https://incierge.jp/"},
-        {"@type":"ListItem","position":2,"name":"地方創業×AI支援","item":"https://incierge.jp/local-ai-startup/"}
-      ]
-    },
-    "mainEntity": {
-      "@type":"Service",
-      "name":"AI創業・業務効率化支援",
-      "serviceType":"BusinessConsulting",
-      "areaServed":["山梨県","甲信","日本"],
-      "provider":{"@type":"Organization","name":"INCIERGE","url":"https://incierge.jp"},
-      "description": description,
-      "offers":{"@type":"Offer","availability":"https://schema.org/InStock"}
-    }
-  })}></script>
+  <section class="py-12 md:py-16 border-t border-gray-100">
+    <h2 class="text-xl md:text-2xl font-semibold">こんな方のためのプランです</h2>
+    <div class="mt-6 grid gap-6 md:grid-cols-3">
+      <div class="p-5 rounded-2xl bg-white/70 shadow-sm">
+        <p class="text-xs font-medium text-indigo-600 mb-1">観光・飲食</p>
+        <p class="text-sm text-gray-800">
+          InstagramやGoogleマップは更新しているが、<br />
+          「どの投稿が効いているのか分からない」<br />
+          「繁忙期だけ予約が集中して苦しい」。
+        </p>
+      </div>
+      <div class="p-5 rounded-2xl bg-white/70 shadow-sm">
+        <p class="text-xs font-medium text-emerald-600 mb-1">美容・サロン</p>
+        <p class="text-sm text-gray-800">
+          予約管理・カルテ・DM配信など、<br />
+          つい後回しになる作業が多く、<br />
+          リピーター施策まで手が回らない。
+        </p>
+      </div>
+      <div class="p-5 rounded-2xl bg-white/70 shadow-sm">
+        <p class="text-xs font-medium text-pink-600 mb-1">個人事業・士業</p>
+        <p class="text-sm text-gray-800">
+          note・ブログ・YouTubeなど情報発信をしたいが、<br />
+          「ネタ出し・原稿づくり・分析」を1人で回すのは難しい。
+        </p>
+      </div>
+    </div>
+  </section>
 
-  <script type="application/ld+json" set:html={JSON.stringify({
-    "@context":"https://schema.org",
-    "@type":"FAQPage",
-    "mainEntity": faq.map(f => ({
-      "@type":"Question",
-      "name": f.q,
-      "acceptedAnswer": {"@type":"Answer","text": f.a}
-    }))
-  })}></script>
+  <section class="py-12 md:py-16 border-t border-gray-100">
+    <h2 class="text-xl md:text-2xl font-semibold">何をするプランなのか</h2>
+    <div class="mt-6 grid gap-6 md:grid-cols-2">
+      <div class="p-5 rounded-2xl bg-white/70 shadow-sm">
+        <h3 class="font-semibold mb-2 text-gray-900">
+          ① 売上につながる「1本の導線」を決める
+        </h3>
+        <p class="text-sm text-gray-700">
+          まずは「予約」「問い合わせ」「LINE登録」など、
+          1つのゴールに導線を絞り込みます。<br />
+          既存サイト・SNS・口コミなど、今ある資産の棚卸しから一緒に行います。
+        </p>
+      </div>
+      <div class="p-5 rounded-2xl bg-white/70 shadow-sm">
+        <h3 class="font-semibold mb-2 text-gray-900">
+          ② AIの役割を“1〜2個”に限定する
+        </h3>
+        <p class="text-sm text-gray-700">
+          例：チャットボットで一次対応だけ任せる / 予約確認メッセージを自動化する /
+          投稿文の下書きだけAIに任せる…など。<br />
+          いきなり全部ではなく、「ここだけAIで十分」というポイントから導入します。
+        </p>
+      </div>
+      <div class="p-5 rounded-2xl bg-white/70 shadow-sm md:col-span-2">
+        <h3 class="font-semibold mb-2 text-gray-900">
+          ③ 無理なく続けられる“ローカル運用ルール”を決める
+        </h3>
+        <p class="text-sm text-gray-700">
+          「週1回の振り返り」「月1回の小さな改善」など、
+          日々の業務に無理なく乗せられるルールを一緒に設計します。<br />
+          山梨・甲斐市の季節性やイベント時期も見ながら、現実的な運用に落とし込みます。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-12 md:py-16 border-t border-gray-100">
+    <h2 class="text-xl md:text-2xl font-semibold">ご相談〜スタートまでの流れ</h2>
+    <ol class="mt-6 space-y-4 text-sm text-gray-800">
+      <li>
+        <strong>1. 無料オンライン相談（30分）</strong><br />
+        課題・現状・エリア・客層などをヒアリングし、
+        「本当にAIを使うべきか？」から一緒に検討します。
+      </li>
+      <li>
+        <strong>2. 小さなPoCプランのご提案（2〜4週）</strong><br />
+        まずどの業務・導線からAIを試すかを決め、期間と作業内容をセットでご提案します。
+      </li>
+      <li>
+        <strong>3. 設定・初期運用の伴走</strong><br />
+        実際のAIツール設定・テスト・スタッフさん向けの簡易マニュアル作成まで伴走します。
+      </li>
+    </ol>
+
+    <div class="mt-8">
+      <a href="/contact/" class="btn-primary">ローカルAI活用について相談する</a>
+    </div>
+  </section>
+
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: title,
+      url: "https://incierge.jp/local-ai-startup/",
+      breadcrumb: {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: "https://incierge.jp/",
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Local AI Startup",
+            item: "https://incierge.jp/local-ai-startup/",
+          },
+        ],
+      },
+      mainEntity: {
+        "@type": "Service",
+        name: "Local AI Startup｜地方・小規模事業者のためのAI伴走",
+        serviceType: "BusinessConsulting",
+        areaServed: ["山梨県", "甲斐市", "日本"],
+        provider: {
+          "@type": "Organization",
+          name: "INCIERGE",
+          url: "https://incierge.jp",
+        },
+        description,
+        offers: {
+          "@type": "Offer",
+          availability: "https://schema.org/InStock",
+        },
+      },
+    })}
+  ></script>
 </Base>
-
-<p class="mt-6 opacity-80">
-  導入の進め方については <a href="/faq/" class="underline">よくある質問</a> もご覧ください。
-</p>
-
-<p class="mt-8"><a href="/faq/">よくある質問はこちら</a></p>
