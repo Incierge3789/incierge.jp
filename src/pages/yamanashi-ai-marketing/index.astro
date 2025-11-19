@@ -1,73 +1,161 @@
 ---
-// layouts
 import Base from "../../layouts/Base.astro";
+
 const title = "山梨のAIマーケティング支援｜INCIERGE";
-const description = "山梨・甲斐市発。中小企業/個人の“伝わらない”をAIで変える。検索意図設計・自動化・継続運用まで。";
+const description =
+  "山梨・甲斐市発。中小企業/個人の“伝わらない”をAIで変える。検索意図設計・自動化・継続運用まで。";
+
+const crumbs = [
+  ["Home", "/"],
+  ["山梨のAIマーケティング支援", "/yamanashi-ai-marketing/"],
+];
 ---
-<Base title={title} description={description} canonical="https://incierge.jp/yamanashi-ai-marketing/">
-  <section class="prose max-w-3xl mx-auto py-10">
-    <h1>山梨のAIマーケティング支援</h1>
-    <p>地方の<strong>「伝わらない」</strong>を、AIで変える。<br/>山梨で<strong>見つかる情報設計</strong>と、<strong>続けられる運用</strong>を。</p>
 
-    <div class="mt-6 flex gap-4">
-      <a href="/contact/" class="btn-primary">30分の無料相談</a>
-      <a href="/services/" class="underline">支援メニューを見る</a>
-    </div>
+<Base
+  title={title}
+  description={description}
+  canonical="https://incierge.jp/yamanashi-ai-marketing/"
+  breadcrumbs={crumbs}
+>
+  {/* HERO */}
+  <section class="py-20 md:py-24">
+    <div class="max-w-3xl mx-auto">
+      <h1 class="font-heading text-3xl md:text-5xl leading-tight">
+        山梨の<span class="gold">AIマーケティング支援</span>
+      </h1>
+      <p class="mt-6 text-base md:text-lg opacity-80">
+        地方の<strong>「伝わらない」</strong>を、AIで変える。<br />
+        山梨で<strong>見つかる情報設計</strong>と、
+        <strong>続けられる運用</strong>を整えます。
+      </p>
 
-    <hr class="my-8"/>
-
-    <h2>できること（Value）</h2>
-    <ul>
-      <li><strong>検索意図設計 × 内部リンク/AEO</strong> — 地域クエリで見つかる情報設計</li>
-      <li><strong>自動化（GAS / Slack / Notion）</strong> — 少人数で回る日次オペ</li>
-      <li><strong>AIコンテンツ運用</strong> — YouTube/Threads/note のPDCA自動化</li>
-    </ul>
-
-    <h2>こう進めます（Process）</h2>
-    <ol>
-      <li><strong>現状ヒアリング（30分）</strong>：課題・強み・流入経路を可視化</li>
-      <li><strong>PoC設計（2–4週）</strong>：最小構成で検証</li>
-      <li><strong>定着（週次レビュー）</strong>：数値で判断し、自動化を拡張</li>
-    </ol>
-
-    <h2>よくある質問（抜粋）</h2>
-    <dl>
-      <div class="mt-4">
-        <dt class="font-semibold">地方でも成果出せる？</dt>
-        <dd>地域クエリに合わせた情報設計と継続運用で十分に可能です。</dd>
+      <div class="mt-8 flex flex-wrap gap-4">
+        <a href="/contact/" class="btn-primary">30分の無料相談</a>
+        <a href="/services/" class="btn-ghost">支援メニューを見る</a>
       </div>
-      <div class="mt-4">
-        <dt class="font-semibold">費用はどう決まりますか？</dt>
-        <dd>課題・目的・自動化範囲に応じて個別にお見積りします。まずは無料相談で方向性を整理したうえで提示します。</dd>
-      </div>
-    </dl>
-
-    <div class="mt-8">
-      <a href="/contact/" class="btn-primary">相談してみる</a>
     </div>
-
-    <h3 class="mt-12">次に読む</h3>
-    <ul>
-      <li><a href="/services/">Services</a>（具体メニュー）</li>
-      <li><a href="/local-ai-startup/">Local AI Startup</a>（地方×AIの考え方）</li>
-      <li><a href="/faq/">FAQ</a>（不安解消）</li>
-      <li><a href="/insights/">Insights</a>（最新記事）</li>
-    </ul>
   </section>
 
-  <script type="application/ld+json">
-    {JSON.stringify({
+  {/* VALUE */}
+  <section class="py-12 md:py-16 border-t border-gray-100">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-xl md:text-2xl font-semibold">できること（Value）</h2>
+      <ul class="mt-6 space-y-3 text-sm md:text-base text-gray-800 list-disc list-inside">
+        <li>
+          <strong>検索意図設計 × 内部リンク / AEO</strong> — 地域クエリで見つかる情報設計
+        </li>
+        <li>
+          <strong>自動化（GAS / Slack / Notion）</strong> — 少人数で回る日次オペ
+        </li>
+        <li>
+          <strong>AIコンテンツ運用</strong> — YouTube / Threads / note のPDCA自動化
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  {/* PROCESS */}
+  <section class="py-12 md:py-16 border-t border-gray-100">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-xl md:text-2xl font-semibold">こう進めます（Process）</h2>
+      <ol class="mt-6 space-y-4 text-sm md:text-base text-gray-800">
+        <li>
+          <strong>現状ヒアリング（30分）</strong>：課題・強み・流入経路を可視化します。
+        </li>
+        <li>
+          <strong>PoC設計（2–4週）</strong>：最小構成で検証し、山梨の商圏に合わせた導線を設計します。
+        </li>
+        <li>
+          <strong>定着（週次レビュー）</strong>：数値で判断し、自動化を段階的に拡張します。
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  {/* FAQ（抜粋） */}
+  <section class="py-12 md:py-16 border-t border-gray-100">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-xl md:text-2xl font-semibold">よくある質問（抜粋）</h2>
+      <dl class="mt-6 space-y-4">
+        <div>
+          <dt class="font-semibold text-sm md:text-base">地方でも成果出せる？</dt>
+          <dd class="text-sm md:text-base text-gray-800">
+            地域クエリに合わせた情報設計と継続運用で、十分に成果は狙えます。
+          </dd>
+        </div>
+        <div>
+          <dt class="font-semibold text-sm md:text-base">費用はどう決まりますか？</dt>
+          <dd class="text-sm md:text-base text-gray-800">
+            課題・目的・自動化範囲に応じて個別にお見積りします。
+            まずは無料相談で方向性を整理したうえで提示します。
+          </dd>
+        </div>
+      </dl>
+
+      <div class="mt-8">
+        <a href="/contact/" class="btn-primary">相談してみる</a>
+      </div>
+    </div>
+  </section>
+
+  {/* NEXT LINKS */}
+  <section class="py-12 md:py-16 border-t border-gray-100">
+    <div class="max-w-3xl mx-auto">
+      <h3 class="text-lg md:text-xl font-semibold">次に読む</h3>
+      <ul class="mt-4 space-y-2 text-sm md:text-base">
+        <li>
+          <a href="/services/" class="underline">Services</a>（具体メニュー）
+        </li>
+        <li>
+          <a href="/local-ai-startup/" class="underline">Local AI Startup</a>（地方×AIの考え方）
+        </li>
+        <li>
+          <a href="/faq/" class="underline">FAQ</a>（不安解消）
+        </li>
+        <li>
+          <a href="/insights/" class="underline">Insights</a>（最新記事）
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  {/* 構造化データ */}
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "WebPage",
-      "name": "山梨のAIマーケティング支援｜INCIERGE",
-      "url": "https://incierge.jp/yamanashi-ai-marketing/",
-      "breadcrumb": {
+      name: title,
+      url: "https://incierge.jp/yamanashi-ai-marketing/",
+      breadcrumb: {
         "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://incierge.jp/" },
-          { "@type": "ListItem", "position": 2, "name": "山梨のAIマーケティング", "item": "https://incierge.jp/yamanashi-ai-marketing/" }
-        ]
-      }
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: "https://incierge.jp/",
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "山梨のAIマーケティング支援",
+            item: "https://incierge.jp/yamanashi-ai-marketing/",
+          },
+        ],
+      },
+      mainEntity: {
+        "@type": "Service",
+        name: title,
+        serviceType: "MarketingConsulting",
+        areaServed: ["山梨県", "甲斐市", "日本"],
+        provider: {
+          "@type": "Organization",
+          name: "INCIERGE",
+          url: "https://incierge.jp",
+        },
+        description,
+      },
     })}
-  </script>
+  ></script>
 </Base>
