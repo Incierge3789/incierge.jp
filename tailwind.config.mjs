@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+import typography from '@tailwindcss/typography';
+
 export default {
   content: ['./src/**/*.{astro,html,md,mdx,js,jsx,ts,tsx}'],
   theme: {
