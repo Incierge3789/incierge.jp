@@ -62,8 +62,19 @@ const tags: string[] = data.tags ?? [];
       </div>
     </div>
 
-    {/* Insights記事共通のCTA */}
-    <InsightsUnifiedCta />
+    <!-- 統一CTA（記事内容に応じて出し分け） -->
+    {
+      (() => {
+        const path = Astro.url.pathname;
+
+        const kind =
+          path.includes("web-analytics-structure")
+            ? "web-analytics"
+            : "automation";
+
+        return <InsightsUnifiedCta kind={kind} />;
+      })()
+    }
 
     <footer class="mt-10 flex items-center justify-between border-t border-dashed border-zinc-200 pt-6 text-sm">
       <a href="/insights/" class="underline underline-offset-4">

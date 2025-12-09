@@ -1,28 +1,47 @@
 ---
-/**
- * Insights記事の末尾に挿入する共通CTA
- * 文言パターンA（構造 × 品質）を採用
- */
+interface Props {
+  kind?: "automation" | "web-analytics";
+}
+
+const { kind = "automation" } = Astro.props as Props;
+
+const isAutomation = kind === "automation";
+
+const title = isAutomation
+  ? "あなたの会社の業務を“構造化”し、ムダをゼロにする30分無料相談。"
+  : "GA4やレポートを“読まなくていい状態”にするWeb解析 × AI伴走相談。";
+
+const description = isAutomation
+  ? "見積り作成・請求書処理・Slack確認など、「止めづらいけれど誰かの時間を奪っている作業」を洗い出し、どこから自動化すべきかをINCIERGEが一緒に整理します。"
+  : "GA4の数字や広告レポートをもとに、「今どこを直せば売上に効くのか」を一緒に決めていきます。Web担当者がいなくても大丈夫です。";
+
+const note = isAutomation
+  ? "※ まだ具体的なツール名やAIの種類が決まっていなくても問題ありません。「この業務がしんどい」という状態からで十分です。"
+  : "※ 現在使っているレポート資料や管理画面があれば、そのまま持ち込んでいただいて構いません。どこから見るべきかを一緒に整理します。";
+
+const buttonHref = isAutomation ? "/automation/" : "/web-analytics/";
+const buttonLabel = isAutomation
+  ? "/automation の相談フォームへ"
+  : "Web解析 × AI伴走の相談フォームへ";
 ---
 
-<section class="mt-12 rounded-2xl border border-slate-200 bg-slate-50 px-6 py-7">
-  <h2 class="text-base font-semibold text-slate-900">
-    あなたの会社の業務を“構造化”し、ムダをゼロにする30分無料相談。
+<section class="mt-10 rounded-2xl border border-zinc-200 bg-zinc-50 px-5 py-6 text-sm text-zinc-800">
+  <h2 class="mb-2 text-base font-semibold text-zinc-900">
+    {isAutomation ? "自動化の相談をする" : "Web解析の相談をする"}
   </h2>
-  <p class="mt-2 text-sm leading-relaxed text-slate-700">
-    見積り作成・請求処理・Slack確認など、「止めづらいのに時間を奪っている作業」を洗い出し、
-    どこから自動化すべきかを INCIERGE が一緒に整理します。
+  <p class="mb-1 font-medium">
+    {title}
   </p>
-  <p class="mt-1 text-xs text-slate-500">
-    ※ まだAI担当がいなくても大丈夫です。「今つらい業務はどこか」だけ共有していただければ十分です。
+  <p class="mb-3 text-[13px] leading-relaxed">
+    {description}
   </p>
-
-  <div class="mt-4">
-    <a
-      href="/automation/"
-      class="inline-flex items-center justify-center rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-slate-800"
-    >
-      /automation の相談フォームへ
-    </a>
-  </div>
+  <p class="mb-4 text-[11px] leading-relaxed text-zinc-500">
+    {note}
+  </p>
+  <a
+    href={buttonHref}
+    class="inline-flex items-center rounded-full bg-zinc-900 px-4 py-2 text-[13px] font-semibold text-white shadow-sm hover:bg-zinc-800"
+  >
+    {buttonLabel}
+  </a>
 </section>
