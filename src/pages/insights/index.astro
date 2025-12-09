@@ -3,26 +3,50 @@ import Base from "../../layouts/Base.astro";
 import { getCollection } from "astro:content";
 
 const title = "Insights｜INCIERGE";
-const description = "地方×AIマーケティングの実践知を発信。";
+const description =
+  "地方×構造化×AIで、中小企業の“業務OS”をつくるための実践知。観点・原則・構造を整理したノートです。";
 
-// date を Date型で扱っている前提（config.ts で z.coerce.date() 推奨）
 const posts = (await getCollection("insights")).sort((a, b) =>
   a.data.date < b.data.date ? 1 : -1
 );
+
 const fmt = (d: Date) =>
   new Intl.DateTimeFormat("ja-JP", { dateStyle: "medium" }).format(d);
 ---
 
-<Base title={title} description={description} breadcrumbs={[["Home","/"],["Insights","/insights/"]]}>
-  <section class="max-w-3xl mx-auto py-10">
-    <h1 class="text-3xl md:text-4xl font-heading">Insights</h1>
-    <ul class="mt-6 space-y-3">
+<Base
+  title={title}
+  description={description}
+  breadcrumbs={[["Home", "/"], ["Insights", "/insights/"]]}
+>
+  <section class="max-w-4xl mx-auto py-10">
+    <header class="space-y-3">
+      <h1 class="text-3xl md:text-4xl font-heading">Insights</h1>
+      <p class="text-sm md:text-base opacity-80 leading-relaxed">
+        INCIERGEが現場で検証している、
+        <strong>「構造 → 原則 → 実装」</strong>
+        の知見をまとめたノートです。<br />
+        AIそのものではなく、「業務OSとしてどう設計するか」を中心に書いています。
+      </p>
+    </header>
+
+    <div class="mt-8 grid gap-6 md:grid-cols-2">
       {posts.map((p) => (
-        <li>
-          <a class="underline" href={`/insights/${p.slug}/`}>{p.data.title}</a>
-          <span class="opacity-70"> — {fmt(p.data.date)}</span>
-        </li>
+        <a
+          href={`/insights/${p.slug}/`}
+          class="block border border-zinc-200 rounded-xl px-4 py-4 hover:shadow-md hover:-translate-y-0.5 transition-all duration-150 bg-white/90"
+        >
+          <p class="text-xs opacity-60">{fmt(p.data.date)}</p>
+          <h2 class="mt-1 text-lg font-semibold leading-snug">
+            {p.data.title}
+          </h2>
+          {p.data.description && (
+            <p class="mt-2 text-sm opacity-80 leading-relaxed">
+              {p.data.description}
+            </p>
+          )}
+        </a>
       ))}
-    </ul>
+    </div>
   </section>
 </Base>
