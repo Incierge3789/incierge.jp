@@ -48,7 +48,15 @@ const tags: string[] = data.tags ?? [];
     </header>
 
     <div class="border-t border-zinc-200 pt-6">
-      <div class="prose prose-neutral max-w-none text-[15px] leading-relaxed">
+      <div
+        class="
+          prose prose-sm md:prose-base prose-zinc
+          prose-headings:font-heading prose-headings:font-semibold
+          prose-h2:text-2xl prose-h3:text-xl
+          max-w-none md:max-w-3xl
+          leading-relaxed md:leading-[1.9]
+        "
+      >
         <Content />
       </div>
     </div>
