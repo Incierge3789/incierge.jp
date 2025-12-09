@@ -112,6 +112,16 @@ const ORG = {
       })}></script>
     )}
 
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17693365968"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'AW-17693365968');
+    </script>
+
     <!-- 追加する（自ドメイン配下のプロキシ経由で読み込む） -->
     <script async defer data-domain="incierge.jp" data-api="/api/plausible" src="/js/script"></script>
     <script>
