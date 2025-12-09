@@ -1,29 +1,89 @@
 ---
 import Base from "./Base.astro";
+
 const { data, Content } = Astro.props;
-const title = `${data.title}｜INCIERGE Insights`;
+
+const pageTitle = `${data.title}｜INCIERGE Insights`;
 const description = data.description;
-const breadcrumbs = [["Home","/"],["Insights","/insights/"],[data.title, Astro.url.pathname]];
+const breadcrumbs = [
+  ["Home", "/"],
+  ["Insights", "/insights/"],
+  [data.title, Astro.url.pathname],
+];
 const og = data.ogImage ?? "/og.jpg";
 
-// ここで整形（ja-JP）
-const publishedText = new Intl.DateTimeFormat("ja-JP", { dateStyle: "medium" }).format(data.date);
+const publishedText = new Intl.DateTimeFormat("ja-JP", {
+  dateStyle: "medium",
+}).format(data.date);
+
+const tags: string[] = data.tags ?? [];
 ---
-<Base title={title} description={description} ogImage={og} breadcrumbs={breadcrumbs}>
-  <article class="prose max-w-3xl mx-auto py-10">
-    <h1 class="text-3xl md:text-4xl font-heading">{data.title}</h1>
-    <p class="opacity-70">{publishedText} — {data.author}</p>
-    <Content />
+
+<Base title={pageTitle} description={description} ogImage={og} breadcrumbs={breadcrumbs}>
+  <article class="max-w-3xl mx-auto py-10 space-y-6">
+    <header class="space-y-3">
+      <p class="text-xs uppercase tracking-[0.12em] text-zinc-500">
+        INSIGHTS
+      </p>
+      <h1 class="text-3xl md:text-4xl font-heading leading-tight">
+        {data.title}
+      </h1>
+      <div class="flex flex-wrap items-center gap-2 text-xs text-zinc-500">
+        <span>{publishedText}</span>
+        <span class="mx-1">／</span>
+        <span>{data.author}</span>
+        {tags.length > 0 && (
+          <>
+            <span class="mx-1">／</span>
+            <div class="flex flex-wrap gap-1">
+              {tags.map((t) => (
+                <span class="rounded-full border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-[11px]">
+                  {t}
+                </span>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+    </header>
+
+    <div class="border-t border-zinc-200 pt-6">
+      <div class="prose prose-neutral max-w-none text-[15px] leading-relaxed">
+        <Content />
+      </div>
+    </div>
+
+    <footer class="mt-10 flex items-center justify-between border-t border-dashed border-zinc-200 pt-6 text-sm">
+      <a href="/insights/" class="underline underline-offset-4">
+        ← Insights 一覧に戻る
+      </a>
+      <a href="/meeting/" class="btn-primary text-sm">
+        この内容で相談してみる
+      </a>
+    </footer>
   </article>
 
-  <script type="application/ld+json" set:html={JSON.stringify({
-    "@context":"https://schema.org",
-    "@type":"Article",
-    "headline": data.title,
-    "description": data.description,
-    "datePublished": data.date.toISOString(), // ← Date型に合わせてISO出力
-    "author": {"@type":"Organization","name":"INCIERGE"},
-    "publisher":{"@type":"Organization","name":"INCIERGE","logo":{"@type":"ImageObject","url":"https://incierge.jp/og.jpg"}},
-    "mainEntityOfPage": {"@type":"WebPage","@id": new URL(Astro.url.pathname, Astro.site).href}
-  })}></script>
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": data.title,
+      "description": data.description,
+      "datePublished": data.date.toISOString(),
+      "author": { "@type": "Organization", "name": "INCIERGE" },
+      "publisher": {
+        "@type": "Organization",
+        "name": "INCIERGE",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://incierge.jp/og.jpg",
+        },
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": new URL(Astro.url.pathname, Astro.site).href,
+      },
+    })}
+  ></script>
 </Base>
