@@ -1,0 +1,175 @@
+---
+import Base from "../layouts/Base.astro";
+
+const title = "Services | INCIERGE";
+const description = "INCIERGEの支援プロセス。小さく検証して定着へ。";
+---
+
+<Base title={title} description={description}>
+    <main class="min-h-screen bg-white text-neutral-900">
+        <div class="page-shell">
+            {/* 上部：サービス全体の説明 */}
+            <section class="section-block-first">
+                <h1 class="section-heading mb-6">Services</h1>
+                <div class="section-body">
+                    <p>
+                        INCIERGEは「AI × 情報 ×
+                        伴走」。課題の言語化→最小の検証→運用定着の順に進めます。<br
+                        />
+                        <span class="font-medium"
+                            >料金は内容により個別見積り</span
+                        >です（まずは無料相談で方向性を整理）。
+                    </p>
+                </div>
+            </section>
+
+            {/* 支援プロセス */}
+            <section class="section-block">
+                <h2 class="section-heading">支援プロセス</h2>
+                <div class="section-body">
+                    <ol class="list-decimal pl-5 space-y-4">
+                        <li class="pl-2">
+                            <span class="font-medium">30分ヒアリング</span> — 目的・現状・制約を確認
+                        </li>
+                        <li class="pl-2">
+                            <span class="font-medium">PoC設計（2–4週）</span> — 最小構成で検証し、成果と学びを明確化
+                        </li>
+                        <li class="pl-2">
+                            <span class="font-medium">定着・拡張</span> — 週次レビューで運用を定着、必要に応じて自動化を拡張
+                        </li>
+                    </ol>
+
+                    <div class="mt-8">
+                        <a href="/contact/" class="btn-outline">無料相談へ</a>
+                    </div>
+                </div>
+            </section>
+
+            {/* 主なサービス */}
+            <section class="section-block">
+                <h2 class="section-heading">主なサービス</h2>
+
+                <div class="section-body grid gap-8 md:grid-cols-2">
+                    {/* Web解析 × AI伴走 */}
+                    <a
+                        href="/web-analytics"
+                        class="block border border-neutral-200 p-6 hover:bg-neutral-50 transition-colors group"
+                    >
+                        <p class="text-xs font-medium text-indigo-700 mb-2">
+                            Web解析 × AI伴走
+                        </p>
+                        <h3
+                            class="text-base font-semibold text-neutral-900 mb-2 leading-relaxed"
+                        >
+                            GA4もレポートも読まなくて大丈夫。<br />
+                            「次の30日でやることリスト」だけ受け取るWeb解析サービス。
+                        </h3>
+                        <p
+                            class="text-sm text-neutral-600 mb-4 leading-relaxed"
+                        >
+                            専任のWeb担当を採用する前に、月15万円で“外部Web参謀”を部分採用できるプランです。
+                        </p>
+                        <div
+                            class="text-xs font-medium text-neutral-800 border-b border-neutral-800 inline-block pb-0.5 group-hover:border-transparent"
+                        >
+                            詳細を見る →
+                        </div>
+                    </a>
+
+                    {/* 即効AI導入パック */}
+                    <a
+                        href="/automation"
+                        class="block border border-neutral-200 p-6 hover:bg-neutral-50 transition-colors group"
+                    >
+                        <p class="text-xs font-medium text-emerald-700 mb-2">
+                            即効AI導入パック
+                        </p>
+                        <h3
+                            class="text-base font-semibold text-neutral-900 mb-2 leading-relaxed"
+                        >
+                            現場のルーティン作業を、まず1つずつAIに置き換える。
+                        </h3>
+                        <p
+                            class="text-sm text-neutral-600 mb-4 leading-relaxed"
+                        >
+                            Slack・スプレッドシート・Gmailなど、今あるツールを前提に、
+                            小さく作ってすぐ動かす「AI自動化パック」です。
+                        </p>
+                        <div
+                            class="text-xs font-medium text-neutral-800 border-b border-neutral-800 inline-block pb-0.5 group-hover:border-transparent"
+                        >
+                            詳細を見る →
+                        </div>
+                    </a>
+
+                    {/* ローカルAIスタートアップ支援 */}
+                    <a
+                        href="/local-ai-startup"
+                        class="block border border-neutral-200 p-6 hover:bg-neutral-50 transition-colors group"
+                    >
+                        <p class="text-xs font-medium text-rose-700 mb-2">
+                            ローカルAIスタートアップ
+                        </p>
+                        <h3
+                            class="text-base font-semibold text-neutral-900 mb-2 leading-relaxed"
+                        >
+                            地方の小さなビジネスに、<br />
+                            ちょうどいいAI活用を。
+                        </h3>
+                        <p
+                            class="text-sm text-neutral-600 mb-4 leading-relaxed"
+                        >
+                            観光・飲食・美容・サロン・士業など、「人が見て選ばれる仕事」に特化したAI伴走プランです。
+                            難しいDXではなく、今の集客・リピート・事務作業を少しずつ置き換えるところから始めます。
+                        </p>
+                        <div
+                            class="text-xs font-medium text-neutral-800 border-b border-neutral-800 inline-block pb-0.5 group-hover:border-transparent"
+                        >
+                            詳細を見る →
+                        </div>
+                    </a>
+
+                    {/* 山梨AIマーケティング支援 */}
+                    <a
+                        href="/yamanashi-ai-marketing"
+                        class="block border border-neutral-200 p-6 hover:bg-neutral-50 transition-colors group"
+                    >
+                        <p class="text-xs font-medium text-amber-700 mb-2">
+                            山梨 × AIマーケ支援
+                        </p>
+                        <h3
+                            class="text-base font-semibold text-neutral-900 mb-2 leading-relaxed"
+                        >
+                            山梨の「伝わらない」を、<br />
+                            AIで分かりやすくする。
+                        </h3>
+                        <p
+                            class="text-sm text-neutral-600 mb-4 leading-relaxed"
+                        >
+                            山梨・甲斐市を中心とした中小企業・個人事業向けに、
+                            HPやSNSが「選ばれる理由」を伝えられるようにするマーケティング支援です。
+                            地域の検索導線に沿った情報設計から、続けられる運用まで伴走します。
+                        </p>
+                        <div
+                            class="text-xs font-medium text-neutral-800 border-b border-neutral-800 inline-block pb-0.5 group-hover:border-transparent"
+                        >
+                            詳細を見る →
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            {/* FAQへの誘導 */}
+            <section class="section-block border-t-0 pt-0">
+                <div class="divider mb-8"></div>
+                <p class="text-sm text-neutral-600 text-center">
+                    その他のご質問は <a
+                        href="/faq/"
+                        class="underline underline-offset-4 text-neutral-900 hover:text-neutral-600"
+                        >FAQページ</a
+                    > にまとめています。
+                </p>
+            </section>
+        </div>
+    </main>
+</Base>

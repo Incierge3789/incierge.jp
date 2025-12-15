@@ -1,0 +1,357 @@
+---
+/**
+ * /aegis — Aegis Design System v1 based product page
+ * NOTE:
+ *  - Uses Base.astro layout
+ *  - Replace hero/demo image placeholders later
+ */
+import Base from "../layouts/Base.astro";
+
+const pageTitle = "Aegis | INCIERGE";
+---
+
+<Base title={pageTitle}>
+    <main class="min-h-screen bg-surface text-ink">
+        <div class="page-shell">
+            {/* Section 1: Hero */}
+            <section class="relative section-block-first">
+                {/* Background structure layer */}
+                <div
+                    class="pointer-events-none absolute inset-y-0 right-[-15%] w-[45%] opacity-60"
+                    aria-hidden="true"
+                >
+                    {
+                        /* TODO: replace with real "multi-layer metallic structure" image asset */
+                    }
+                    <div
+                        class="h-full w-full bg-[url('/images/aegis-hero-structure.png')] bg-contain bg-center bg-no-repeat"
+                    >
+                    </div>
+                </div>
+
+                <div class="relative max-w-xl">
+                    <p
+                        class="mb-6 text-sm uppercase tracking-[0.2em] text-neutral-500"
+                    >
+                        Aegis / Self-Defending Data
+                    </p>
+                    <h1
+                        class="text-3xl sm:text-4xl leading-snug text-neutral-900"
+                    >
+                        データは、自らを守れるべきだ。
+                    </h1>
+                    <p class="mt-4 text-sm sm:text-base text-neutral-600">
+                        Self-Defending Data Infrastructure
+                    </p>
+
+                    <div class="mt-10">
+                        <a href="/contact/" class="btn-outline">
+                            Aegisについて相談する
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            {/* Section 2: Problem */}
+            <section class="section-block">
+                <h2 class="section-heading">なぜ、データは守られないのか。</h2>
+
+                <div class="section-body">
+                    <div>
+                        <p class="font-medium text-neutral-900">
+                            ① データは「静的資産」として扱われている。
+                        </p>
+                        <p class="mt-1">
+                            実際には、移動し、共有され、脅威に晒され続けている。
+                        </p>
+                    </div>
+                    <div>
+                        <p class="font-medium text-neutral-900">
+                            ② セキュリティは“境界”に依存しすぎている。
+                        </p>
+                        <p class="mt-1">
+                            境界が破られた瞬間、データは無防備になる。
+                        </p>
+                    </div>
+                    <div>
+                        <p class="font-medium text-neutral-900">
+                            ③ 情報は奪われた後に対処される。
+                        </p>
+                        <p class="mt-1">
+                            事後対応が前提であり、データ自身の生存戦略が存在しない。
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            {/* Section 3: Concept */}
+            <section class="section-block">
+                <h2 class="section-heading">
+                    データは、生存戦略を持つべきだ。
+                </h2>
+
+                <div class="section-body">
+                    <div>
+                        <p class="font-medium text-neutral-900">
+                            ① Self-Defending Data
+                        </p>
+                        <p class="mt-1">
+                            データが周囲の環境に応じて、自らの扱い方を決める。
+                            許可・拒否・逃走・消去という反応を内部で備える。
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="font-medium text-neutral-900">
+                            ② Reflex Engine
+                        </p>
+                        <p class="mt-1">
+                            Allow / Deny / Escape / Wipe
+                            を即時に判断する基礎層。
+                            外部からの信号ではなく、データ自身のルールで動作する。
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="font-medium text-neutral-900">
+                            ③ Capsule Architecture
+                        </p>
+                        <p class="mt-1">
+                            多層構造のカプセルにより、情報を分離・封鎖・移動する。
+                            状態変化やアクセスの痕跡も内部で自律的に管理される。
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="font-medium text-neutral-900">④ DNA Layer</p>
+                        <p class="mt-1">
+                            データを“誰のものか”で識別する最深部。
+                            正しい主体に属する場合のみ、開示や移動が許される。
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            {/* Section 4: Technology Overview */}
+            <section class="section-block">
+                <h2 class="section-heading">技術の骨格</h2>
+
+                <div
+                    class="mt-8 space-y-10 text-sm sm:text-base text-neutral-700"
+                >
+                    {/* Reflex Engine */}
+                    <div>
+                        <p class="mb-3 font-medium text-neutral-900">
+                            Reflex Engine
+                        </p>
+                        <div
+                            class="border border-neutral-300 px-4 py-3 text-sm leading-relaxed"
+                        >
+                            <p>Allow</p>
+                            <p>Deny</p>
+                            <p>Escape</p>
+                            <p>Wipe</p>
+                        </div>
+                    </div>
+
+                    {/* Capsule Architecture */}
+                    <div>
+                        <p class="mb-3 font-medium text-neutral-900">
+                            Capsule Architecture
+                        </p>
+                        <div
+                            class="border border-neutral-300 px-4 py-3 text-sm leading-relaxed"
+                        >
+                            <p>Layer 3: Isolation</p>
+                            <p>Layer 2: State</p>
+                            <p>Layer 1: Data</p>
+                        </div>
+                    </div>
+
+                    {/* Data Flow */}
+                    <div>
+                        <p class="mb-3 font-medium text-neutral-900">
+                            Data Flow
+                        </p>
+                        <div
+                            class="flex flex-col gap-1 text-sm leading-relaxed"
+                        >
+                            <p>DNA Layer</p>
+                            <p>↓</p>
+                            <p>Reflex Engine</p>
+                            <p>↓</p>
+                            <p>Capsule</p>
+                            <p>↓</p>
+                            <p>Escape / Wipe / Open</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Section 5: Features */}
+            <section class="section-block">
+                <h2 class="section-heading">Aegisの行動原則</h2>
+
+                <div class="section-body">
+                    <div>
+                        <p class="font-medium text-neutral-900">Capsule</p>
+                        <p class="mt-1">
+                            情報を多層の容器に封じ、状態と痕跡を内部で管理する。
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="font-medium text-neutral-900">Open</p>
+                        <p class="mt-1">
+                            主体・条件・環境の整合が取れたときだけ、内容を開示する。
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="font-medium text-neutral-900">Panic</p>
+                        <p class="mt-1">
+                            異常を検知した瞬間、接続と処理を切断し、状態を凍結する。
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="font-medium text-neutral-900">
+                            Escape to Vault
+                        </p>
+                        <p class="mt-1">
+                            危険度が閾値を超えた場合、安全な領域へ内容を逃がす。
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="font-medium text-neutral-900">Classify</p>
+                        <p class="mt-1">
+                            内容の性質を判定し、扱い方の基準を自動で決定する。
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            {/* Section 6: Demo / Visual */}
+            <section class="section-block">
+                <h2 class="section-heading">デモ（静的）</h2>
+
+                <div
+                    class="mt-8 space-y-10 text-sm sm:text-base text-neutral-700"
+                >
+                    <div class="space-y-3">
+                        {
+                            /* TODO: replace with real GUI v0.2 "Create Capsule" screenshot */
+                        }
+                        <div
+                            class="h-40 w-full border border-neutral-300 bg-neutral-50"
+                        >
+                        </div>
+                        <p class="text-neutral-700">
+                            Capsule: 情報を多層構造に封じる。
+                        </p>
+                    </div>
+
+                    <div class="space-y-3">
+                        {/* TODO: replace with real "Open" screenshot */}
+                        <div
+                            class="h-40 w-full border border-neutral-300 bg-neutral-50"
+                        >
+                        </div>
+                        <p class="text-neutral-700">
+                            Open: 条件が整ったときだけ内容にアクセスできる。
+                        </p>
+                    </div>
+
+                    <div class="space-y-3">
+                        {
+                            /* TODO: replace with real "Panic / Escape" screenshot */
+                        }
+                        <div
+                            class="h-40 w-full border border-neutral-300 bg-neutral-50"
+                        >
+                        </div>
+                        <p class="text-neutral-700">
+                            Panic / Escape:
+                            異常を検知した瞬間に封鎖し、安全領域へ退避する。
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            {/* Section 7: Use Cases */}
+            <section class="section-block">
+                <h2 class="section-heading">利用シーン</h2>
+
+                <div class="section-body">
+                    <div>
+                        <p class="font-medium text-neutral-900">
+                            個人情報の保護
+                        </p>
+                        <p class="mt-1">
+                            個人情報がコピーされ、転送され、蓄積される過程を封じる。
+                            主体が一致しない環境では開示されず、不正アクセスは即時に閉ざされる。
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="font-medium text-neutral-900">
+                            機密データの共有・移動
+                        </p>
+                        <p class="mt-1">
+                            受け渡しや移動の途中でも、データは自律的に防御する。
+                            異常があれば封鎖し、必要に応じて安全領域へ逃走する。
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="font-medium text-neutral-900">
+                            生成AIとの安全な連携
+                        </p>
+                        <p class="mt-1">
+                            生成AIに渡す前に、内容の性質を判定し、扱い方を決める。
+                            秘匿すべき情報は開示せず、必要最小限だけを提示する。
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            {/* Section 8: Pricing */}
+            <section class="section-block">
+                <h2 class="section-heading">導入</h2>
+
+                <div class="section-body">
+                    <div>
+                        <p class="font-medium text-neutral-900">
+                            PoC（技術検証）
+                        </p>
+                        <p class="mt-1">
+                            小規模な導入環境で、Aegis
+                            の構造と反応を検証するフェーズ。
+                            要件に応じて、対象データと防御レイヤを設計する。
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="font-medium text-neutral-900">Enterprise</p>
+                        <p class="mt-1">
+                            本番環境での運用を想定した、完全な導入プラン。
+                            組織構造や情報フローに合わせて、Aegis を最適化する。
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            {/* Section 9: CTA */}
+            <section class="py-20 sm:py-24 border-t border-neutral-200">
+                <div class="space-y-6 text-neutral-900">
+                    <p class="text-sm sm:text-base">
+                        Aegis は、情報に生存戦略を与える技術です。
+                    </p>
+                    <a href="/contact/" class="btn-outline"> 相談する </a>
+                </div>
+            </section>
+        </div>
+    </main>
+</Base>
+```

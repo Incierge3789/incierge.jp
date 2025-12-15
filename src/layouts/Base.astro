@@ -12,6 +12,7 @@ const {
 } = Astro.props;
 
 import "../styles/global.css";
+import "../styles/design-system.css";
 
 // canonical（astro.config.mjs の site が必須）
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -37,6 +38,7 @@ const ORG = {
   email: "info@incierge.jp",
 };
 ---
+
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
@@ -46,8 +48,14 @@ const ORG = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical.href} />
-    <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
-    <meta name="keywords" content="山梨,甲斐市,AIマーケティング,地方創業,AI支援,INCIERGE" />
+    <meta
+      name="robots"
+      content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1"
+    />
+    <meta
+      name="keywords"
+      content="山梨,甲斐市,AIマーケティング,地方創業,AI支援,INCIERGE"
+    />
 
     <!-- OGP / Twitter -->
     <meta property="og:type" content="website" />
@@ -62,13 +70,24 @@ const ORG = {
     <meta name="twitter:image" content={new URL(ogImage, Astro.site).href} />
 
     <!-- フォント -->
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" media="print" onload="this.media='all'">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
     <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap">
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+      />
     </noscript>
-
 
     <!-- Organization / LocalBusiness JSON-LD -->
     <script
@@ -76,58 +95,75 @@ const ORG = {
       set:html={JSON.stringify({
         "@context": "https://schema.org",
         "@type": ["Organization", "LocalBusiness"],
-        "name": ORG.name,
-        "url": ORG.url,
-        "logo": new URL(ogImage, Astro.site).href,
-        "image": new URL(ogImage, Astro.site).href,
-        "description": description,
-        "address": ORG.address,
-        "areaServed": ORG.areaServed,
-        "sameAs": ORG.sameAs,
-        "telephone": ORG.telephone,
-        "email": ORG.email,
-        "contactPoint": [
+        name: ORG.name,
+        url: ORG.url,
+        logo: new URL(ogImage, Astro.site).href,
+        image: new URL(ogImage, Astro.site).href,
+        description: description,
+        address: ORG.address,
+        areaServed: ORG.areaServed,
+        sameAs: ORG.sameAs,
+        telephone: ORG.telephone,
+        email: ORG.email,
+        contactPoint: [
           {
             "@type": "ContactPoint",
-            "contactType": "customer support",
-            "telephone": ORG.telephone,
-            "email": ORG.email,
-            "url": "https://incierge.jp/contact/"
-          }
-        ]
+            contactType: "customer support",
+            telephone: ORG.telephone,
+            email: ORG.email,
+            url: "https://incierge.jp/contact/",
+          },
+        ],
       })}
-    ></script>
+    />
 
     <!-- パンくず（あるときだけ出力） -->
-    {breadcrumbs.length > 0 && (
-      <script type="application/ld+json" set:html={JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": breadcrumbs.map(([name, path], i) => ({
-          "@type": "ListItem",
-          "position": i + 1,
-          "name": name,
-          "item": new URL(path, Astro.site).href
-        }))
-      })}></script>
-    )}
+    {
+      breadcrumbs.length > 0 && (
+        <script
+          type="application/ld+json"
+          set:html={JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: breadcrumbs.map(([name, path], i) => ({
+              "@type": "ListItem",
+              position: i + 1,
+              name: name,
+              item: new URL(path, Astro.site).href,
+            })),
+          })}
+        />
+      )
+    }
 
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17693365968"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=AW-17693365968"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-      gtag('config', 'AW-17693365968');
+      gtag("config", "AW-17693365968");
     </script>
 
     <!-- 追加する（自ドメイン配下のプロキシ経由で読み込む） -->
-    <script async defer data-domain="incierge.jp" data-api="/api/plausible" src="/js/script"></script>
+    <script
+      async
+      defer
+      data-domain="incierge.jp"
+      data-api="/api/plausible"
+      src="/js/script"></script>
     <script>
-      window.plausible = window.plausible || function(){(plausible.q = plausible.q || []).push(arguments)};
+      window.plausible =
+        window.plausible ||
+        function () {
+          (plausible.q = plausible.q || []).push(arguments);
+        };
     </script>
-
   </head>
 
   <body class="font-body">
@@ -146,26 +182,24 @@ const ORG = {
     <main class="container"><slot /></main>
 
     <footer class="container mt-16 py-10 text-sm opacity-80">
-      <div class="flex flex-col gap-3 items-start justify-between md:flex-row md:items-center">
+      <div
+        class="flex flex-col gap-3 items-start justify-between md:flex-row md:items-center"
+      >
         <p>
           © {new Date().getFullYear()} INCIERGE — Information Concierge
         </p>
         <nav class="flex flex-wrap gap-4 text-xs">
-          <a href="/terms/" class="hover:underline">
-            利用規約
-          </a>
-          <a href="/privacy/" class="hover:underline">
-            プライバシーポリシー
-          </a>
-          <a href="/law/" class="hover:underline">
-            特定商取引法に基づく表記
-          </a>
+          <a href="/terms/" class="hover:underline"> 利用規約 </a>
+          <a href="/privacy/" class="hover:underline"> プライバシーポリシー </a>
+          <a href="/law/" class="hover:underline"> 特定商取引法に基づく表記 </a>
         </nav>
       </div>
     </footer>
 
     <!-- Cloudflare Turnstile -->
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-
+    <script
+      src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+      async
+      defer></script>
   </body>
 </html>

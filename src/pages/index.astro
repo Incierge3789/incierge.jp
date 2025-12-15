@@ -1,30 +1,287 @@
 ---
 import Base from "../layouts/Base.astro";
 
-const title = "INCIERGE｜Information Concierge";
-const description = "地方の「伝わらない」を、AIで変える。情報を整え、AIで外貨を稼ぐ。";
+const title = "ムダ作業を減らして、利益を増やすAI自動化 | INCIERGE";
+const description =
+  "最短3日で1本動く。効果が出たら増やす。中小企業向けAI自動化パック。";
 ---
 
 <Base title={title} description={description}>
-  <section class="py-24 text-center">
-    <h1 class="font-heading text-4xl md:text-6xl leading-tight">
-      地方の「<span class="gold">伝わらない</span>」を、AIで変える。
-    </h1>
-    <p class="mt-6 text-lg opacity-80">
-      情報を整え、AIで<strong>外貨を稼ぐ</strong>。
-    </p>
-    <div class="mt-10 flex gap-4 justify-center">
-      <a
-        href="https://chatgpt.com/g/g-6902e000b124819185e60fe5ecb67e74-incierge-aimakexiang-tan-konsierusiyu?utm_source=incierge.jp&utm_medium=hero&utm_campaign=ai_consult_gpts"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="btn-primary"
+  <main class="min-h-screen bg-white text-neutral-900">
+    <div class="page-shell">
+      {/* 1) Hero */}
+      <section class="section-block-first text-center">
+        <h1 class="text-3xl sm:text-5xl font-bold leading-tight mb-6">
+          その作業、<br class="sm:hidden" />社長がやる必要ありますか？
+        </h1>
+        <p class="text-lg sm:text-xl text-neutral-600 mb-10 leading-relaxed">
+          最短3日で1本だけ実装。<br class="sm:hidden" />
+          使えなければ、そこで止めてOK。
+        </p>
+        <div class="flex flex-col items-center gap-4">
+          <a
+            href="/contact"
+            class="btn-outline bg-neutral-900 text-white border-neutral-900 hover:bg-neutral-700 hover:border-neutral-700 w-full sm:w-auto px-10"
+          >
+            無料相談する
+          </a>
+          <p class="text-sm text-neutral-500">
+            30分で「減らせる作業」を特定します。
+          </p>
+        </div>
+      </section>
+
+      {/* 2) ICP Filter */}
+      <section
+        class="section-block bg-neutral-50 -mx-4 px-4 sm:mx-0 sm:px-0 sm:bg-transparent sm:border-t-0"
       >
-        AIマーケ相談（24時間 GPTs）
-      </a>
-      <a href="/services/" class="btn-ghost">
-        サービスを見る
-      </a>
+        <div class="border border-neutral-200 p-8 bg-neutral-50">
+          <h2 class="section-heading text-center mb-6">
+            こんな会社に向いています
+          </h2>
+          <ul class="space-y-3 text-sm sm:text-base max-w-lg mx-auto mb-6">
+            <li class="flex gap-2">
+              <span class="text-accent-aegis">✔</span>
+              <span>「ただの転記・入力作業」に社員の時間が奪われている</span>
+            </li>
+            <li class="flex gap-2">
+              <span class="text-accent-aegis">✔</span>
+              <span>SlackやLINEの連絡が多すぎて、重要な情報が埋もれる</span>
+            </li>
+            <li class="flex gap-2">
+              <span class="text-accent-aegis">✔</span>
+              <span>「誰がボールを持っているか」が分からず、ミスが起きる</span>
+            </li>
+            <li class="flex gap-2">
+              <span class="text-accent-aegis">✔</span>
+              <span>IT担当がおらず、ツールを入れても定着しない</span>
+            </li>
+          </ul>
+          <p
+            class="text-xs text-neutral-400 text-center border-t border-neutral-200 pt-4 max-w-lg mx-auto leading-relaxed"
+          >
+            ※
+            本サービスは「業務改善に投資できる企業様」「実行にご協力いただける体制がある企業様」を対象としています。
+          </p>
+        </div>
+      </section>
+
+      {/* 3) Main Offer: Automation Pack */}
+      <section class="section-block">
+        <h2 class="section-heading text-center mb-2">Automation Pack</h2>
+        <p class="text-center text-sm text-neutral-600 mb-10">
+          現場のルーティン作業を、まず1つずつAIに置き換える。
+        </p>
+
+        <div class="grid md:grid-cols-3 gap-8 mb-10">
+          <div class="text-center">
+            <div class="text-2xl mb-2">📦</div>
+            <h3 class="font-bold mb-2">1. 今日から動く仕組み</h3>
+            <p class="text-sm text-neutral-600">
+              LINE / Gmail / Google Workspace / スプレッドシート / Apps Script
+              など既存ツールで最短実装。
+            </p>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl mb-2">🛠</div>
+            <h3 class="font-bold mb-2">2. 運用・保守もお任せ</h3>
+            <p class="text-sm text-neutral-600">
+              エラー対応や仕様変更も丸ごとサポート。
+            </p>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl mb-2">📖</div>
+            <h3 class="font-bold mb-2">3. 自動台帳・マニュアル</h3>
+            <p class="text-sm text-neutral-600">
+              作業ログを自動保存し、属人化を防ぐ。
+            </p>
+          </div>
+        </div>
+
+        <div class="text-center">
+          <a href="/automation" class="btn-outline"> Automation Packを見る </a>
+        </div>
+      </section>
+
+      {/* 4) Proof (Placeholders) */}
+      <section class="section-block">
+        <h2 class="section-heading mb-8">実績 / Before-After</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+          {/* Card 1 */}
+          <div class="border border-neutral-200 p-6">
+            <div
+              class="text-xs font-bold bg-neutral-100 inline-block px-2 py-1 mb-3"
+            >
+              例：日程調整の自動化
+            </div>
+            <div class="space-y-2 text-sm">
+              <p>
+                <span class="font-bold">課題：</span> 往復DMで消耗、Wブッキング多発。
+              </p>
+              <p>
+                <span class="font-bold">対策：</span> LINE×カレンダー連携Botを導入。
+              </p>
+              <p>
+                <span class="font-bold text-accent-aegis">効果：</span> 調整コストゼロ。社長の時間が月10時間増。
+              </p>
+            </div>
+          </div>
+          {/* Card 2 */}
+          <div class="border border-neutral-200 p-6">
+            <div
+              class="text-xs font-bold bg-neutral-100 inline-block px-2 py-1 mb-3"
+            >
+              例：日報の要約・共有
+            </div>
+            <div class="space-y-2 text-sm">
+              <p>
+                <span class="font-bold">課題：</span> 報告がバラバラで状況が見えない。
+              </p>
+              <p>
+                <span class="font-bold">対策：</span> フォーム入力をAIが要約しSlack通知。
+              </p>
+              <p>
+                <span class="font-bold text-accent-aegis">効果：</span> 朝5分で全現場の状況を把握可能に。
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 5) Pricing */}
+      <section class="section-block" id="pricing">
+        <h2 class="section-heading mb-8">料金目安</h2>
+        <div class="grid md:grid-cols-2 gap-8 mb-6">
+          <div class="border border-neutral-200 p-6 text-center">
+            <h3 class="font-bold text-lg mb-2">PoC（最短導入）</h3>
+            <p class="text-2xl font-bold mb-2">3.3万円〜</p>
+            <p class="text-sm text-neutral-600">
+              まずは1つの業務を自動化。<br />
+              要件定義・実装・テスト込み。
+            </p>
+          </div>
+          <div class="border border-neutral-200 p-6 text-center bg-neutral-50">
+            <h3 class="font-bold text-lg mb-2">運用・改善</h3>
+            <p class="text-2xl font-bold mb-2">
+              3万円〜<span class="text-sm font-normal"> /月</span>
+            </p>
+            <p class="text-sm text-neutral-600">
+              エラー監視・微修正・月次MTG。<br />
+              「動かない」リスクをゼロに。
+            </p>
+          </div>
+        </div>
+        <p class="text-center text-sm text-neutral-500">
+          ※ 内容により個別見積。まずは30分で方向性を整理します。
+        </p>
+      </section>
+
+      {/* 6) Process */}
+      <section class="section-block">
+        <h2 class="section-heading mb-8">導入プロセス</h2>
+        <div class="space-y-6 max-w-2xl mx-auto">
+          <div class="flex gap-4 items-start">
+            <div class="font-mono font-bold text-xl pt-1">01</div>
+            <div>
+              <h3 class="font-bold text-lg">30分ヒアリング（無料）</h3>
+              <p class="text-sm text-neutral-600">
+                現状の課題と「一番減らしたい作業」を整理します。
+              </p>
+            </div>
+          </div>
+          <div class="flex gap-4 items-start">
+            <div class="font-mono font-bold text-xl pt-1">02</div>
+            <div>
+              <h3 class="font-bold text-lg">最短3日で1本動く</h3>
+              <p class="text-sm text-neutral-600">
+                最小構成で実装し、実際の業務でテスト稼働させます。
+              </p>
+            </div>
+          </div>
+          <div class="flex gap-4 items-start">
+            <div class="font-mono font-bold text-xl pt-1">03</div>
+            <div>
+              <h3 class="font-bold text-lg">効果測定・継続判断</h3>
+              <p class="text-sm text-neutral-600">
+                2週間ほど使い、効果が出れば本運用・横展開へ進みます。
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Us (Trust Section) */}
+      <section class="section-block">
+        <h2 class="section-heading mb-4 text-center">
+          なぜ、このやり方ができるのか。
+        </h2>
+        <div
+          class="text-center max-w-2xl mx-auto space-y-4 text-sm sm:text-base leading-relaxed text-neutral-600"
+        >
+          <p>
+            AIや自動化の「理論」ではなく、<br />
+            実務で失敗と検証を繰り返してきた知見だけを使っています。
+          </p>
+          <p>
+            場当たり的なツール導入ではなく、<br />
+            「実際に利益が残ったケース」だけを積み上げています。
+          </p>
+          <div class="pt-4">
+            <a
+              href="/insights"
+              class="text-xs text-neutral-500 underline underline-offset-4 hover:text-neutral-800"
+            >
+              実務から得た知見（インサイト）
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* 7) Secondary Offer: Aegis */}
+      <section class="section-block">
+        <div class="border-t border-dotted border-neutral-300 pt-8">
+          <div
+            class="flex flex-col md:flex-row justify-between items-center gap-6"
+          >
+            <div class="text-left">
+              <h2 class="text-lg font-bold mb-2">Aegis（自律データ）</h2>
+              <p class="text-sm text-neutral-600">
+                散らばった社内データを「使える資産」に変える、<br
+                  class="hidden md:block"
+                />
+                もうひとつのデータ基盤構築サービス。
+              </p>
+            </div>
+            <a href="/aegis" class="btn-outline text-sm"> Aegisについて </a>
+          </div>
+        </div>
+      </section>
+
+      {/* 8) Final CTA */}
+      <section
+        class="section-block-first text-center border-t border-neutral-200"
+      >
+        <h2 class="text-2xl font-bold mb-6">
+          まずは、今いちばん減らしたい作業を<br
+            class="sm:hidden"
+          />1つ教えてください。
+        </h2>
+        <div class="flex flex-col items-center gap-4">
+          <a
+            href="/contact"
+            class="btn-outline bg-neutral-900 text-white border-neutral-900 hover:bg-neutral-700 hover:border-neutral-700 px-10 py-3"
+          >
+            無料相談する
+          </a>
+          <p class="text-xs text-neutral-400">
+            ※ 無理な営業は一切いたしません。
+          </p>
+          <p class="text-[10px] text-neutral-400 mt-2">
+            ※
+            本サービスは「業務改善に投資できる企業様」「実行にご協力いただける体制がある企業様」を対象としています。
+          </p>
+        </div>
+      </section>
     </div>
-  </section>
+  </main>
 </Base>
