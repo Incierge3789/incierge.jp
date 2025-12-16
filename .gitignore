@@ -27,3 +27,6 @@ pnpm-debug.log*
 .lighthouseci/manifest.json
 src/_backup/
 turnstile_test.json
+
+# local backups
+/tmp/
