@@ -69,3 +69,21 @@ jobs:
           if grep -qi '^x-plausible-dropped: 1' /tmp/resp.txt /tmp/resp2.txt 2>/dev/null; then
             echo "::warning ::Plausible indicated drop (x-plausible-dropped: 1)"
           fi
+      - name: 4) Verify Hub Article contains all 11 internal links
+        run: |
+          set -euxo pipefail
+          # Install rg if likely needed, or use grep. Using grep for portability in CI default image.
+          # Logic: Get HTML -> grep all hrefs -> clean quotes -> filter /insights/ internal links -> count
+          
+          count=$(curl -sS "$BASE_URL/insights/professional-firms-automation-structure/" \
+            | grep -oE 'href=[^ >]+' \
+            | sed -E 's/^href=//; s/^"//; s/"$//' \
+            | grep '^/insights/' \
+            | sort -u \
+            | wc -l)
+          
+          echo "Found $count internal links (Expected >= 11)"
+          if [ "$count" -lt 11 ]; then
+            echo "::error ::Expected at least 11 internal links, found $count"
+            exit 1
+          fi
