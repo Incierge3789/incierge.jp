@@ -65,7 +65,6 @@ const tags: string[] = data.tags ?? [];
       </div>
     </div>
 
-    <!-- 統一CTA（記事内容に応じて出し分け） -->
     {
       !data.disableUnifiedCta &&
         (() => {
@@ -75,7 +74,12 @@ const tags: string[] = data.tags ?? [];
             ? "web-analytics"
             : "automation";
 
-          return <InsightsUnifiedCta kind={kind} />;
+          return (
+            <>
+              <!-- 統一CTA（記事内容に応じて出し分け） -->
+              <InsightsUnifiedCta kind={kind} />
+            </>
+          );
         })()
     }
 
