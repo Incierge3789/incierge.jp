@@ -3,7 +3,8 @@
 import Base from "../../../layouts/Base.astro";
 const title = "送信完了｜INCIERGE";
 ---
-<Base title={title}>
+
+<Base title={title} noindex={true}>
   <h1>送信ありがとうございました</h1>
   <p>内容を受け付けました。通常、1〜2営業日以内にご連絡いたします。</p>
 
@@ -32,26 +33,27 @@ const title = "送信完了｜INCIERGE";
   <script is:inline>
     (function () {
       // 同タブ内での二重送信防止
-      if (sessionStorage.getItem('pl_form_fired')) return;
-      sessionStorage.setItem('pl_form_fired', '1');
+      if (sessionStorage.getItem("pl_form_fired")) return;
+      sessionStorage.setItem("pl_form_fired", "1");
 
       var send = function () {
         if (window.plausible) {
           const p = new URLSearchParams(location.search);
           const t = p.get("ticket");
-          window.plausible('form_submitted', { props: { has_ticket: t ? 'yes' : 'no', ticket: t || '' }});
+          window.plausible("form_submitted", {
+            props: { has_ticket: t ? "yes" : "no", ticket: t || "" },
+          });
         } else {
           // script.js読込前なら100ms後に再試行
           setTimeout(send, 100);
         }
       };
 
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', send, { once: true });
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", send, { once: true });
       } else {
         send();
       }
     })();
   </script>
-
 </Base>

@@ -9,6 +9,7 @@ export default defineConfig({
     tailwind({ applyBaseStyles: false }),
     mdx(),
     sitemap({
+      filter: (page) => page !== "https://incierge.jp/contact/thanks/",
       serialize(item) {
         const out = { ...item };
         const u = item.url;
