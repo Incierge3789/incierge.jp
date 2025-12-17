@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useStore } from '@nanostores/react';
-import { personaAtom, rateAtom, countAtom } from '../../stores/experienceStore';
+import { personaAtom, rateAtom, countAtom, isSolutionRevealedAtom } from '../../stores/experienceStore';
 import type { Persona } from '../../lib/experience/generateScheduleEmail';
 
 const PERSONA_OPTIONS: { value: Persona; label: string }[] = [
@@ -30,6 +30,15 @@ export default function CostDiagnosis({ initialPersona = 'tax_accountant' }: Pro
     // Computed Values
     const annualHours = Math.round((count * 12 * TIME_PER_OCCURRENCE_MIN) / 60);
     const annualCost = annualHours * rate;
+
+    const handleReveal = () => {
+        isSolutionRevealedAtom.set(true);
+        // Smooth scroll to the next section slightly
+        setTimeout(() => {
+            const el = document.getElementById('solution-start');
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+    };
 
     return (
         <div className="w-full max-w-2xl mx-auto rounded-3xl bg-white/50 backdrop-blur-sm border border-red-100 shadow-xl overflow-hidden p-6 md:p-10 font-sans text-gray-800 my-16">
@@ -101,6 +110,15 @@ export default function CostDiagnosis({ initialPersona = 'tax_accountant' }: Pro
                         ≈ 年間 <span className="font-bold">{annualHours} 時間</span> を失っています
                     </p>
                 </div>
+
+                {/* Reveal Button */}
+                <button
+                    onClick={handleReveal}
+                    className="w-full py-4 rounded-xl bg-gray-900 text-white font-bold shadow-lg hover:shadow-xl hover:bg-black transition-all transform active:scale-95 flex items-center justify-center gap-2"
+                >
+                    <span>このコストを「0」にする方法を見る</span>
+                    <span className="text-gray-400">↓</span>
+                </button>
             </div>
         </div>
     );
