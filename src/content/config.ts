@@ -11,6 +11,7 @@ export const collections = {
       author: z.string().default("INCIERGE"),
       tags: z.array(z.string()).default([]),
       ogImage: z.string().optional(),
+      disableUnifiedCta: z.boolean().optional(),
     }),
   }),
 };
