@@ -3,25 +3,23 @@ import tailwind from "@astrojs/tailwind";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 
+import react from "@astrojs/react";
+
 export default defineConfig({
   site: "https://incierge.jp",
-  integrations: [
-    tailwind({ applyBaseStyles: false }),
-    mdx(),
-    sitemap({
-      filter: (page) => page !== "https://incierge.jp/contact/thanks/",
-      serialize(item) {
-        const out = { ...item };
-        const u = item.url;
+  integrations: [tailwind({ applyBaseStyles: false }), mdx(), sitemap({
+    filter: (page) => page !== "https://incierge.jp/contact/thanks/",
+    serialize(item) {
+      const out = { ...item };
+      const u = item.url;
 
-        if (u === "https://incierge.jp/") { out.changefreq = "weekly"; out.priority = 0.9; }
-        else if (u.endsWith("/services/")) { out.changefreq = "weekly"; out.priority = 0.8; }
-        else if (u.endsWith("/local-ai-startup/")) { out.changefreq = "weekly"; out.priority = 0.8; }
-        else if (u.endsWith("/faq/")) { out.changefreq = "weekly"; out.priority = 0.7; }
-        else if (u.includes("/insights/")) { out.changefreq = "daily"; out.priority = 0.8; }
+      if (u === "https://incierge.jp/") { out.changefreq = "weekly"; out.priority = 0.9; }
+      else if (u.endsWith("/services/")) { out.changefreq = "weekly"; out.priority = 0.8; }
+      else if (u.endsWith("/local-ai-startup/")) { out.changefreq = "weekly"; out.priority = 0.8; }
+      else if (u.endsWith("/faq/")) { out.changefreq = "weekly"; out.priority = 0.7; }
+      else if (u.includes("/insights/")) { out.changefreq = "daily"; out.priority = 0.8; }
 
-        return out;
-      },
-    }),
-  ],
+      return out;
+    },
+  }), react()],
 });

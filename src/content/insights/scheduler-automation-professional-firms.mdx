@@ -9,6 +9,7 @@ tags:
   - 日程調整
 ---
 import { Image } from 'astro:assets';
+import ExperienceSection from '../../components/experience/ExperienceSection.astro';
 
 <div class="page-shell py-12 md:py-20 text-neutral-800">
 
@@ -36,6 +37,20 @@ import { Image } from 'astro:assets';
       </p>
 
       <hr class="my-10 border-neutral-200" />
+
+      <ExperienceSection initialPersona="tax_accountant" className="-mx-6 md:-mx-12 lg:-mx-20" />
+
+      <div class="bg-gray-900 text-white p-8 rounded-xl not-prose mb-12 shadow-2xl relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl"></div>
+        <h3 class="text-xl font-bold mb-3 relative z-10">「このメール作成、一生続けますか？」</h3>
+        <p class="text-sm text-gray-300 mb-6 relative z-10">
+          INCIERGEの日程調整自動化なら、あなたの作業は『専用URLを1つ送るだけ』で完了します。<br/>
+          カレンダー確認も、仮押さえも、Zoom URL発行も、もう不要です。
+        </p>
+        <a href="/contact" class="inline-block bg-white text-gray-900 px-6 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors relative z-10">
+          日程調整を自動化する（相談無料）
+        </a>
+      </div>
 
       <h2 class="text-xl font-bold mt-10 mb-4">「丁寧な手作業」が招くリスク</h2>
       
