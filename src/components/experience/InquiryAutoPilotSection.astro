@@ -1,0 +1,13 @@
+---
+import InquiryAutoPilot from "./InquiryAutoPilot";
+
+interface Props {
+    className?: string;
+}
+
+const { className = "" } = Astro.props;
+---
+
+<div class={`experience-section ${className}`}>
+    <InquiryAutoPilot client:visible />
+</div>
