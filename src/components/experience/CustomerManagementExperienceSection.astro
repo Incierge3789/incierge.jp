@@ -1,0 +1,13 @@
+---
+import CustomerManagementExperience from "./CustomerManagementExperience.tsx";
+
+interface Props {
+    className?: string;
+}
+
+const { className = "" } = Astro.props;
+---
+
+<div class={`experience-section ${className}`}>
+    <CustomerManagementExperience client:visible />
+</div>

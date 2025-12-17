@@ -7,8 +7,11 @@ tags:
   - 士業
   - 業務自動化
   - 構造化
+disableUnifiedCta: true
 ---
 import { Image } from 'astro:assets';
+import CostDiagnosisSection from '../../components/experience/CostDiagnosisSection.astro';
+import ProfessionalFirmsExperienceSection from '../../components/experience/ProfessionalFirmsExperienceSection.astro';
 
 ## 自動化しても「楽にならない」のはなぜか
 
@@ -96,6 +99,12 @@ INCIERGEが自動化するのは、専門知識や責任を伴う判断ではあ
 以下に、士業事務所が最初に自動化すべき3つの領域を紹介します。
 
 ---
+
+<h3 class="text-xl font-bold mt-10 mb-4 text-center">あなたの「見えない損失」を可視化します</h3>
+
+<CostDiagnosisSection initialPersona="professional_firms" className="-mx-6 md:-mx-12 lg:-mx-20" />
+
+<ProfessionalFirmsExperienceSection className="-mx-6 md:-mx-12 lg:-mx-20" />
 
 ## 1. 日程調整の自動化
 **～所長の「細切れ時間」を取り戻す～**

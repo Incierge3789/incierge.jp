@@ -8,8 +8,11 @@ tags:
   - 業務自動化
   - 構造化
   - 請求管理
+disableUnifiedCta: true
 ---
 import { Image } from 'astro:assets';
+import CostDiagnosisSection from '../../components/experience/CostDiagnosisSection.astro';
+import BillingPaymentExperienceSection from '../../components/experience/BillingPaymentExperienceSection.astro';
 
 ## 「お金の管理」が一番のアナログになっていませんか？
 
@@ -26,6 +29,14 @@ import { Image } from 'astro:assets';
 
 士業事務所は「数字のプロ」でありながら、自社の売上管理に関しては驚くほど手作業が多く、非効率な状態が放置されているケースが目立ちます。
 特にスポット業務や立替金の精算が混在すると、管理コストは複雑さを増します。
+
+<hr class="my-10 border-neutral-200" />
+
+<h3 class="text-xl font-bold mt-10 mb-4 text-center">あなたの「見えない損失」を可視化します</h3>
+
+<CostDiagnosisSection initialPersona="professional_firms" className="-mx-6 md:-mx-12 lg:-mx-20" />
+
+<BillingPaymentExperienceSection className="-mx-6 md:-mx-12 lg:-mx-20" />
 
 本記事は、請求・入金管理業務の自動化構造を示すガイドです。
 
