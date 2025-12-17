@@ -1,4 +1,4 @@
-export type Persona = 'tax_accountant' | 'labor_consultant' | 'administrative_scrivener' | 'judicial_scrivener';
+export type Persona = 'tax_accountant' | 'labor_consultant' | 'administrative_scrivener' | 'judicial_scrivener' | 'professional_firms';
 
 interface ScheduleEmailResult {
     subject: string;
@@ -10,6 +10,7 @@ const PERSONA_LABELS: Record<Persona, string> = {
     labor_consultant: '社会保険労務士',
     administrative_scrivener: '行政書士',
     judicial_scrivener: '司法書士',
+    professional_firms: '専門家',
 };
 
 // Simple heuristics to extract date-like patterns
@@ -58,6 +59,11 @@ export function generateScheduleEmail(persona: Persona, memo: string): ScheduleE
             subject = '登記手続きに関するご面談日程の調整';
             greeting = 'お世話になっております。';
             purpose = '登記のお手続きに関しまして、ご本人様確認および押印書類のご説明のため、ご面談のお時間を頂戴できればと存じます。';
+            break;
+        case 'professional_firms':
+            subject = '【ご相談】お打ち合わせの日程調整につきまして';
+            greeting = 'いつもお世話になっております。';
+            purpose = 'ご依頼いただきました件につきまして、今後の進め方をご相談したく、お打ち合わせのお時間をいただけますでしょうか。';
             break;
     }
 

@@ -8,6 +8,7 @@ const PERSONA_OPTIONS: { value: Persona; label: string }[] = [
     { value: 'labor_consultant', label: '社会保険労務士' },
     { value: 'administrative_scrivener', label: '行政書士' },
     { value: 'judicial_scrivener', label: '司法書士' },
+    { value: 'professional_firms', label: 'その他士業' },
 ];
 
 const TIME_PER_OCCURRENCE_MIN = 10;
