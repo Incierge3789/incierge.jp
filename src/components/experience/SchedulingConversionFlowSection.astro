@@ -1,0 +1,13 @@
+---
+import SchedulingConversionFlow from "./SchedulingConversionFlow";
+
+interface Props {
+    className?: string;
+}
+
+const { className = "" } = Astro.props;
+---
+
+<div className={`experience-tool-wrapper ${className}`}>
+    <SchedulingConversionFlow client:load />
+</div>

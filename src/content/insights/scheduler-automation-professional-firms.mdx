@@ -9,8 +9,7 @@ tags:
   - 日程調整
 ---
 import { Image } from 'astro:assets';
-import CostDiagnosisSection from '../../components/experience/CostDiagnosisSection.astro';
-import SchedulingUrlExperienceSection from '../../components/experience/SchedulingUrlExperienceSection.astro';
+import SchedulingConversionFlowSection from '../../components/experience/SchedulingConversionFlowSection.astro';
 
 <div class="page-shell py-12 md:py-20 text-neutral-800">
 
@@ -37,7 +36,8 @@ import SchedulingUrlExperienceSection from '../../components/experience/Scheduli
         日程調整は「ほんの数分の作業」に見えて、実は専門家の思考と時間を最も細切れに奪う、隠れたボトルネックだからです。
       </p>
 
-
+      {/* Unified Conversion Flow */}
+      <SchedulingConversionFlowSection className="-mx-6 md:-mx-12 lg:-mx-20 my-16" />
 
       <h2 class="text-xl font-bold mt-10 mb-4">「丁寧な手作業」が招くリスク</h2>
       
@@ -54,25 +54,6 @@ import SchedulingUrlExperienceSection from '../../components/experience/Scheduli
       <p>
         しかし、この作業が1日に数件あるだけで、あなたの思考は何度も中断され、集中すべき高付加価値な業務（戦略策定や重要案件の検討）が細切れになってしまいます。
       </p>
-
-      <hr class="my-10 border-neutral-200" />
-
-      <h3 class="text-xl font-bold mt-10 mb-4 text-center">あなたの「見えない損失」を可視化します</h3>
-
-      <CostDiagnosisSection initialPersona="tax_accountant" className="-mx-6 md:-mx-12 lg:-mx-20" />
-
-      <SchedulingUrlExperienceSection className="-mx-6 md:-mx-12 lg:-mx-20" />
-
-      <div class="bg-gray-900 text-white p-8 rounded-xl not-prose my-12 shadow-2xl relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl"></div>
-        <h3 class="text-xl font-bold mb-3 relative z-10">「日程調整作業」を今すぐ止めませんか？</h3>
-        <p class="text-sm text-gray-300 mb-6 relative z-10">
-          この体験は一例です。INCIERGEは、士業事務所の「意思決定を伴わない作業」を徹底的に排除します。
-        </p>
-        <a href="/contact" class="inline-block bg-white text-gray-900 px-6 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors relative z-10">
-          日程調整作業を止める（無料相談）
-        </a>
-      </div>
 
       <h2 class="text-xl font-bold mt-10 mb-4">なぜ、最初に「日程調整」なのか</h2>
 
