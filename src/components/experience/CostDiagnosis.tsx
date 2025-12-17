@@ -114,10 +114,10 @@ export default function CostDiagnosis({ initialPersona = 'tax_accountant' }: Pro
                 {/* Reveal Button */}
                 <button
                     onClick={handleReveal}
-                    className="w-full py-4 rounded-xl bg-gray-900 text-white font-bold shadow-lg hover:shadow-xl hover:bg-black transition-all transform active:scale-95 flex items-center justify-center gap-2"
+                    className="w-full py-4 rounded-xl bg-gray-900 text-white font-bold shadow-lg hover:shadow-xl hover:bg-black transition-all transform active:scale-95 flex flex-col items-center justify-center gap-1"
                 >
-                    <span>このコストを「0」にする方法を見る</span>
-                    <span className="text-gray-400">↓</span>
+                    <span className="text-sm md:text-base">このコストは完全に「0」にできます</span>
+                    <span className="text-xs md:text-sm text-gray-400">その方法を以下で体験してください ↓</span>
                 </button>
             </div>
         </div>

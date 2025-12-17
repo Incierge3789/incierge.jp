@@ -35,14 +35,7 @@ export default function SchedulingUrlExperience() {
     return (
         <div id="solution-start" className="w-full max-w-4xl mx-auto my-16 font-sans text-gray-800 animate-fade-in">
 
-            {/* Transition Text (Moved from MDX) */}
-            <div className="text-center mb-16">
-                <p className="text-lg md:text-xl font-bold leading-relaxed">
-                    しかし、この作業自体が<br className="md:hidden" />「本来不要なタスク」だとしたらどうでしょうか。<br />
-                    <span className="text-blue-600">あなたの仕事は「URLを1つ送る」こと。</span><br />
-                    それ以外は、すべて消去できます。
-                </p>
-            </div>
+
 
             {/* Experience Header */}
             <div className="mb-8 text-center transition-all duration-500">
