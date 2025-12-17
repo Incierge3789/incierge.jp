@@ -1,0 +1,16 @@
+- target_hub_slug: "customer-management-automation-structure"
+  trigger_keywords: 
+    - "顧客情報"
+    - "CRM"
+    - "名簿管理"
+  insertion_strategy: "append_after_paragraph"
+  anchor_text: "顧客管理の自動化構造"
+  link_path: "/insights/customer-management-automation-structure/"
+
+- target_hub_slug: "scheduler-automation-structure"
+  trigger_keywords:
+    - "日程調整"
+    - "アポイント"
+  insertion_strategy: "inline_keyword"
+  anchor_text: "日程調整の自動化構造"
+  link_path: "/insights/scheduler-automation-structure/"
