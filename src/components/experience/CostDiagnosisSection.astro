@@ -1,0 +1,18 @@
+---
+import CostDiagnosis from "./CostDiagnosis";
+
+interface Props {
+    initialPersona?:
+        | "tax_accountant"
+        | "labor_consultant"
+        | "administrative_scrivener"
+        | "judicial_scrivener";
+    className?: string;
+}
+
+const { initialPersona, className = "" } = Astro.props;
+---
+
+<div class={`experience-tool-wrapper ${className}`}>
+    <CostDiagnosis client:load initialPersona={initialPersona} />
+</div>

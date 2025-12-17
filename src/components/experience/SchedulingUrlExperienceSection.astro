@@ -1,0 +1,13 @@
+---
+import SchedulingUrlExperience from "./SchedulingUrlExperience";
+
+interface Props {
+    className?: string;
+}
+
+const { className = "" } = Astro.props;
+---
+
+<div class={`experience-tool-wrapper ${className}`}>
+    <SchedulingUrlExperience client:load />
+</div>
