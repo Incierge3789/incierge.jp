@@ -8,8 +8,11 @@ tags:
   - 業務自動化
   - 司法書士
   - 日程調整
+disableUnifiedCta: true
 ---
 import { Image } from 'astro:assets';
+import CostDiagnosisSection from '../../components/experience/CostDiagnosisSection.astro';
+import SchedulingUrlExperienceSection from '../../components/experience/SchedulingUrlExperienceSection.astro';
 
 <div class="page-shell py-12 md:py-20 text-neutral-800">
 
@@ -37,6 +40,12 @@ import { Image } from 'astro:assets';
       </p>
 
       <hr class="my-10 border-neutral-200" />
+
+      <h3 class="text-xl font-bold mt-10 mb-4 text-center">あなたの「見えない損失」を可視化します</h3>
+
+      <CostDiagnosisSection initialPersona="judicial_scrivener" className="-mx-6 md:-mx-12 lg:-mx-20" />
+
+      <SchedulingUrlExperienceSection className="-mx-6 md:-mx-12 lg:-mx-20" />
 
       <h2 class="text-xl font-bold mt-10 mb-4">「丁寧な手作業」が招くリスク</h2>
       
