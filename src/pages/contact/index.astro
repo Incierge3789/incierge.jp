@@ -89,7 +89,13 @@ const service = Astro.url.searchParams.get("service") ?? "";
         name="message"
         rows="10"
         required
-        class="w-full border rounded px-3 py-2"></textarea>
+        class="w-full border rounded px-3 py-2"
+        placeholder={`例：
+・自動化を検討している具体的な業務
+・判断が人によってブレているポイント
+・「これは例外」と感じている処理
+
+※ 完璧でなくて構いません。現状のまま書いてください。`}></textarea>
     </label>
 
     {/* ▼ 任意：今すぐ日程を予約する（Google カレンダー予約ボタンだけ） */}
