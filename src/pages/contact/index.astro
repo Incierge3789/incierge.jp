@@ -8,11 +8,46 @@ const desc =
 // /contact?service=web-analytics のようなクエリを取得
 const service = Astro.url.searchParams.get("service") ?? "";
 ---
+
 <Base title={title} description={desc}>
-  <h1>Contact</h1>
-  <p>
+  <h1 class="text-2xl font-bold mb-6">Contact</h1>
+
+  {/* Decision Gate Message */}
+  <section
+    class="mb-8 rounded-lg border-2 border-neutral-900 bg-neutral-50 p-6 text-neutral-900"
+  >
+    <h2 class="mb-4 text-lg font-bold">ご相談について（必ずお読みください）</h2>
+    <div class="space-y-4 text-sm leading-relaxed">
+      <p>
+        この相談は、<br />
+        <strong class="font-bold"
+          >「自動化の実装に進んでいいかどうか」を確認するためのものです。</strong
+        >
+      </p>
+      <p>
+        ツールの紹介や営業、料金の説明は行いません。<br />
+        また、「とりあえず楽にしたい」「何ができるか知りたい」<br />
+        といった段階でのご相談は対象外としています。
+      </p>
+      <p>この30分では、</p>
+      <ul class="list-disc pl-5 space-y-1">
+        <li>業務の前提条件が整理されているか</li>
+        <li>判断ルールや例外が構造として成立しているか</li>
+        <li>今、実装フェーズに進むべきかどうか</li>
+      </ul>
+      <p><strong class="font-bold">この一点だけを一緒に確認します。</strong></p>
+      <p>
+        「進むべきではない」という結論になることもありますが、<br />
+        それは失敗を避けるための正しい判断です。
+      </p>
+    </div>
+  </section>
+
+  <p class="mb-4">
     以下のフォームにご記入ください。<br />
-    GPTの事前相談メモは <code>?prefill=</code> または <code>?gpts=</code> で自動入力されます。
+    <span class="text-xs text-slate-500"
+      >GPTの事前相談メモは <code>?prefill=</code> または <code>?gpts=</code> で自動入力されます。</span
+    >
   </p>
 
   <form method="POST" action="/api/contact" class="mt-6 space-y-4">
@@ -54,8 +89,7 @@ const service = Astro.url.searchParams.get("service") ?? "";
         name="message"
         rows="10"
         required
-        class="w-full border rounded px-3 py-2"
-      ></textarea>
+        class="w-full border rounded px-3 py-2"></textarea>
     </label>
 
     {/* ▼ 任意：今すぐ日程を予約する（Google カレンダー予約ボタンだけ） */}
@@ -84,9 +118,12 @@ const service = Astro.url.searchParams.get("service") ?? "";
       カスタマーサポート窓口
     </h2>
     <p class="leading-relaxed">
-      お問い合わせ・サポートにつきましては、以下の連絡先でも承っております。<br />
+      お問い合わせ・サポートにつきましては、以下の連絡先でも承っております。<br
+      />
       電話：<a href="tel:08063916489" class="underline">080-6391-6489</a><br />
-      メール：<a href="mailto:info@incierge.jp" class="underline">info@incierge.jp</a>
+      メール：<a href="mailto:info@incierge.jp" class="underline"
+        >info@incierge.jp</a
+      >
     </p>
   </section>
 
@@ -95,7 +132,9 @@ const service = Astro.url.searchParams.get("service") ?? "";
     rel="stylesheet"
     href="https://calendar.google.com/calendar/scheduling-button-script.css"
   />
-  <script src="https://calendar.google.com/calendar/scheduling-button-script.js" async></script>
+  <script
+    src="https://calendar.google.com/calendar/scheduling-button-script.js"
+    async></script>
 
   <script>
     (function () {
