@@ -10,7 +10,27 @@ const description =
   <main class="min-h-screen bg-white text-neutral-900">
     <div class="page-shell">
       {/* Hero */}
-      <section class="section-block-first relative text-center">
+      <section class="section-block-first relative text-center pt-8">
+        {/* Bridge Block */}
+        <div
+          class="max-w-2xl mx-auto mb-10 text-left bg-neutral-50 p-6 border border-neutral-100 rounded-lg"
+        >
+          <p
+            class="text-xs font-bold text-neutral-500 tracking-widest mb-2 uppercase"
+          >
+            Structure First
+          </p>
+          <p class="text-sm leading-relaxed text-neutral-700 mb-2">
+            Insightsの記事で「業務構造」の重要性についてご確認いただき、ありがとうございます。
+          </p>
+          <p class="text-sm leading-relaxed text-neutral-700">
+            ここは、整理された構造を<strong
+              >「動くシステム」に変えるための実装ページ</strong
+            >です。
+            ツールを導入することがゴールではありません。「構造が整った業務」を機械に任せ、あなたの時間を物理的に空けること。それがこのフェーズの唯一の目的です。
+          </p>
+        </div>
+
         <p class="mb-6 text-sm uppercase tracking-[0.2em] text-neutral-500">
           INCIERGE /automation
         </p>
@@ -22,12 +42,9 @@ const description =
         </h1>
 
         <p class="mb-8 text-lg sm:text-xl leading-relaxed text-neutral-600">
+          構造が決まれば、あとは実装するだけ。<br />
           最短3日で1本だけ実装。使えなければ、そこで終了OK。<br />
           PoC 3.3万円〜
-        </p>
-
-        <p class="mb-10 text-sm text-neutral-500">
-          ツール選定ではなく、『実際に利益が残る自動化』だけをやります。
         </p>
 
         <div class="flex flex-col items-center gap-4 mb-12">
@@ -35,10 +52,10 @@ const description =
             href="/contact?from_automation=1"
             class="btn-outline px-8 py-4 text-base"
           >
-            30分で『止められる作業』を決める
+            最初に止める作業を一緒に決める
           </a>
           <p class="text-xs text-neutral-400">
-            ※ 実装前提のヒアリングです（売り込みなし）
+            ※ 実装フェーズの具体的なご相談（30分）
           </p>
         </div>
 
@@ -46,23 +63,23 @@ const description =
         <div
           class="max-w-xl mx-auto border-t border-dotted border-neutral-300 pt-8 text-left"
         >
-          <p class="text-xs font-bold text-neutral-900 mb-3">【対象条件】</p>
+          <p class="text-xs font-bold text-neutral-900 mb-3">【対象】</p>
           <ul class="space-y-2 text-sm text-neutral-600 mb-4">
             <li class="flex items-start gap-2">
               <span class="text-accent-aegis">✔</span>
-              <span>自動化したい業務が特定できている、または特定したい方</span>
+              <span>構造化できている業務を、自動化したい方</span>
             </li>
             <li class="flex items-start gap-2">
               <span class="text-accent-aegis">✔</span>
-              <span>導入の意思決定ができる方（または決裁者と協働できる方）</span
-              >
+              <span>「これを止める」というターゲットが明確な方</span>
             </li>
           </ul>
           <p class="text-xs text-neutral-400">
-            ※ 情報収集のみの方は <a
-              href="/insights"
-              class="underline hover:text-neutral-600">インサイト</a
-            > をご覧ください
+            ※ まだ構造が曖昧な方は <a
+              href="/insights/automation-readiness/"
+              class="underline hover:text-neutral-600"
+              >自動化の準備（Readiness）</a
+            > を再度ご確認ください
           </p>
         </div>
       </section>
@@ -99,38 +116,52 @@ const description =
         </div>
       </section>
 
-      {/* Reason */}
+      {/* Why Structure First Works */}
       <section class="section-block">
-        <h2 class="section-heading">
-          実は、AI導入がうまくいかない理由はいつも同じです。
-        </h2>
+        <h2 class="section-heading">なぜ、この手順ならうまくいくのか</h2>
         <div class="section-body">
-          <ul class="space-y-2">
-            <li>
-              ・「とりあえずツール」を入れてみたが、現場ではほとんど使われていない
+          <p class="mb-4 text-sm">
+            多くのDXプロジェクトが失敗するのは、準備（構造整理）不足のままツールを入れてしまうからです。
+            INCIERGEは、以下の「正しい手順」を守ることで、確実な成果を約束します。
+          </p>
+          <ul class="space-y-4">
+            <li class="flex gap-3">
+              <span
+                class="font-bold text-neutral-900 border border-neutral-900 w-6 h-6 flex items-center justify-center rounded-none text-xs flex-shrink-0"
+                >1</span
+              >
+              <div>
+                <h3 class="font-bold text-sm mb-1">Structure（構造）</h3>
+                <p class="text-sm text-neutral-600">
+                  「誰が判断しても同じ結果になる」状態まで業務ルールを整理します。
+                </p>
+              </div>
             </li>
-            <li>
-              ・最初から大掛かりなDXプロジェクトにしてしまい、途中で止まる
+            <li class="flex gap-3">
+              <span
+                class="font-bold text-neutral-900 border border-neutral-900 w-6 h-6 flex items-center justify-center rounded-none text-xs flex-shrink-0"
+                >2</span
+              >
+              <div>
+                <h3 class="font-bold text-sm mb-1">Implementation（実装）</h3>
+                <p class="text-sm text-neutral-600">
+                  整った構造に対し、最適なツール（コードやAPI）を当てはめます。迷いがないため、実装は最短で終わります。
+                </p>
+              </div>
             </li>
-            <li>
-              ・マニュアルやルールが整っておらず、使い方が人ごとにバラバラ
-            </li>
-            <li>
-              ・トラブルや仕様変更が起きた瞬間に、誰もメンテナンスできなくなる
-            </li>
-            <li>
-              ・「結局これで何が良くなったのか？」が分からず、投資だけが残る
+            <li class="flex gap-3">
+              <span
+                class="font-bold text-neutral-900 border border-neutral-900 w-6 h-6 flex items-center justify-center rounded-none text-xs flex-shrink-0"
+                >3</span
+              >
+              <div>
+                <h3 class="font-bold text-sm mb-1">Measurement（計測）</h3>
+                <p class="text-sm text-neutral-600">
+                  「何時間空いたか」を測定します。構造が整っているからこそ、効果も明確に数値化できます。
+                </p>
+              </div>
             </li>
           </ul>
-          <p class="text-sm">
-            → INCIERGE /automation は、
-            <span
-              class="font-medium underline decoration-neutral-300 underline-offset-2"
-            >
-              最初から完璧なシステムを作るのではなく、今日から動く“小さな1つ”
-            </span>
-            に絞ることで、この失敗パターンを避けます。
-          </p>
         </div>
       </section>
 
@@ -578,7 +609,7 @@ const description =
           <a
             href="/contact?from_automation=1"
             class="btn-outline mb-4 px-8 py-4 text-base"
-            >30分で『止められる作業』を決める</a
+            >実装フェーズの相談をする（30分）</a
           >
           <p class="text-xs text-neutral-400">
             ※ 実装前提のヒアリングです（売り込みなし）
